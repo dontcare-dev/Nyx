@@ -43,7 +43,6 @@
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Uniform card size */
     .glass {
       background: rgba(20, 0, 0, 0.25);
       backdrop-filter: blur(20px) saturate(180%);
@@ -53,7 +52,7 @@
       box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       width: 380px; max-width: 100%;
-      flex-shrink: 0; /* prevent shrinking below 380px */
+      flex-shrink: 0;
       position: relative; overflow: hidden;
     }
     .glass::before {
@@ -88,29 +87,27 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
 
+    /* NEW: Username styled like clock timer */
     .username {
-      font-size: 2.4rem; font-weight: 700;
-      background: linear-gradient(135deg, #ff5555 0%, #ff9999 50%, #ff5555 100%);
-      background-size: 200% auto;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-top: 25px; letter-spacing: 3px;
-      animation: textGlow 3s ease-in-out infinite alternate, gradientShift 4s ease-in-out infinite;
+      font-size: 2.6rem; font-weight: 700;
+      color: #ff3333;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.5);
+      margin-top: 25px;
+      animation: usernameGlow 2s ease-in-out infinite alternate;
     }
-    @keyframes textGlow {
-      from { text-shadow: 0 0 15px #ff5555, 0 0 30px #ff3333; }
-      to { text-shadow: 0 0 25px #ff9999, 0 0 50px #ff4444; }
+    @keyframes usernameGlow {
+      from { text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.4); }
+      to { text-shadow: 0 0 30px #ff0000, 0 0 60px rgba(255,0,0,0.7); }
     }
-    @keyframes gradientShift { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
 
     .section-title {
       font-size: 1.6rem; font-weight: 600; margin-bottom: 25px;
       display: flex; align-items: center; gap: 12px; color: #ffbbbb;
       text-shadow: 0 0 15px rgba(255,80,80,0.6);
       border-bottom: 2px solid rgba(255,50,50,0.4); padding-bottom: 12px; letter-spacing: 1px;
-      justify-content: center; /* Center all section titles by default */
+      justify-content: center;
     }
-    /* Override for profile card if needed, but we want it centered too */
-    .profile-card .section-title { justify-content: center; }
 
     .spotify-widget { display: flex; flex-direction: column; gap: 15px; }
     .spotify-embed {
@@ -147,12 +144,11 @@
     .dot.dnd { background: #f04747; }
     .dot.offline { background: #747f8d; }
 
-    /* New footer style inside time card */
     .time-footer {
-      margin-top: 30px; 
-      font-size: 0.9rem; 
-      color: rgba(255,170,170,0.7); 
-      letter-spacing: 1px; 
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: rgba(255,170,170,0.7);
+      letter-spacing: 1px;
       font-weight: 400;
       text-shadow: 0 0 8px rgba(255,0,0,0.5);
       animation: softPulse 4s ease-in-out infinite;
