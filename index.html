@@ -11,8 +11,8 @@
       background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 50%, #020000 100%);
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       color: #fff;
-      overflow-x: hidden;        /* ← fix 1 */
-      width: 100vw;             /* ← fix 1 */
+      overflow-x: hidden;
+      width: 100vw;
       position: relative;
       animation: bgShift 10s ease-in-out infinite alternate;
     }
@@ -70,8 +70,16 @@
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-    .tab-content { display: none; width: 100%; }
-    .tab-content.active { display: block; }
+    /* Smooth tab transition */
+    .tab-content {
+      display: none; width: 100%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .tab-content.active {
+      display: block;
+      opacity: 1;
+    }
 
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
@@ -87,7 +95,7 @@
       width: 380px; max-width: 100%;
       flex-shrink: 0;
       position: relative;
-      overflow: hidden;        /* ← fix 2 (no more layout wobble) */
+      overflow: hidden;
     }
     .glass::before {
       content: '';
@@ -122,7 +130,6 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
 
-    /* Glow kept with drop-shadow + text-shadow (will be slightly clipped inside overflow:hidden, but still visible) */
     .username, .clock {
       color: #fff;
       font-weight: 700;
@@ -257,6 +264,7 @@
             Spotify
           </div>
           <div class="spotify-embed">
+            <!-- Replace the playlist ID if this doesn't show – ensure the playlist is Public -->
             <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
                     width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                     loading="lazy" style="border-radius:15px;"></iframe>
@@ -346,7 +354,7 @@
     }
     animateParticles();
 
-    // ---------- Tabs ----------
+    // ---------- Tabs (with smooth opacity transition) ----------
     const tabs = document.querySelectorAll('.tab-btn');
     const contents = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
@@ -355,7 +363,11 @@
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         contents.forEach(c => c.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
+        const activeContent = document.getElementById(target);
+        activeContent.classList.add('active');
+        // Force opacity transition by re-adding the class after a tick
+        void activeContent.offsetWidth; // reflow
+        activeContent.style.opacity = '1';
         if (target === 'friends') loadFriends();
       });
     });
@@ -408,7 +420,7 @@
     loadDiscord();
     setInterval(loadDiscord, 30000);
 
-    // ---------- Friends (Discord API via proxy) ----------
+    // ---------- Friends (Discord API via proxy – works without Lanyard) ----------
     const FRIEND_IDS = [
       "838897771439587379",
       "1246472494437630023",
@@ -453,7 +465,6 @@
         }
       }
     }
-    // Preload on page load if Friends tab was previously active? Not needed, will load on click.
   </script>
 </body>
 </html>
