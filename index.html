@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>NyX Dashboard</title>
+  <title>nyx dashboard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -12,7 +12,6 @@
       min-height: 100vh;
       color: #fff;
       overflow-x: hidden;
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -42,22 +41,22 @@
 
     .dashboard {
       position: relative; z-index: 1;
-      width: 100%; max-width: 1200px;
+      width: 100%; max-width: 1250px;
       padding: 30px 20px;
       display: flex; flex-direction: column; align-items: center;
       gap: 25px;
     }
 
     .header {
-      width: 100%; max-width: 900px;
-      background: rgba(20, 0, 0, 0.2);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 60, 60, 0.15);
-      border-radius: 40px;
-      padding: 20px 30px;
+      width: 100%; max-width: 950px;
+      background: rgba(18, 0, 0, 0.25);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 70, 70, 0.2);
+      border-radius: 44px;
+      padding: 22px 35px;
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 10px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      flex-wrap: wrap; gap: 15px;
+      box-shadow: 0 22px 55px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
       animation: headerSlide 0.7s ease-out;
     }
     @keyframes headerSlide {
@@ -66,14 +65,14 @@
     }
 
     .greeting {
-      font-size: 1.8rem; font-weight: 600;
+      font-size: 1.85rem; font-weight: 600;
       letter-spacing: 1px;
       color: #fff;
       text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
     }
 
     .live-clock {
-      font-size: 1.8rem; font-weight: 700;
+      font-size: 1.85rem; font-weight: 700;
       letter-spacing: 2px;
       color: #fff;
       text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
@@ -81,18 +80,18 @@
 
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 20px; width: 100%;
+      gap: 22px; width: 100%;
     }
 
     .glass {
       background: rgba(20, 0, 0, 0.22);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 60, 60, 0.15);
-      border-radius: 36px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 70, 70, 0.18);
+      border-radius: 38px;
       padding: 25px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      width: 300px; max-width: 100%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      width: 310px; max-width: 100%;
       flex-shrink: 0;
       position: relative;
       overflow: hidden;
@@ -104,6 +103,7 @@
     .glass:nth-child(4) { animation-delay: 0.4s; }
     .glass:nth-child(5) { animation-delay: 0.5s; }
     .glass:nth-child(6) { animation-delay: 0.6s; }
+    .glass:nth-child(7) { animation-delay: 0.7s; }
 
     @keyframes cardPop {
       from { opacity: 0; transform: scale(0.92); }
@@ -113,11 +113,11 @@
     .glass::after {
       content: '';
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.02) 50%, transparent 55%);
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 50%, transparent 55%);
       background-size: 200% 100%;
       animation: shine 4s ease-in-out infinite;
       z-index: 0; pointer-events: none;
-      border-radius: 36px;
+      border-radius: 38px;
     }
     @keyframes shine {
       0% { background-position: 200% 0; }
@@ -126,8 +126,8 @@
 
     .glass:hover {
       transform: translateY(-6px);
-      box-shadow: 0 35px 80px rgba(255, 0, 0, 0.5);
-      border-color: rgba(255, 80, 80, 0.5);
+      box-shadow: 0 35px 80px rgba(255, 0, 0, 0.55);
+      border-color: rgba(255, 90, 90, 0.6);
     }
 
     .card-content {
@@ -136,7 +136,7 @@
     }
 
     .avatar {
-      width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
+      width: 115px; height: 115px; border-radius: 50%; object-fit: cover;
       border: 3px solid rgba(255,50,50,0.7);
       box-shadow: 0 0 30px rgba(255,0,0,0.5);
       transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
@@ -214,7 +214,6 @@
     }
     .section-title svg { width: 18px; height: 18px; }
 
-    /* Crypto */
     .crypto-price {
       font-size: 2.2rem; font-weight: 700;
       text-shadow: 0 0 12px #ff0000;
@@ -225,14 +224,12 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* Roblox status */
     .status-text {
       font-size: 1.2rem; font-weight: 500;
       color: #ffbbbb;
       margin-top: 8px;
     }
 
-    /* Quick Links */
     .discord-link {
       display: inline-flex; align-items: center; gap: 8px;
       margin-top: 15px;
@@ -258,12 +255,11 @@
 
   <div class="dashboard">
     <div class="header">
-      <div class="greeting" id="greeting">Good Evening, NyX</div>
+      <div class="greeting" id="greeting">Good Evening, nyx</div>
       <div class="live-clock" id="liveClock">00:00:00</div>
     </div>
 
     <div class="cards-grid">
-      <!-- Profile Card -->
       <div class="glass">
         <div class="card-content">
           <img class="avatar" id="avatar" src="" alt="Avatar">
@@ -276,7 +272,6 @@
         </div>
       </div>
 
-      <!-- Spotify Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">
@@ -291,7 +286,6 @@
         </div>
       </div>
 
-      <!-- Luau Tips Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Luau Tip</div>
@@ -299,7 +293,6 @@
         </div>
       </div>
 
-      <!-- Pomodoro Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Pomodoro</div>
@@ -312,7 +305,6 @@
         </div>
       </div>
 
-      <!-- Crypto Ticker Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">₿ Bitcoin</div>
@@ -321,18 +313,16 @@
         </div>
       </div>
 
-      <!-- Roblox Status Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Roblox Status</div>
           <div class="status-row" style="margin-top: 5px;">
-            <span class="dot operational" id="robloxDot"></span>
+            <span class="dot" id="robloxDot"></span>
             <span class="status-text" id="robloxStatus">Checking...</span>
           </div>
         </div>
       </div>
 
-      <!-- Quick Links Card (Discord only) -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Quick Links</div>
@@ -346,7 +336,6 @@
   </div>
 
   <script>
-    // ---------- Particle Background ----------
     const pCanvas = document.getElementById('particles');
     const pCtx = pCanvas.getContext('2d');
     let particles = [];
@@ -392,7 +381,6 @@
     }
     animateParticles();
 
-    // ---------- Matrix Rain ----------
     const mCanvas = document.getElementById('matrixCanvas');
     const mCtx = mCanvas.getContext('2d');
     let mw, mh, columns, drops;
@@ -428,23 +416,21 @@
     }
     setInterval(drawMatrix, 80);
 
-    // ---------- Clock & Greeting ----------
     function updateClockAndGreeting() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
       document.getElementById('liveClock').textContent = timeStr;
       const hour = now.getHours();
       let greet;
-      if (hour < 5) greet = "Good Midnight, NyX";
-      else if (hour < 12) greet = "Good Morning, NyX";
-      else if (hour < 17) greet = "Good Afternoon, NyX";
-      else greet = "Good Evening, NyX";
+      if (hour < 5) greet = "Good Midnight, nyx";
+      else if (hour < 12) greet = "Good Morning, nyx";
+      else if (hour < 17) greet = "Good Afternoon, nyx";
+      else greet = "Good Evening, nyx";
       document.getElementById('greeting').textContent = greet;
     }
     updateClockAndGreeting();
     setInterval(updateClockAndGreeting, 1000);
 
-    // ---------- Luau Tips ----------
     const luauTips = [
       "Use task.wait() instead of wait() for better performance.",
       "Local variables are faster than global ones – always use local.",
@@ -468,7 +454,6 @@
       }, 400);
     }, 10000);
 
-    // ---------- Discord via Lanyard ----------
     const USER_ID = "1418597263479144471";
     async function loadDiscord() {
       try {
@@ -476,7 +461,7 @@
         const json = await res.json();
         if (!json.success) return;
         const data = json.data;
-        document.getElementById('username').textContent = data.discord_user.global_name || data.discord_user.username || "NyX";
+        document.getElementById('username').textContent = data.discord_user.global_name || data.discord_user.username || "nyx._.dev";
         const avatar = data.discord_user.avatar;
         const avatarImg = document.getElementById('avatar');
         if (avatar) {
@@ -492,14 +477,11 @@
         text.textContent = status.charAt(0).toUpperCase() + status.slice(1);
         const custom = data.activities.find(a => a.type === 4);
         document.getElementById('customStatus').textContent = custom?.state || "";
-      } catch (err) {
-        console.error("Discord fetch error", err);
-      }
+      } catch (err) {}
     }
     loadDiscord();
     setInterval(loadDiscord, 30000);
 
-    // ---------- Pomodoro Timer ----------
     const timerDisplay = document.getElementById('timerDisplay');
     const pomoStatus = document.getElementById('pomoStatus');
     const startBtn = document.getElementById('pomoStart');
@@ -573,7 +555,6 @@
     resetBtn.addEventListener('click', resetTimer);
     updateTimerDisplay();
 
-    // ---------- Crypto Ticker (CoinGecko) ----------
     async function fetchCrypto() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
@@ -586,22 +567,20 @@
         changeEl.textContent = `${change > 0 ? '↑' : '↓'} ${Math.abs(change)}%`;
         changeEl.style.color = change >= 0 ? '#4caf50' : '#f44336';
       } catch (err) {
-        console.error('Crypto fetch error', err);
         document.getElementById('btcPrice').textContent = '—';
       }
     }
     fetchCrypto();
     setInterval(fetchCrypto, 60000);
 
-    // ---------- Roblox Status ----------
     async function fetchRobloxStatus() {
+      const dot = document.getElementById('robloxDot');
+      const text = document.getElementById('robloxStatus');
       try {
         const res = await fetch('https://status.roblox.com/api/v2/status.json');
         const data = await res.json();
         const status = data.status.description;
-        const indicator = data.status.indicator; // 'none', 'minor', 'major', 'critical'
-        const dot = document.getElementById('robloxDot');
-        const text = document.getElementById('robloxStatus');
+        const indicator = data.status.indicator;
         text.textContent = status;
         dot.className = 'dot';
         if (indicator === 'none') {
@@ -610,12 +589,12 @@
           dot.classList.add('issue');
         }
       } catch (err) {
-        console.error('Roblox status error', err);
-        document.getElementById('robloxStatus').textContent = 'Error';
+        text.textContent = 'Error';
+        dot.className = 'dot issue';
       }
     }
     fetchRobloxStatus();
-    setInterval(fetchRobloxStatus, 300000); // every 5 minutes
+    setInterval(fetchRobloxStatus, 300000);
   </script>
 </body>
 </html>
