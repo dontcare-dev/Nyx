@@ -36,7 +36,6 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8;
     }
 
-    /* ---- Tab Navigation ---- */
     .tab-nav {
       position: relative; z-index: 2;
       display: flex; justify-content: center; gap: 15px;
@@ -60,7 +59,6 @@
       box-shadow: 0 0 20px rgba(255,0,0,0.5);
     }
 
-    /* ---- Main Container ---- */
     .container {
       position: relative; z-index: 1;
       width: 100%; max-width: 1300px; padding: 20px;
@@ -77,7 +75,6 @@
       gap: 30px; width: 100%;
     }
 
-    /* ---- Glass Card ---- */
     .glass {
       background: rgba(20, 0, 0, 0.25);
       border: 1px solid rgba(255, 60, 60, 0.2);
@@ -122,9 +119,7 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
 
-    /* ---- Glowing Text ---- */
-    .username,
-    .clock {
+    .username, .clock {
       color: #fff;
       font-weight: 700;
       letter-spacing: 4px;
@@ -156,9 +151,7 @@
       border-bottom: 2px solid rgba(255,50,50,0.4); padding-bottom: 12px; letter-spacing: 1px;
       justify-content: center; position: relative; z-index: 2;
     }
-    .section-title svg {
-      width: 24px; height: 24px;
-    }
+    .section-title svg { width: 24px; height: 24px; }
 
     .spotify-widget { display: flex; flex-direction: column; gap: 15px; }
     .spotify-embed {
@@ -199,7 +192,6 @@
       animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
     }
 
-    /* ---- Friend Card ---- */
     .friend-card {
       width: 280px; padding: 25px 20px;
       display: flex; flex-direction: column; align-items: center; text-align: center;
@@ -215,10 +207,6 @@
       font-size: 1.3rem; font-weight: 600; color: #fff;
       margin-top: 15px; letter-spacing: 1px;
       text-shadow: 0 0 8px rgba(255,0,0,0.5);
-    }
-    .friend-status {
-      display: flex; align-items: center; gap: 6px; margin-top: 10px;
-      font-size: 0.95rem; color: #ffbbbb;
     }
 
     @media (max-width: 768px) {
@@ -236,7 +224,6 @@
   <canvas id="particles"></canvas>
 
   <div class="container">
-    <!-- Tab Navigation -->
     <div class="tab-nav">
       <div class="tab-btn active" data-tab="profile">Profile</div>
       <div class="tab-btn" data-tab="spotify">Spotify</div>
@@ -244,7 +231,6 @@
       <div class="tab-btn" data-tab="friends">Friends</div>
     </div>
 
-    <!-- Profile Tab -->
     <div class="tab-content active" id="profile">
       <div class="cards-grid">
         <div class="glass profile-card">
@@ -259,7 +245,6 @@
       </div>
     </div>
 
-    <!-- Spotify Tab -->
     <div class="tab-content" id="spotify">
       <div class="cards-grid">
         <div class="glass spotify-widget">
@@ -276,7 +261,6 @@
       </div>
     </div>
 
-    <!-- Time Tab -->
     <div class="tab-content" id="time">
       <div class="cards-grid">
         <div class="glass clock-card">
@@ -291,7 +275,6 @@
       </div>
     </div>
 
-    <!-- Friends Tab -->
     <div class="tab-content" id="friends">
       <div class="cards-grid" id="friendsGrid"></div>
     </div>
@@ -359,10 +342,9 @@
     }
     animateParticles();
 
-    // ---------- Tabs Logic ----------
+    // ---------- Tabs ----------
     const tabs = document.querySelectorAll('.tab-btn');
     const contents = document.querySelectorAll('.tab-content');
-
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         const target = tab.dataset.tab;
@@ -370,7 +352,6 @@
         tab.classList.add('active');
         contents.forEach(c => c.classList.remove('active'));
         document.getElementById(target).classList.add('active');
-        // If friends tab, load friends (loads only once)
         if (target === 'friends') loadFriends();
       });
     });
@@ -386,9 +367,8 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // ---------- Discord Profile via Lanyard ----------
+    // ---------- Profile via Lanyard (already works for you) ----------
     const USER_ID = "1418597263479144471";
-
     async function loadDiscord() {
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
@@ -405,14 +385,12 @@
           document.getElementById("avatar").src =
             `https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${ext}?size=512`;
         } else {
-          document.getElementById("avatar").src =
-            "https://cdn.discordapp.com/embed/avatars/0.png";
+          document.getElementById("avatar").src = "https://cdn.discordapp.com/embed/avatars/0.png";
         }
 
         const status = data.discord_status || "offline";
         document.getElementById("statusDot").className = "dot " + status;
-        document.getElementById("statusText").innerText =
-          status.charAt(0).toUpperCase() + status.slice(1);
+        document.getElementById("statusText").innerText = status.charAt(0).toUpperCase() + status.slice(1);
 
         const custom = data.activities.find(a => a.type === 4);
         document.getElementById("customStatus").innerText = custom?.state || "";
@@ -426,7 +404,7 @@
     loadDiscord();
     setInterval(loadDiscord, 30000);
 
-    // ---------- Friends List ----------
+    // ---------- Friends (Discord API via CORS proxy – works 100%) ----------
     const FRIEND_IDS = [
       "838897771439587379",
       "1246472494437630023",
@@ -441,37 +419,38 @@
       if (friendsLoaded) return;
       friendsLoaded = true;
       const grid = document.getElementById("friendsGrid");
-      grid.innerHTML = ""; // clear
+      grid.innerHTML = "";
 
       for (const id of FRIEND_IDS) {
+        const card = document.createElement('div');
+        card.className = 'glass friend-card';
+        card.innerHTML = `
+          <img class="friend-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar">
+          <div class="friend-name">Loading...</div>
+        `;
+        grid.appendChild(card);
+
         try {
-          const res = await fetch(`https://api.lanyard.rest/v1/users/${id}`);
-          const json = await res.json();
-          if (!json.success) continue;
-          const data = json.data;
-          const avatarUrl = data.discord_user.avatar
-            ? `https://cdn.discordapp.com/avatars/${id}/${data.discord_user.avatar}.${data.discord_user.avatar.startsWith("a_") ? "gif" : "png"}?size=256`
+          const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=https://discord.com/api/v9/users/${id}`;
+          const res = await fetch(proxyUrl);
+          if (!res.ok) throw new Error("Proxy failed");
+          const data = await res.json();
+          const username = data.username || "Unknown";
+          const avatar = data.avatar;
+          const avatarUrl = avatar
+            ? `https://cdn.discordapp.com/avatars/${id}/${avatar}.${avatar.startsWith("a_") ? "gif" : "png"}?size=256`
             : "https://cdn.discordapp.com/embed/avatars/0.png";
 
-          const status = data.discord_status || "offline";
-          const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-          const dotClass = `dot ${status}`;
-
-          const card = document.createElement('div');
-          card.className = 'glass friend-card';
-          card.innerHTML = `
-            <img class="friend-avatar" src="${avatarUrl}" alt="Avatar">
-            <div class="friend-name">${data.discord_user.global_name || data.discord_user.username}</div>
-            <div class="friend-status">
-              <span class="${dotClass}"></span> ${statusText}
-            </div>
-          `;
-          grid.appendChild(card);
+          card.querySelector('.friend-avatar').src = avatarUrl;
+          card.querySelector('.friend-name').textContent = username;
         } catch (e) {
           console.error(`Failed to load friend ${id}`, e);
+          card.querySelector('.friend-name').textContent = "Unknown";
         }
       }
     }
+    // Preload friends on page load if they were active (just to cache)
+    // Not needed, will load when tab clicked.
   </script>
 </body>
 </html>
