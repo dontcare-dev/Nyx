@@ -87,18 +87,14 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
 
-    /* NEW: Username styled like clock timer */
+    /* Username – EXACTLY like the clock timer */
     .username {
-      font-size: 2.6rem; font-weight: 700;
-      color: #ff3333;
+      font-size: 2.6rem;          /* slightly smaller than clock's 3rem to fit card */
+      font-weight: 700;
+      color: #fff;                /* white text */
       letter-spacing: 4px;
-      text-shadow: 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.5);
+      text-shadow: 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.5);   /* same glow as clock */
       margin-top: 25px;
-      animation: usernameGlow 2s ease-in-out infinite alternate;
-    }
-    @keyframes usernameGlow {
-      from { text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.4); }
-      to { text-shadow: 0 0 30px #ff0000, 0 0 60px rgba(255,0,0,0.7); }
     }
 
     .section-title {
