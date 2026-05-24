@@ -22,7 +22,6 @@
       100% { background: radial-gradient(ellipse at 30% 90%, #1a0000 0%, #0a0000 50%, #020000 100%); }
     }
 
-    /* Subtle grid overlay */
     .grid-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
@@ -60,17 +59,11 @@
     }
 
     .container {
-      position: relative; z-index: 1; width: 100%; max-width: 1300px; padding: 20px;
+      position: relative; z-index: 1; width: 100%; max-width: 1400px; padding: 20px;
       display: flex; flex-direction: column; align-items: center;
       animation: fadeInUp 0.8s ease-out;
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-    /* Tab Navigation (still works, but we show all cards at once now) */
-    .tab-nav {
-      position: relative; z-index: 2;
-      display: none; /* hide tabs, we show everything directly */
-    }
 
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
@@ -87,7 +80,18 @@
       flex-shrink: 0;
       position: relative;
       overflow: visible;
-      animation: cardBreath 6s ease-in-out infinite;
+      animation: cardBreath 6s ease-in-out infinite, cardEntry 0.6s ease-out backwards;
+    }
+    .glass:nth-child(1) { animation-delay: 0s, 0.1s; }
+    .glass:nth-child(2) { animation-delay: 0s, 0.2s; }
+    .glass:nth-child(3) { animation-delay: 0s, 0.3s; }
+    .glass:nth-child(4) { animation-delay: 0s, 0.4s; }
+    .glass:nth-child(5) { animation-delay: 0s, 0.5s; }
+    .glass:nth-child(6) { animation-delay: 0s, 0.6s; }
+
+    @keyframes cardEntry {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     @keyframes cardBreath {
       0%,100% { transform: scale(1); }
@@ -112,7 +116,9 @@
       border-color: rgba(255, 80, 80, 0.6);
     }
 
-    .profile-card, .greeting-card, .quote-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .profile-card, .greeting-card, .nowplaying-card, .weather-card, .tiptech-card {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+    }
     .avatar {
       width: 130px; height: 130px; border-radius: 50%; object-fit: cover;
       border: 3px solid rgba(255,50,50,0.7);
@@ -134,7 +140,7 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9); }
 
-    .username, .clock, .greeting-text {
+    .username, .clock, .greeting-text, .nowplaying-title, .weather-temp {
       color: #fff;
       font-weight: 700;
       letter-spacing: 4px;
@@ -147,7 +153,10 @@
     }
     .username { font-size: 2.6rem; margin-top: 25px; }
     .clock { font-size: 3rem; margin: 10px 0; }
-    .greeting-text { font-size: 1.8rem; }
+    .greeting-text { font-size: 1.8rem; transition: transform 0.3s; }
+    .greeting-text:hover { transform: rotate(-1deg) scale(1.05); }
+    .nowplaying-title { font-size: 1.5rem; margin-top: 10px; }
+    .weather-temp { font-size: 2.8rem; }
 
     @keyframes glowPulse {
       from {
@@ -213,11 +222,45 @@
       animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
     }
 
-    /* Quote card */
+    /* Now Playing music wave */
+    .music-waves {
+      display: flex; justify-content: center; gap: 4px; margin-top: 20px;
+    }
+    .wave-bar {
+      width: 6px; height: 20px; background: #ff5555;
+      border-radius: 3px;
+      animation: wave 1.2s ease-in-out infinite;
+    }
+    .wave-bar:nth-child(1) { animation-delay: 0s; }
+    .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+    .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+    .wave-bar:nth-child(4) { animation-delay: 0.6s; }
+    .wave-bar:nth-child(5) { animation-delay: 0.8s; }
+    @keyframes wave {
+      0%,100% { height: 10px; }
+      50% { height: 30px; }
+    }
+
+    .weather-icon {
+      font-size: 3rem; display: inline-block;
+      animation: weatherSwing 2s ease-in-out infinite;
+    }
+    @keyframes weatherSwing {
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
+    }
+
     .quote-text {
       font-size: 1.3rem; font-weight: 400; font-style: italic;
       color: #ffcccc; text-shadow: 0 0 10px rgba(255,0,0,0.4);
       transition: opacity 0.5s ease;
+    }
+    .luau-tip {
+      font-size: 1.1rem; color: #ffbbbb; margin-top: 15px;
+      max-width: 280px; text-align: center;
+      transition: opacity 0.4s ease;
+      line-height: 1.4;
     }
 
     @media (max-width: 768px) {
@@ -237,7 +280,6 @@
   <canvas id="particles"></canvas>
 
   <div class="container">
-    <!-- Cards Grid (2x2) -->
     <div class="cards-grid">
       <!-- Profile Card -->
       <div class="glass profile-card">
@@ -274,10 +316,29 @@
         <div class="time-footer">Made with love by NyX</div>
       </div>
 
-      <!-- Greeting + Quote Card -->
+      <!-- Greeting + Luau Tip Card -->
       <div class="glass greeting-card">
         <div class="greeting-text" id="greeting">Good Evening, NyX</div>
-        <div class="quote-text" id="quote" style="margin-top:20px;">"Code is like humor. When you have to explain it, it’s bad."</div>
+        <div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div>
+      </div>
+
+      <!-- Now Playing Card (Lanyard) -->
+      <div class="glass nowplaying-card">
+        <div class="section-title" style="justify-content: center;">Now Playing</div>
+        <div id="nowPlayingContent">
+          <div class="music-waves">
+            <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+          </div>
+          <p style="margin-top: 15px; color: #ffaaaa;" id="nowPlayingText">Not listening to anything</p>
+        </div>
+      </div>
+
+      <!-- Weather Card -->
+      <div class="glass weather-card">
+        <div class="section-title" style="justify-content: center;">Weather</div>
+        <div class="weather-icon" id="weatherIcon">☀️</div>
+        <div class="weather-temp" id="weatherTemp">--°C</div>
+        <p style="color: #ffaaaa; margin-top: 5px;" id="weatherDesc">--</p>
       </div>
     </div>
   </div>
@@ -344,7 +405,7 @@
     }
     animateParticles();
 
-    // ---------- IST Clock ----------
+    // ---------- IST Clock & Greeting ----------
     function updateClock() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
@@ -352,7 +413,6 @@
       document.getElementById('clock').textContent = timeStr;
       document.getElementById('date').textContent = dateStr;
 
-      // Update greeting
       const hour = now.getHours();
       let greet = "Good Evening, NyX";
       if (hour < 12) greet = "Good Morning, NyX";
@@ -362,24 +422,29 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // ---------- Rotating Quotes ----------
-    const quotes = [
-      "\"Code is like humor. When you have to explain it, it’s bad.\"",
-      "\"First, solve the problem. Then, write the code.\"",
-      "\"Make it work, make it right, make it fast.\"",
-      "\"Simplicity is the soul of efficiency.\"",
-      "\"Talk is cheap. Show me the code.\""
+    // ---------- Luau Tips (Roblox Studio) ----------
+    const luauTips = [
+      "Use task.wait() instead of wait() for better performance.",
+      "Local variables are faster than global ones – always use local.",
+      "Use :Connect() instead of :connect() for events (new Luau syntax).",
+      "Avoid using while true do without a task.wait() – it freezes Roblox.",
+      "Leverage type checking in Luau to catch bugs early.",
+      "Use table.create() for pre-allocated arrays in performance-critical code.",
+      "String interpolation is easier with `..` but use string.format() for complex strings.",
+      "Learn to use the debug library: debug.traceback() helps find errors.",
+      "Don't forget to disconnect connections when they're no longer needed.",
+      "Use pcall() to safely call functions that may error.",
     ];
-    let quoteIndex = 0;
-    const quoteEl = document.getElementById('quote');
+    let tipIndex = 0;
+    const tipEl = document.getElementById('luauTip');
     setInterval(() => {
-      quoteIndex = (quoteIndex + 1) % quotes.length;
-      quoteEl.style.opacity = '0';
+      tipIndex = (tipIndex + 1) % luauTips.length;
+      tipEl.style.opacity = '0';
       setTimeout(() => {
-        quoteEl.innerText = quotes[quoteIndex];
-        quoteEl.style.opacity = '1';
-      }, 500);
-    }, 8000);
+        tipEl.innerText = `"${luauTips[tipIndex]}"`;
+        tipEl.style.opacity = '1';
+      }, 400);
+    }, 10000); // change tip every 10 seconds
 
     // ---------- Discord via Lanyard ----------
     const USER_ID = "1418597263479144471";
@@ -416,6 +481,16 @@
         } else {
           document.getElementById("customStatus").innerText = "";
         }
+
+        // Now Playing
+        const spotify = data.spotify;
+        if (spotify) {
+          document.getElementById("nowPlayingText").innerHTML = `<strong>${spotify.song}</strong><br>by ${spotify.artist}`;
+          document.querySelector(".music-waves").style.display = "none";
+        } else {
+          document.getElementById("nowPlayingText").innerText = "Not listening to anything";
+          document.querySelector(".music-waves").style.display = "flex";
+        }
       } catch (err) {
         console.error(err);
         document.getElementById("statusText").innerText = "Offline";
@@ -426,6 +501,40 @@
 
     loadDiscord();
     setInterval(loadDiscord, 30000);
+
+    // ---------- Weather (wttr.in) ----------
+    async function loadWeather() {
+      try {
+        const res = await fetch("https://wttr.in/Kolkata?format=%t+%C&m");
+        const text = await res.text();
+        const parts = text.trim().split(" ");
+        const temp = parts[0]; // e.g., "+27°C"
+        const desc = parts.slice(1).join(" "); // e.g., "Clear"
+        document.getElementById("weatherTemp").innerText = temp;
+        document.getElementById("weatherDesc").innerText = desc;
+        // Icon mapping
+        const iconMap = {
+          "Clear": "☀️",
+          "Sunny": "☀️",
+          "Partly cloudy": "⛅",
+          "Cloudy": "☁️",
+          "Overcast": "☁️",
+          "Mist": "🌫️",
+          "Fog": "🌫️",
+          "Rain": "🌧️",
+          "Light rain": "🌦️",
+          "Heavy rain": "🌧️",
+          "Thunderstorm": "⛈️",
+          "Snow": "❄️",
+          "Default": "🌤️"
+        };
+        document.getElementById("weatherIcon").innerText = iconMap[desc] || "🌤️";
+      } catch (e) {
+        console.error("Weather fetch error", e);
+      }
+    }
+    loadWeather();
+    setInterval(loadWeather, 600000); // update every 10 minutes
   </script>
 </body>
 </html>
