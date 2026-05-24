@@ -87,13 +87,13 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
 
-    /* Username – EXACTLY like the clock timer */
+    /* Username – white glow */
     .username {
-      font-size: 2.6rem;          /* slightly smaller than clock's 3rem to fit card */
+      font-size: 2.6rem;
       font-weight: 700;
-      color: #fff;                /* white text */
+      color: #fff;
       letter-spacing: 4px;
-      text-shadow: 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.5);   /* same glow as clock */
+      text-shadow: 0 0 20px #ffffff, 0 0 40px rgba(255,255,255,0.5);
       margin-top: 25px;
     }
 
@@ -114,13 +114,15 @@
     .spotify-embed:hover { box-shadow: 0 20px 50px rgba(255,0,0,0.5); transform: scale(1.02); }
 
     .clock-card { text-align: center; }
+    /* Clock – white glow */
     .clock {
       font-size: 3rem; font-weight: 700; letter-spacing: 4px;
-      text-shadow: 0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.5); margin: 10px 0; position: relative;
+      text-shadow: 0 0 20px #ffffff, 0 0 40px rgba(255,255,255,0.5); margin: 10px 0; position: relative;
     }
     .clock::after {
       content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-      width: 60%; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,80,80,0.5), transparent);
+      width: 60%; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
     }
     .date {
       color: #ffaaaa; font-size: 1.1rem; margin-top: 5px; font-weight: 300;
