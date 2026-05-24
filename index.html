@@ -9,20 +9,17 @@
     body {
       font-family: 'Poppins', sans-serif;
       background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 50%, #020000 100%);
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
       color: #fff;
       overflow-x: hidden;
-      width: 100vw;
       position: relative;
-      animation: bgShift 10s ease-in-out infinite alternate;
-    }
-    @keyframes bgShift {
-      0% { background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 50%, #020000 100%); }
-      50% { background: radial-gradient(ellipse at 70% 50%, #250000 0%, #0a0000 50%, #020000 100%); }
-      100% { background: radial-gradient(ellipse at 30% 90%, #1a0000 0%, #0a0000 50%, #020000 100%); }
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* ---- ORBS (only opacity, no movement) ---- */
+    /* ---- Background Layers ---- */
     .orb {
       position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12;
       z-index: 0; pointer-events: none;
@@ -36,188 +33,195 @@
       100% { opacity: 0.18; }
     }
 
-    /* ---- Particles (lighter) ---- */
     canvas#particles {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6;
     }
 
-    /* ---- Matrix Rain (lightweight) ---- */
     #matrixCanvas {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0; pointer-events: none;
-      opacity: 0.4;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.35;
     }
 
-    .container {
-      position: relative; z-index: 1; width: 100%; max-width: 1400px; padding: 20px;
+    /* ---- Main Layout ---- */
+    .dashboard {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 1100px;
+      padding: 30px 20px;
       display: flex; flex-direction: column; align-items: center;
-      animation: fadeInUp 0.8s ease-out;
+      gap: 25px;
     }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* ---- Top Header ---- */
+    .header {
+      width: 100%; max-width: 750px;
+      background: rgba(20, 0, 0, 0.2);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 60, 60, 0.15);
+      border-radius: 40px;
+      padding: 20px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      animation: headerSlide 0.7s ease-out;
+    }
+    @keyframes headerSlide {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .greeting {
+      font-size: 1.8rem; font-weight: 600;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
+    }
+
+    .live-clock {
+      font-size: 1.8rem; font-weight: 700;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
+    }
+
+    /* ---- Cards Grid ---- */
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
       gap: 20px; width: 100%;
     }
 
-    /* ---- Glass Cards – clean, no scaling ---- */
+    /* ---- Glass Card ---- */
     .glass {
-      background: rgba(20, 0, 0, 0.25);
-      border: 1px solid rgba(255, 60, 60, 0.2);
-      border-radius: 32px; padding: 25px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-      width: 340px; max-width: 100%;
+      background: rgba(20, 0, 0, 0.22);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 60, 60, 0.15);
+      border-radius: 36px;
+      padding: 25px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      width: 300px; max-width: 100%;
       flex-shrink: 0;
       position: relative;
-      overflow: visible;
-      animation: cardEntry 0.6s ease-out backwards;
+      overflow: hidden;
+      animation: cardPop 0.5s ease-out backwards;
     }
     .glass:nth-child(1) { animation-delay: 0.1s; }
     .glass:nth-child(2) { animation-delay: 0.2s; }
     .glass:nth-child(3) { animation-delay: 0.3s; }
     .glass:nth-child(4) { animation-delay: 0.4s; }
-    .glass:nth-child(5) { animation-delay: 0.5s; }
 
-    @keyframes cardEntry {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
     }
 
-    /* ---- Shine effect (background-position only) ---- */
     .glass::after {
       content: '';
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 50%, transparent 55%);
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.05) 45%, rgba(255,255,255,0.02) 50%, transparent 55%);
       background-size: 200% 100%;
       animation: shine 4s ease-in-out infinite;
       z-index: 0; pointer-events: none;
-      border-radius: 32px;
+      border-radius: 36px;
     }
     @keyframes shine {
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
+
     .glass:hover {
-      transform: translateY(-5px);
+      transform: translateY(-6px);
       box-shadow: 0 35px 80px rgba(255, 0, 0, 0.5);
-      border-color: rgba(255, 80, 80, 0.6);
+      border-color: rgba(255, 80, 80, 0.5);
     }
 
-    .profile-card, .greeting-card, .pomodoro-card {
+    .card-content {
+      position: relative; z-index: 2;
       display: flex; flex-direction: column; align-items: center; text-align: center;
     }
+
+    /* ---- Profile Card ---- */
     .avatar {
-      width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
+      width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
       border: 3px solid rgba(255,50,50,0.7);
-      box-shadow: 0 0 40px rgba(255,0,0,0.6), 0 0 80px rgba(255,0,0,0.3);
+      box-shadow: 0 0 30px rgba(255,0,0,0.5);
       transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-      animation: avatarRingPulse 2s infinite;
-      background: #2d0000;
+      animation: ringPulse 2s infinite;
     }
-    @keyframes avatarRingPulse {
-      0%,100% { border-color: rgba(255,50,50,0.7); box-shadow: 0 0 40px rgba(255,0,0,0.6); }
-      50% { border-color: rgba(255,90,90,0.9); box-shadow: 0 0 60px rgba(255,0,0,0.9); }
+    @keyframes ringPulse {
+      0%,100% { border-color: rgba(255,50,50,0.7); box-shadow: 0 0 30px rgba(255,0,0,0.5); }
+      50% { border-color: rgba(255,90,90,0.9); box-shadow: 0 0 60px rgba(255,0,0,0.8); }
     }
-    .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9); }
+    .avatar:hover { transform: scale(1.07); border-color: #ff4444; box-shadow: 0 0 70px rgba(255,0,0,0.9); }
 
-    /* ---- Glow (static, no filter, no pulse) ---- */
-    .username, .clock, .greeting-text {
+    .username {
+      font-size: 1.8rem; font-weight: 700;
+      margin-top: 15px;
       color: #fff;
-      font-weight: 700;
-      letter-spacing: 3px;
-      position: relative;
-      z-index: 2;
-      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff3333, 0 0 40px #ff0000;
+      text-shadow: 0 0 8px #ff0000, 0 0 20px rgba(255,0,0,0.6);
     }
-    .username { font-size: 2.2rem; margin-top: 20px; }
-    .clock { font-size: 2.8rem; margin: 10px 0; }
-    .greeting-text { font-size: 1.6rem; transition: transform 0.3s; }
-    .greeting-text:hover { transform: rotate(-1deg) scale(1.05); }
 
-    .section-title {
-      font-size: 1.4rem; font-weight: 600; margin-bottom: 20px;
-      display: flex; align-items: center; gap: 10px; color: #ffbbbb;
-      text-shadow: 0 0 15px rgba(255,80,80,0.6);
-      border-bottom: 2px solid rgba(255,50,50,0.4); padding-bottom: 10px; letter-spacing: 1px;
-      justify-content: center; position: relative; z-index: 2;
-    }
-    .section-title svg { width: 20px; height: 20px; }
-
-    .spotify-widget { display: flex; flex-direction: column; gap: 15px; }
-    .spotify-embed {
-      border-radius: 18px; overflow: hidden; width: 100%;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 30px rgba(255,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.05); transition: box-shadow 0.3s ease, transform 0.3s ease;
-    }
-    .spotify-embed:hover { box-shadow: 0 20px 50px rgba(255,0,0,0.5); transform: scale(1.02); }
-
-    .clock-card { text-align: center; }
-    .clock::after {
-      content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-      width: 60%; height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-      animation: lineFade 2s ease-in-out infinite;
-    }
-    @keyframes lineFade {
-      0%,100% { opacity: 0.3; }
-      50% { opacity: 0.8; }
-    }
-    .date {
-      color: #ffaaaa; font-size: 1rem; margin-top: 5px; font-weight: 300;
-      animation: softPulse 3s ease-in-out infinite; position: relative; z-index: 2;
-    }
-    @keyframes softPulse {
-      0%,100% { opacity: 0.7; }
-      50% { opacity: 1; }
+    .status-row {
+      margin-top: 10px; display: flex; align-items: center; gap: 6px;
+      color: #ffaaaa; font-size: 0.95rem;
     }
 
     .dot {
-      width: 12px; height: 12px; border-radius: 50%; background: #747f8d;
-      display: inline-block; margin-right: 6px; animation: pulse 2s infinite;
+      width: 10px; height: 10px; border-radius: 50%;
+      animation: pulse 2s infinite;
     }
     .dot.online { background: #43b581; }
     .dot.idle { background: #faa61a; }
     .dot.dnd { background: #f04747; }
     .dot.offline { background: #747f8d; }
 
-    .time-footer {
-      margin-top: 20px; font-size: 0.8rem;
-      color: rgba(255,170,170,0.7); letter-spacing: 1px; font-weight: 400;
-      text-shadow: 0 0 8px rgba(255,0,0,0.5);
-      animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
+    .custom-status {
+      margin-top: 8px; color: #ccc; font-style: italic; font-size: 0.9rem;
+      opacity: 0.8;
     }
 
+    /* ---- Spotify Card ---- */
+    .spotify-embed {
+      width: 100%; border-radius: 18px; overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    /* ---- Luau Tips Card ---- */
     .luau-tip {
-      font-size: 1rem; color: #ffbbbb; margin-top: 15px;
-      max-width: 260px; text-align: center;
-      transition: opacity 0.4s ease;
-      line-height: 1.4;
+      font-size: 1rem; color: #ffbbbb; margin-top: 10px;
+      text-align: center; line-height: 1.5;
+      transition: opacity 0.3s;
+      text-shadow: 0 0 6px rgba(255,0,0,0.4);
     }
 
     /* ---- Pomodoro ---- */
     .timer-display {
       font-size: 2.2rem; font-weight: 700; letter-spacing: 3px;
-      margin: 10px 0; color: #fff;
+      margin: 8px 0;
       text-shadow: 0 0 15px #ff0000;
     }
     .pomodoro-controls {
       display: flex; gap: 10px; margin-top: 15px;
     }
     .pomo-btn {
-      background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.5);
-      color: #fff; padding: 8px 16px; border-radius: 20px;
+      background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4);
+      color: #fff; padding: 8px 18px; border-radius: 25px;
       cursor: pointer; font-weight: 600; transition: 0.3s;
       font-size: 0.9rem; letter-spacing: 1px;
     }
     .pomo-btn:hover { background: rgba(255,50,50,0.4); }
     .pomo-btn.active { background: rgba(255,50,50,0.6); border-color: #ff5555; }
 
+    .section-title {
+      font-size: 1.2rem; font-weight: 600; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px; color: #ffbbbb;
+      text-shadow: 0 0 10px rgba(255,80,80,0.5);
+      border-bottom: 2px solid rgba(255,50,50,0.3); padding-bottom: 8px;
+      justify-content: center;
+    }
+    .section-title svg { width: 18px; height: 18px; }
+
     @media (max-width: 768px) {
-      .glass { width: 100%; max-width: 100%; }
-      .username { font-size: 1.8rem; }
-      .clock { font-size: 2.2rem; }
-      .greeting-text { font-size: 1.3rem; }
+      .header { flex-direction: column; text-align: center; }
+      .glass { width: 100%; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -229,64 +233,68 @@
   <canvas id="particles"></canvas>
   <canvas id="matrixCanvas"></canvas>
 
-  <div class="container">
+  <div class="dashboard">
+    <!-- Top Header -->
+    <div class="header">
+      <div class="greeting" id="greeting">Good Evening, NyX</div>
+      <div class="live-clock" id="liveClock">00:00:00</div>
+    </div>
+
+    <!-- Cards -->
     <div class="cards-grid">
       <!-- Profile Card -->
-      <div class="glass profile-card">
-        <img class="avatar" id="avatar" src="" alt="Avatar">
-        <div class="username" id="username">nyx._.dev</div>
-        <div style="margin-top: 12px; color: #ffaaaa; font-size: 1rem; position:relative; z-index:2;">
-          <span class="dot" id="statusDot"></span>
-          <span id="statusText">Loading...</span>
+      <div class="glass">
+        <div class="card-content">
+          <img class="avatar" id="avatar" src="" alt="Avatar">
+          <div class="username" id="username">nyx._.dev</div>
+          <div class="status-row">
+            <span class="dot" id="statusDot"></span>
+            <span id="statusText">Loading...</span>
+          </div>
+          <div class="custom-status" id="customStatus"></div>
         </div>
-        <p style="margin-top: 8px; color: #ccc; font-style: italic; position:relative; z-index:2;" id="customStatus"></p>
       </div>
 
       <!-- Spotify Card -->
-      <div class="glass spotify-widget">
-        <div class="section-title" style="justify-content: center;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
-          Spotify
-        </div>
-        <div class="spotify-embed">
-          <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
-                  width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                  loading="lazy" style="border-radius:15px;"></iframe>
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">
+            <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
+            Spotify
+          </div>
+          <div class="spotify-embed">
+            <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
+                    width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy" style="border-radius:12px;"></iframe>
+          </div>
         </div>
       </div>
 
-      <!-- Time Card -->
-      <div class="glass clock-card">
-        <div class="section-title" style="justify-content: center;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          Time (IST)
+      <!-- Luau Tips Card -->
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">Luau Tip</div>
+          <div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div>
         </div>
-        <div class="clock" id="clock">--:--:--</div>
-        <div class="date" id="date">---</div>
-        <div class="time-footer">Made with love by NyX</div>
       </div>
 
-      <!-- Greeting + Luau Tip -->
-      <div class="glass greeting-card">
-        <div class="greeting-text" id="greeting">Good Evening, NyX</div>
-        <div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div>
-      </div>
-
-      <!-- Pomodoro Timer -->
-      <div class="glass pomodoro-card">
-        <div class="section-title" style="justify-content: center;">Pomodoro</div>
-        <div class="timer-display" id="timerDisplay">25:00</div>
-        <div class="pomodoro-controls">
-          <button class="pomo-btn active" id="pomoStart">Start</button>
-          <button class="pomo-btn" id="pomoReset">Reset</button>
+      <!-- Pomodoro Card -->
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">Pomodoro</div>
+          <div class="timer-display" id="timerDisplay">25:00</div>
+          <div class="pomodoro-controls">
+            <button class="pomo-btn active" id="pomoStart">Start</button>
+            <button class="pomo-btn" id="pomoReset">Reset</button>
+          </div>
+          <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.85rem;" id="pomoStatus">Work session</p>
         </div>
-        <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.9rem;" id="pomoStatus">Work session</p>
       </div>
     </div>
   </div>
 
   <script>
-    // ---------- Particle Background (lightweight) ----------
+    // ---------- Particle Background ----------
     const pCanvas = document.getElementById('particles');
     const pCtx = pCanvas.getContext('2d');
     let particles = [];
@@ -300,9 +308,7 @@
     resizeParticles();
 
     class Particle {
-      constructor() {
-        this.reset();
-      }
+      constructor() { this.reset(); }
       reset() {
         this.x = Math.random() * pw;
         this.y = Math.random() * ph;
@@ -334,12 +340,12 @@
     }
     animateParticles();
 
-    // ---------- Matrix Rain (optimized) ----------
+    // ---------- Matrix Rain ----------
     const mCanvas = document.getElementById('matrixCanvas');
     const mCtx = mCanvas.getContext('2d');
-    let mw, mh;
+    let mw, mh, columns, drops;
     const fontSize = 20;
-    let columns, drops;
+    const chars = "01";
 
     function setupMatrix() {
       mw = mCanvas.width = window.innerWidth;
@@ -350,48 +356,41 @@
     window.addEventListener('resize', setupMatrix);
     setupMatrix();
 
-    const chars = "01";
     function drawMatrix() {
       mCtx.fillStyle = 'rgba(0, 0, 0, 0.08)';
       mCtx.fillRect(0, 0, mw, mh);
       mCtx.font = `${fontSize}px monospace`;
       mCtx.textAlign = 'center';
-
       for (let i = 0; i < drops.length; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize + fontSize / 2;
         const y = drops[i] * fontSize;
-
         mCtx.fillStyle = '#ff3333';
         mCtx.shadowColor = '#ff0000';
         mCtx.shadowBlur = 6;
         mCtx.fillText(text, x, y);
         mCtx.shadowBlur = 0;
-
-        if (y > mh && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
+        if (y > mh && Math.random() > 0.975) drops[i] = 0;
         drops[i]++;
       }
     }
-    setInterval(drawMatrix, 80); // relaxed speed
+    setInterval(drawMatrix, 80);
 
-    // ---------- IST Clock & Greeting ----------
-    function updateClock() {
+    // ---------- Clock & Greeting ----------
+    function updateClockAndGreeting() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
-      const dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      document.getElementById('clock').textContent = timeStr;
-      document.getElementById('date').textContent = dateStr;
-
+      document.getElementById('liveClock').textContent = timeStr;
       const hour = now.getHours();
-      let greet = "Good Evening, NyX";
-      if (hour < 12) greet = "Good Morning, NyX";
+      let greet;
+      if (hour < 5) greet = "Good Midnight, NyX";
+      else if (hour < 12) greet = "Good Morning, NyX";
       else if (hour < 17) greet = "Good Afternoon, NyX";
-      document.getElementById('greeting').innerText = greet;
+      else greet = "Good Evening, NyX";
+      document.getElementById('greeting').textContent = greet;
     }
-    updateClock();
-    setInterval(updateClock, 1000);
+    updateClockAndGreeting();
+    setInterval(updateClockAndGreeting, 1000);
 
     // ---------- Luau Tips ----------
     const luauTips = [
@@ -412,47 +411,37 @@
       tipIndex = (tipIndex + 1) % luauTips.length;
       tipEl.style.opacity = '0';
       setTimeout(() => {
-        tipEl.innerText = `"${luauTips[tipIndex]}"`;
+        tipEl.textContent = `"${luauTips[tipIndex]}"`;
         tipEl.style.opacity = '1';
       }, 400);
     }, 10000);
 
     // ---------- Discord via Lanyard ----------
     const USER_ID = "1418597263479144471";
-
     async function loadDiscord() {
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
         const json = await res.json();
-        if (!json.success) throw new Error("Lanyard API failed");
+        if (!json.success) return;
         const data = json.data;
-
-        document.getElementById("username").innerText =
-          data.discord_user.global_name || data.discord_user.username || "NyX";
-
+        document.getElementById('username').textContent = data.discord_user.global_name || data.discord_user.username || "NyX";
         const avatar = data.discord_user.avatar;
+        const avatarImg = document.getElementById('avatar');
         if (avatar) {
           const ext = avatar.startsWith("a_") ? "gif" : "png";
-          document.getElementById("avatar").src =
-            `https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${ext}?size=512`;
+          avatarImg.src = `https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${ext}?size=512`;
         } else {
-          document.getElementById("avatar").src =
-            "https://cdn.discordapp.com/embed/avatars/0.png";
+          avatarImg.src = "https://cdn.discordapp.com/embed/avatars/0.png";
         }
-
         const status = data.discord_status || "offline";
-        const dot = document.getElementById("statusDot");
-        const text = document.getElementById("statusText");
+        const dot = document.getElementById('statusDot');
+        const text = document.getElementById('statusText');
         dot.className = "dot " + status;
-        text.innerText = status.charAt(0).toUpperCase() + status.slice(1);
-
+        text.textContent = status.charAt(0).toUpperCase() + status.slice(1);
         const custom = data.activities.find(a => a.type === 4);
-        document.getElementById("customStatus").innerText = custom?.state || "";
+        document.getElementById('customStatus').textContent = custom?.state || "";
       } catch (err) {
-        console.error(err);
-        document.getElementById("statusText").innerText = "Offline";
-        document.getElementById("customStatus").innerText = "";
-        document.getElementById("avatar").src = "https://cdn.discordapp.com/embed/avatars/0.png";
+        console.error("Discord fetch error", err);
       }
     }
     loadDiscord();
@@ -497,13 +486,8 @@
     }
 
     function startTimer() {
-      if (isRunning) {
-        stopTimer();
-        return;
-      }
-      if (Notification.permission === 'default') {
-        Notification.requestPermission();
-      }
+      if (isRunning) { stopTimer(); return; }
+      if (Notification.permission === 'default') Notification.requestPermission();
       isRunning = true;
       startBtn.textContent = 'Pause';
       startBtn.classList.add('active');
