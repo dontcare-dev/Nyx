@@ -9,7 +9,7 @@
     body {
       font-family: 'Poppins', sans-serif;
       background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 50%, #020000 100%);
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; display: flex;
       color: #fff; overflow-x: hidden; position: relative;
       animation: bgShift 10s ease-in-out infinite alternate;
     }
@@ -36,50 +36,83 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8;
     }
 
-    /* ---- Tab Navigation ---- */
-    .tab-nav {
-      position: relative; z-index: 2;
-      display: flex; justify-content: center; gap: 15px;
-      margin-bottom: 30px;
-    }
-    .tab-btn {
-      background: rgba(255,50,50,0.15);
-      border: 1px solid rgba(255,50,50,0.4);
-      color: #ffaaaa;
-      padding: 10px 25px;
-      border-radius: 30px;
-      font-weight: 600; letter-spacing: 1px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 1rem;
-      backdrop-filter: blur(5px);
-    }
-    .tab-btn.active {
-      background: rgba(255,50,50,0.4);
-      color: #fff;
-      border-color: #ff5555;
-      box-shadow: 0 0 20px rgba(255,0,0,0.5);
-    }
-
-    /* ---- Main Container ---- */
-    .container {
+    /* ---- Layout ---- */
+    .app-layout {
+      display: flex;
+      width: 100%;
+      min-height: 100vh;
       position: relative; z-index: 1;
-      width: 100%; max-width: 1300px; padding: 20px;
-      display: flex; flex-direction: column; align-items: center;
-      animation: fadeInUp 0.8s ease-out;
-    }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-    .tab-content { display: none; width: 100%; }
-    .tab-content.active { display: block; }
-
-    /* ---- Cards Grid (used for both singles and friends) ---- */
-    .cards-grid {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 30px; width: 100%;
     }
 
-    /* ---- Glass Card ---- */
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width: 280px;
+      background: rgba(15, 0, 0, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 60, 60, 0.2);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      overflow-y: auto;
+      position: sticky; top: 0;
+      height: 100vh;
+      z-index: 2;
+    }
+    .sidebar-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffcccc;
+      text-shadow: 0 0 15px rgba(255,80,80,0.6);
+      margin-bottom: 15px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .friend-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,50,50,0.15);
+      transition: 0.3s;
+    }
+    .friend-item:hover {
+      background: rgba(255,50,50,0.1);
+      border-color: rgba(255,80,80,0.5);
+    }
+    .friend-avatar {
+      width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+      border: 2px solid rgba(255,50,50,0.6);
+      box-shadow: 0 0 12px rgba(255,0,0,0.4);
+    }
+    .friend-info {
+      flex: 1;
+    }
+    .friend-name {
+      font-weight: 600; font-size: 1rem;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+    .friend-status {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.85rem; color: #ffbbbb;
+    }
+
+    /* ---- Main Content ---- */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* ---- Cards (reused from before) ---- */
     .glass {
       background: rgba(20, 0, 0, 0.25);
       border: 1px solid rgba(255, 60, 60, 0.2);
@@ -87,7 +120,6 @@
       box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       width: 380px; max-width: 100%;
-      flex-shrink: 0;
       position: relative;
       overflow: visible;
     }
@@ -108,7 +140,7 @@
       border-color: rgba(255, 80, 80, 0.6);
     }
 
-    /* ---- Profile / Common styles ---- */
+    /* Profile / Username / Clock styles */
     .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .avatar {
       width: 130px; height: 130px; border-radius: 50%; object-fit: cover;
@@ -125,7 +157,6 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
 
-    /* ---- Username & Clock Glow (Android safe) ---- */
     .username,
     .clock {
       color: #fff;
@@ -199,32 +230,27 @@
       animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
     }
 
-    /* ---- Friends Mini Card ---- */
-    .friend-card {
-      width: 280px; padding: 25px 20px;
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-    }
-    .friend-avatar {
-      width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-      border: 2px solid rgba(255,50,50,0.6);
-      box-shadow: 0 0 25px rgba(255,0,0,0.4);
-      transition: 0.3s;
-    }
-    .friend-avatar:hover { transform: scale(1.05); border-color: #ff5555; }
-    .friend-name {
-      font-size: 1.3rem; font-weight: 600; color: #fff;
-      margin-top: 15px; letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(255,0,0,0.5);
-    }
-    .friend-status {
-      display: flex; align-items: center; gap: 6px; margin-top: 10px;
-      font-size: 0.95rem; color: #ffbbbb;
+    /* ---- Mobile sidebar toggle ---- */
+    .menu-toggle {
+      display: none;
+      position: fixed; top: 20px; left: 20px; z-index: 10;
+      background: rgba(255,50,50,0.3);
+      border: 1px solid rgba(255,50,50,0.5);
+      color: #fff; padding: 10px 15px;
+      border-radius: 12px; cursor: pointer;
+      font-size: 1.4rem;
     }
 
     @media (max-width: 768px) {
-      .glass { width: 100%; max-width: 100%; }
-      .username { font-size: 2rem; }
-      .clock { font-size: 2.5rem; }
+      .app-layout { flex-direction: column; }
+      .sidebar {
+        position: fixed; left: -100%; top: 0; height: 100%;
+        width: 280px; transition: left 0.3s;
+        z-index: 5;
+      }
+      .sidebar.open { left: 0; }
+      .menu-toggle { display: block; }
+      .main-content { padding: 80px 20px 20px; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -235,70 +261,59 @@
   <div class="orb orb-3"></div>
   <canvas id="particles"></canvas>
 
-  <div class="container">
-    <!-- Tab Navigation -->
-    <div class="tab-nav">
-      <div class="tab-btn active" data-tab="profile">Profile</div>
-      <div class="tab-btn" data-tab="spotify">Spotify</div>
-      <div class="tab-btn" data-tab="time">Time</div>
-      <div class="tab-btn" data-tab="friends">Friends</div>
-    </div>
+  <!-- Mobile menu toggle -->
+  <div class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</div>
 
-    <!-- Profile Tab -->
-    <div class="tab-content active" id="profile">
-      <div class="cards-grid">
-        <div class="glass profile-card">
-          <img class="avatar" id="avatar" src="" alt="Avatar">
-          <div class="username" id="username">nyx._.dev</div>
-          <div style="margin-top: 15px; color: #ffaaaa; font-size: 1.1rem; position:relative; z-index:2;">
-            <span class="dot" id="statusDot"></span>
-            <span id="statusText">Loading...</span>
-          </div>
-          <p style="margin-top: 10px; color: #ccc; font-style: italic; position:relative; z-index:2;" id="customStatus"></p>
-        </div>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-title">✨ Friends</div>
+      <div id="friendsList">
+        <!-- friend items will be injected here -->
       </div>
     </div>
 
-    <!-- Spotify Tab -->
-    <div class="tab-content" id="spotify">
-      <div class="cards-grid">
-        <div class="glass spotify-widget">
-          <div class="section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
-            Spotify
-          </div>
-          <div class="spotify-embed">
-            <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
-                    width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy" style="border-radius:15px;"></iframe>
-          </div>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <!-- Profile Card -->
+      <div class="glass profile-card">
+        <img class="avatar" id="avatar" src="" alt="Avatar">
+        <div class="username" id="username">nyx._.dev</div>
+        <div style="margin-top: 15px; color: #ffaaaa; font-size: 1.1rem; position:relative; z-index:2;">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">Loading...</span>
+        </div>
+        <p style="margin-top: 10px; color: #ccc; font-style: italic; position:relative; z-index:2;" id="customStatus"></p>
+      </div>
+
+      <!-- Spotify Card -->
+      <div class="glass spotify-widget">
+        <div class="section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
+          Spotify
+        </div>
+        <div class="spotify-embed">
+          <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
+                  width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                  loading="lazy" style="border-radius:15px;"></iframe>
         </div>
       </div>
-    </div>
 
-    <!-- Time Tab -->
-    <div class="tab-content" id="time">
-      <div class="cards-grid">
-        <div class="glass clock-card">
-          <div class="section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            Time (IST)
-          </div>
-          <div class="clock" id="clock">--:--:--</div>
-          <div class="date" id="date">---</div>
-          <div class="time-footer">Made with ❤️ by NyX</div>
+      <!-- Time Card -->
+      <div class="glass clock-card">
+        <div class="section-title">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Time (IST)
         </div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">---</div>
+        <div class="time-footer">Made with ❤️ by NyX</div>
       </div>
-    </div>
-
-    <!-- Friends Tab -->
-    <div class="tab-content" id="friends">
-      <div class="cards-grid" id="friendsGrid"></div>
     </div>
   </div>
 
   <script>
-    // ---------- Particle Background (unchanged) ----------
+    // ---------- Particle Background ----------
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -359,20 +374,6 @@
     }
     animateParticles();
 
-    // ---------- Tabs Logic ----------
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        contents.forEach(c => c.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
-      });
-    });
-
     // ---------- IST Clock ----------
     function updateClock() {
       const now = new Date();
@@ -384,13 +385,14 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    // ---------- Discord via Lanyard (your profile) ----------
+    // ---------- Discord Profile (you) via Lanyard ----------
     const USER_ID = "1418597263479144471";
+
     async function loadDiscord() {
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
         const json = await res.json();
-        if (!json.success) throw new Error("Lanyard API failed");
+        if (!json.success) throw new Error("Lanyard failed");
         const data = json.data;
 
         document.getElementById("username").innerText =
@@ -416,7 +418,7 @@
       } catch (err) {
         console.error(err);
         document.getElementById("statusText").innerText = "Offline";
-        document.getElementById("customStatus").innerText = "Lanyard not connected";
+        document.getElementById("customStatus").innerText = "";
         document.getElementById("avatar").src = "https://cdn.discordapp.com/embed/avatars/0.png";
       }
     }
@@ -433,8 +435,8 @@
     ];
 
     async function loadFriends() {
-      const grid = document.getElementById("friendsGrid");
-      grid.innerHTML = ''; // clear
+      const container = document.getElementById("friendsList");
+      container.innerHTML = ""; // clear
 
       for (const id of FRIEND_IDS) {
         try {
@@ -443,32 +445,35 @@
           if (!json.success) continue;
           const data = json.data;
           const avatarUrl = data.discord_user.avatar
-            ? `https://cdn.discordapp.com/avatars/${id}/${data.discord_user.avatar}.${data.discord_user.avatar.startsWith("a_") ? "gif" : "png"}?size=256`
+            ? `https://cdn.discordapp.com/avatars/${id}/${data.discord_user.avatar}.${data.discord_user.avatar.startsWith("a_") ? "gif" : "png"}?size=128`
             : "https://cdn.discordapp.com/embed/avatars/0.png";
 
           const status = data.discord_status || "offline";
           const statusText = status.charAt(0).toUpperCase() + status.slice(1);
           const dotClass = `dot ${status}`;
 
-          const card = document.createElement('div');
-          card.className = 'glass friend-card';
-          card.innerHTML = `
+          const item = document.createElement('div');
+          item.className = 'friend-item';
+          item.innerHTML = `
             <img class="friend-avatar" src="${avatarUrl}" alt="Avatar">
-            <div class="friend-name">${data.discord_user.global_name || data.discord_user.username}</div>
-            <div class="friend-status">
-              <span class="${dotClass}"></span> ${statusText}
+            <div class="friend-info">
+              <div class="friend-name">${data.discord_user.global_name || data.discord_user.username}</div>
+              <div class="friend-status">
+                <span class="${dotClass}"></span> ${statusText}
+              </div>
             </div>
           `;
-          grid.appendChild(card);
+          container.appendChild(item);
         } catch (e) {
           console.error(`Failed to load friend ${id}`, e);
         }
       }
     }
 
-    // Load friends when the tab is clicked (or on page load)
-    document.querySelector('[data-tab="friends"]').addEventListener('click', loadFriends, { once: true });
-    // Also load immediately if friends tab is active by default? not needed.
+    // Load friends immediately (they appear in the sidebar)
+    loadFriends();
+    // Refresh every 2 minutes
+    setInterval(loadFriends, 120000);
   </script>
 </body>
 </html>
