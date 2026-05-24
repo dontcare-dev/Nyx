@@ -58,6 +58,13 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8;
     }
 
+    /* Matrix rain canvas */
+    #matrixCanvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+      opacity: 0.6;
+    }
+
     .container {
       position: relative; z-index: 1; width: 100%; max-width: 1400px; padding: 20px;
       display: flex; flex-direction: column; align-items: center;
@@ -87,7 +94,6 @@
     .glass:nth-child(3) { animation-delay: 0s, 0.3s; }
     .glass:nth-child(4) { animation-delay: 0s, 0.4s; }
     .glass:nth-child(5) { animation-delay: 0s, 0.5s; }
-    .glass:nth-child(6) { animation-delay: 0s, 0.6s; }
 
     @keyframes cardEntry {
       from { opacity: 0; transform: translateY(20px); }
@@ -116,7 +122,7 @@
       border-color: rgba(255, 80, 80, 0.6);
     }
 
-    .profile-card, .greeting-card, .css-card, .pomodoro-card, .fuq-card {
+    .profile-card, .greeting-card, .pomodoro-card {
       display: flex; flex-direction: column; align-items: center; text-align: center;
     }
     .avatar {
@@ -220,7 +226,6 @@
       animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
     }
 
-    /* ---- Luau Tip ---- */
     .luau-tip {
       font-size: 1rem; color: #ffbbbb; margin-top: 15px;
       max-width: 260px; text-align: center;
@@ -228,21 +233,7 @@
       line-height: 1.4;
     }
 
-    /* ---- CSS Snippet Box ---- */
-    .css-editor {
-      width: 100%; min-height: 80px; background: rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,50,50,0.4); border-radius: 10px;
-      color: #fff; padding: 10px; font-family: monospace; font-size: 0.9rem;
-      resize: vertical; outline: none; margin-top: 10px;
-    }
-    .css-preview {
-      margin-top: 15px; padding: 15px; border: 1px solid rgba(255,50,50,0.4);
-      border-radius: 10px; background: rgba(0,0,0,0.3);
-      min-height: 50px; transition: all 0.3s ease;
-      text-align: center; color: #ffaaaa;
-    }
-
-    /* ---- Pomodoro ---- */
+    /* Pomodoro */
     .timer-display {
       font-size: 2.2rem; font-weight: 700; letter-spacing: 3px;
       margin: 10px 0; color: #fff;
@@ -260,14 +251,6 @@
     .pomo-btn:hover { background: rgba(255,50,50,0.4); }
     .pomo-btn.active { background: rgba(255,50,50,0.6); border-color: #ff5555; }
 
-    /* ---- Fuck You Quote ---- */
-    .fuq-text {
-      font-size: 1.1rem; font-weight: 500; color: #ffbbbb;
-      text-shadow: 0 0 10px rgba(255,0,0,0.5);
-      transition: opacity 0.4s ease; max-width: 260px; margin-top: 10px;
-      font-style: italic;
-    }
-
     @media (max-width: 768px) {
       .glass { width: 100%; max-width: 100%; }
       .username { font-size: 1.8rem; }
@@ -283,6 +266,7 @@
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
   <canvas id="particles"></canvas>
+  <canvas id="matrixCanvas"></canvas>
 
   <div class="container">
     <div class="cards-grid">
@@ -327,13 +311,6 @@
         <div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div>
       </div>
 
-      <!-- CSS Snippet Box -->
-      <div class="glass css-card">
-        <div class="section-title" style="justify-content: center;">CSS Snippet</div>
-        <textarea class="css-editor" id="cssInput" placeholder="Type CSS here... e.g., color: red; font-size: 20px;"></textarea>
-        <div class="css-preview" id="cssPreview">CSS Preview</div>
-      </div>
-
       <!-- Pomodoro Timer -->
       <div class="glass pomodoro-card">
         <div class="section-title" style="justify-content: center;">Pomodoro</div>
@@ -343,12 +320,6 @@
           <button class="pomo-btn" id="pomoReset">Reset</button>
         </div>
         <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.9rem;" id="pomoStatus">Work session</p>
-      </div>
-
-      <!-- Fuck You Quotes -->
-      <div class="glass fuq-card">
-        <div class="section-title" style="justify-content: center;">Fuck You Quote</div>
-        <div class="fuq-text" id="fuqQuote">"You're not stupid; you just have bad luck thinking."</div>
       </div>
     </div>
   </div>
@@ -414,6 +385,54 @@
       requestAnimationFrame(animateParticles);
     }
     animateParticles();
+
+    // ---------- Matrix Rain (Hacking Background) ----------
+    const matrixCanvas = document.getElementById('matrixCanvas');
+    const mctx = matrixCanvas.getContext('2d');
+
+    function resizeMatrix() {
+      matrixCanvas.width = window.innerWidth;
+      matrixCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeMatrix);
+    resizeMatrix();
+
+    const chars = "01";
+    const fontSize = 14;
+    let columns = Math.floor(matrixCanvas.width / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function drawMatrix() {
+      mctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+      mctx.font = `${fontSize}px monospace`;
+      mctx.textAlign = 'center';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops[i] * fontSize;
+
+        mctx.fillStyle = '#ff3333';
+        mctx.shadowColor = '#ff0000';
+        mctx.shadowBlur = 8;
+        mctx.fillText(text, x, y);
+        mctx.shadowBlur = 0;
+
+        if (y > matrixCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 50);
+
+    // Recalculate columns on resize
+    window.addEventListener('resize', () => {
+      columns = Math.floor(matrixCanvas.width / fontSize);
+      drops = Array(columns).fill(1);
+    });
 
     // ---------- IST Clock & Greeting ----------
     function updateClock() {
@@ -497,43 +516,12 @@
     loadDiscord();
     setInterval(loadDiscord, 30000);
 
-    // ---------- CSS Snippet Box ----------
-    const cssInput = document.getElementById('cssInput');
-    const cssPreview = document.getElementById('cssPreview');
-    cssInput.addEventListener('input', () => {
-      cssPreview.style.cssText = cssInput.value;
-    });
-
-    // ---------- Fuck You Quotes ----------
-    const fuqQuotes = [
-      "You're not stupid; you just have bad luck thinking.",
-      "If I wanted to listen to an asshole, I'd fart.",
-      "You bring everyone so much joy — when you leave the room.",
-      "I'd agree with you but then we'd both be wrong.",
-      "You're the reason they put instructions on shampoo bottles.",
-      "You have the right to remain silent because whatever you say will probably be stupid.",
-      "Some people bring happiness wherever they go. You bring happiness whenever you go.",
-      "If I had a dollar for every time you said something smart, I'd be broke.",
-      "You're like a cloud. When you disappear it's a beautiful day.",
-      "I'm not insulting you, I'm describing you."
-    ];
-    let fuqIndex = 0;
-    const fuqEl = document.getElementById('fuqQuote');
-    setInterval(() => {
-      fuqIndex = (fuqIndex + 1) % fuqQuotes.length;
-      fuqEl.style.opacity = '0';
-      setTimeout(() => {
-        fuqEl.innerText = `"${fuqQuotes[fuqIndex]}"`;
-        fuqEl.style.opacity = '1';
-      }, 400);
-    }, 8000);
-
     // ---------- Pomodoro Timer ----------
     const timerDisplay = document.getElementById('timerDisplay');
     const pomoStatus = document.getElementById('pomoStatus');
     const startBtn = document.getElementById('pomoStart');
     const resetBtn = document.getElementById('pomoReset');
-    const WORK_TIME = 25 * 60; // seconds
+    const WORK_TIME = 25 * 60;
     const BREAK_TIME = 5 * 60;
     let timerInterval = null;
     let timeLeft = WORK_TIME;
@@ -571,7 +559,6 @@
         stopTimer();
         return;
       }
-      // Request notification permission if not granted
       if (Notification.permission === 'default') {
         Notification.requestPermission();
       }
