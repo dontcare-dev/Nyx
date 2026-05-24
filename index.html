@@ -22,47 +22,30 @@
       100% { background: radial-gradient(ellipse at 30% 90%, #1a0000 0%, #0a0000 50%, #020000 100%); }
     }
 
-    .grid-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      z-index: 0; pointer-events: none;
-      animation: gridFade 4s ease-in-out infinite alternate;
-    }
-    @keyframes gridFade {
-      0% { opacity: 0.3; }
-      100% { opacity: 0.6; }
-    }
-
+    /* ---- ORBS (only opacity, no movement) ---- */
     .orb {
-      position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15;
+      position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12;
       z-index: 0; pointer-events: none;
-      animation: orbPulse 8s ease-in-out infinite alternate;
+      animation: orbFade 6s ease-in-out infinite alternate;
     }
     .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, #ff3333, transparent); top: -200px; left: -200px; }
-    .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #cc0000, transparent); bottom: -200px; right: -200px; animation-delay: -4s; }
-    .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, #ff5555, transparent); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -6s; }
-
-    @keyframes orbPulse {
-      0% { transform: scale(1); opacity: 0.12; }
-      100% { transform: scale(1.15); opacity: 0.22; }
-    }
-    .orb-3 { animation-name: orbPulseCenter; }
-    @keyframes orbPulseCenter {
-      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.12; }
-      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.22; }
+    .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #cc0000, transparent); bottom: -200px; right: -200px; animation-delay: -3s; }
+    .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, #ff5555, transparent); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -5s; }
+    @keyframes orbFade {
+      0% { opacity: 0.08; }
+      100% { opacity: 0.18; }
     }
 
+    /* ---- Particles (lighter) ---- */
     canvas#particles {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.8;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6;
     }
 
-    /* Matrix rain canvas */
+    /* ---- Matrix Rain (lightweight) ---- */
     #matrixCanvas {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 0; pointer-events: none;
-      opacity: 0.6;
+      opacity: 0.4;
     }
 
     .container {
@@ -77,6 +60,7 @@
       gap: 20px; width: 100%;
     }
 
+    /* ---- Glass Cards – clean, no scaling ---- */
     .glass {
       background: rgba(20, 0, 0, 0.25);
       border: 1px solid rgba(255, 60, 60, 0.2);
@@ -87,26 +71,24 @@
       flex-shrink: 0;
       position: relative;
       overflow: visible;
-      animation: cardBreath 6s ease-in-out infinite, cardEntry 0.6s ease-out backwards;
+      animation: cardEntry 0.6s ease-out backwards;
     }
-    .glass:nth-child(1) { animation-delay: 0s, 0.1s; }
-    .glass:nth-child(2) { animation-delay: 0s, 0.2s; }
-    .glass:nth-child(3) { animation-delay: 0s, 0.3s; }
-    .glass:nth-child(4) { animation-delay: 0s, 0.4s; }
-    .glass:nth-child(5) { animation-delay: 0s, 0.5s; }
+    .glass:nth-child(1) { animation-delay: 0.1s; }
+    .glass:nth-child(2) { animation-delay: 0.2s; }
+    .glass:nth-child(3) { animation-delay: 0.3s; }
+    .glass:nth-child(4) { animation-delay: 0.4s; }
+    .glass:nth-child(5) { animation-delay: 0.5s; }
 
     @keyframes cardEntry {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes cardBreath {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-    }
-    .glass::before {
+
+    /* ---- Shine effect (background-position only) ---- */
+    .glass::after {
       content: '';
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 50%, transparent 55%);
       background-size: 200% 100%;
       animation: shine 4s ease-in-out infinite;
       z-index: 0; pointer-events: none;
@@ -117,7 +99,7 @@
       100% { background-position: -200% 0; }
     }
     .glass:hover {
-      transform: translateY(-5px) scale(1.03);
+      transform: translateY(-5px);
       box-shadow: 0 35px 80px rgba(255, 0, 0, 0.5);
       border-color: rgba(255, 80, 80, 0.6);
     }
@@ -129,16 +111,9 @@
       width: 120px; height: 120px; border-radius: 50%; object-fit: cover;
       border: 3px solid rgba(255,50,50,0.7);
       box-shadow: 0 0 40px rgba(255,0,0,0.6), 0 0 80px rgba(255,0,0,0.3);
-      transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
-      animation: avatarGlitch 3s infinite, avatarRingPulse 2s infinite;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      animation: avatarRingPulse 2s infinite;
       background: #2d0000;
-    }
-    @keyframes avatarGlitch {
-      0%,90%,100%{ transform: translate(0); }
-      92%{ transform: translate(-4px,3px) skew(2deg); }
-      94%{ transform: translate(5px,-3px) skew(-2deg); }
-      96%{ transform: translate(-3px,2px) skew(1deg); }
-      98%{ transform: translate(3px,-2px) skew(0); }
     }
     @keyframes avatarRingPulse {
       0%,100% { border-color: rgba(255,50,50,0.7); box-shadow: 0 0 40px rgba(255,0,0,0.6); }
@@ -146,32 +121,19 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9); }
 
+    /* ---- Glow (static, no filter, no pulse) ---- */
     .username, .clock, .greeting-text {
       color: #fff;
       font-weight: 700;
       letter-spacing: 3px;
       position: relative;
       z-index: 2;
-      filter: drop-shadow(0 0 8px #ff0000) drop-shadow(0 0 18px #ff1a1a) drop-shadow(0 0 40px #ff4d4d);
       text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff3333, 0 0 40px #ff0000;
-      animation: glowPulse 1.5s infinite alternate;
-      will-change: filter, text-shadow;
     }
     .username { font-size: 2.2rem; margin-top: 20px; }
     .clock { font-size: 2.8rem; margin: 10px 0; }
     .greeting-text { font-size: 1.6rem; transition: transform 0.3s; }
     .greeting-text:hover { transform: rotate(-1deg) scale(1.05); }
-
-    @keyframes glowPulse {
-      from {
-        filter: drop-shadow(0 0 6px #ff0000) drop-shadow(0 0 14px #ff1a1a);
-        text-shadow: 0 0 5px #fff, 0 0 10px #ff6666, 0 0 20px #ff1a1a, 0 0 40px #ff0000;
-      }
-      to {
-        filter: drop-shadow(0 0 12px #ff3333) drop-shadow(0 0 30px #ff0000) drop-shadow(0 0 60px #ff4d4d);
-        text-shadow: 0 0 10px #fff, 0 0 20px #ff8080, 0 0 40px #ff3333, 0 0 80px #ff0000, 0 0 120px #ff0000;
-      }
-    }
 
     .section-title {
       font-size: 1.4rem; font-weight: 600; margin-bottom: 20px;
@@ -233,7 +195,7 @@
       line-height: 1.4;
     }
 
-    /* Pomodoro */
+    /* ---- Pomodoro ---- */
     .timer-display {
       font-size: 2.2rem; font-weight: 700; letter-spacing: 3px;
       margin: 10px 0; color: #fff;
@@ -261,7 +223,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="grid-overlay"></div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
@@ -325,114 +286,95 @@
   </div>
 
   <script>
-    // ---------- Particle Background ----------
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
+    // ---------- Particle Background (lightweight) ----------
+    const pCanvas = document.getElementById('particles');
+    const pCtx = pCanvas.getContext('2d');
     let particles = [];
-    let w, h;
+    let pw, ph;
 
-    function resizeCanvas() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+    function resizeParticles() {
+      pw = pCanvas.width = window.innerWidth;
+      ph = pCanvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', resizeParticles);
+    resizeParticles();
 
     class Particle {
-      constructor() { this.reset(); }
+      constructor() {
+        this.reset();
+      }
       reset() {
-        this.x = Math.random() * w;
-        this.y = Math.random() * h;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.4;
-        this.opacity = Math.random() * 0.4 + 0.1;
+        this.x = Math.random() * pw;
+        this.y = Math.random() * ph;
+        this.size = Math.random() * 1.5 + 0.3;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.3 + 0.05;
       }
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-        if (this.x < 0 || this.x > w) this.speedX *= -1;
-        if (this.y < 0 || this.y > h) this.speedY *= -1;
+        if (this.x < 0 || this.x > pw) this.speedX *= -1;
+        if (this.y < 0 || this.y > ph) this.speedY *= -1;
       }
       draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 80, 80, ${this.opacity})`;
-        ctx.fill();
+        pCtx.beginPath();
+        pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        pCtx.fillStyle = `rgba(255, 80, 80, ${this.opacity})`;
+        pCtx.fill();
       }
     }
 
-    for (let i = 0; i < 120; i++) particles.push(new Particle());
+    for (let i = 0; i < 50; i++) particles.push(new Particle());
 
     function animateParticles() {
-      ctx.clearRect(0, 0, w, h);
+      pCtx.clearRect(0, 0, pw, ph);
       particles.forEach(p => { p.update(); p.draw(); });
-      for (let a = 0; a < particles.length; a++) {
-        for (let b = a + 1; b < particles.length; b++) {
-          let dx = particles[a].x - particles[b].x;
-          let dy = particles[a].y - particles[b].y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(particles[b].x, particles[b].y);
-            ctx.strokeStyle = `rgba(255, 80, 80, ${0.06 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.4;
-            ctx.stroke();
-          }
-        }
-      }
       requestAnimationFrame(animateParticles);
     }
     animateParticles();
 
-    // ---------- Matrix Rain (Hacking Background) ----------
-    const matrixCanvas = document.getElementById('matrixCanvas');
-    const mctx = matrixCanvas.getContext('2d');
+    // ---------- Matrix Rain (optimized) ----------
+    const mCanvas = document.getElementById('matrixCanvas');
+    const mCtx = mCanvas.getContext('2d');
+    let mw, mh;
+    const fontSize = 20;
+    let columns, drops;
 
-    function resizeMatrix() {
-      matrixCanvas.width = window.innerWidth;
-      matrixCanvas.height = window.innerHeight;
+    function setupMatrix() {
+      mw = mCanvas.width = window.innerWidth;
+      mh = mCanvas.height = window.innerHeight;
+      columns = Math.floor(mw / fontSize) + 1;
+      drops = Array(columns).fill(1);
     }
-    window.addEventListener('resize', resizeMatrix);
-    resizeMatrix();
+    window.addEventListener('resize', setupMatrix);
+    setupMatrix();
 
     const chars = "01";
-    const fontSize = 14;
-    let columns = Math.floor(matrixCanvas.width / fontSize);
-    let drops = Array(columns).fill(1);
-
     function drawMatrix() {
-      mctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-      mctx.font = `${fontSize}px monospace`;
-      mctx.textAlign = 'center';
+      mCtx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      mCtx.fillRect(0, 0, mw, mh);
+      mCtx.font = `${fontSize}px monospace`;
+      mCtx.textAlign = 'center';
 
       for (let i = 0; i < drops.length; i++) {
         const text = chars[Math.floor(Math.random() * chars.length)];
         const x = i * fontSize + fontSize / 2;
         const y = drops[i] * fontSize;
 
-        mctx.fillStyle = '#ff3333';
-        mctx.shadowColor = '#ff0000';
-        mctx.shadowBlur = 8;
-        mctx.fillText(text, x, y);
-        mctx.shadowBlur = 0;
+        mCtx.fillStyle = '#ff3333';
+        mCtx.shadowColor = '#ff0000';
+        mCtx.shadowBlur = 6;
+        mCtx.fillText(text, x, y);
+        mCtx.shadowBlur = 0;
 
-        if (y > matrixCanvas.height && Math.random() > 0.975) {
+        if (y > mh && Math.random() > 0.975) {
           drops[i] = 0;
         }
         drops[i]++;
       }
     }
-
-    setInterval(drawMatrix, 50);
-
-    // Recalculate columns on resize
-    window.addEventListener('resize', () => {
-      columns = Math.floor(matrixCanvas.width / fontSize);
-      drops = Array(columns).fill(1);
-    });
+    setInterval(drawMatrix, 80); // relaxed speed
 
     // ---------- IST Clock & Greeting ----------
     function updateClock() {
