@@ -70,21 +70,10 @@
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Smooth tab transition */
-    .tab-content {
-      display: none; width: 100%;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .tab-content.active {
-      display: block;
-      opacity: 1;
-    }
+    .tab-content { display: none; width: 100%; opacity: 0; transition: opacity 0.3s ease; }
+    .tab-content.active { display: block; opacity: 1; }
 
-    .cards-grid {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 30px; width: 100%;
-    }
+    .cards-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; width: 100%; }
 
     .glass {
       background: rgba(20, 0, 0, 0.25);
@@ -93,7 +82,6 @@
       box-shadow: 0 25px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
       width: 380px; max-width: 100%;
-      flex-shrink: 0;
       position: relative;
       overflow: hidden;
     }
@@ -102,136 +90,40 @@
       position: absolute; top: 0; left: -50%; width: 200%; height: 100%;
       background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
       pointer-events: none; animation: shine 4s ease-in-out infinite;
-      z-index: 0;
     }
-    @keyframes shine {
-      0%,100% { transform: translateX(-100%); }
-      50% { transform: translateX(100%); }
-    }
-    .glass:hover {
-      transform: translateY(-5px) scale(1.01);
-      box-shadow: 0 35px 80px rgba(255, 0, 0, 0.5);
-      border-color: rgba(255, 80, 80, 0.6);
-    }
+    @keyframes shine { 0%,100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
+    .glass:hover { transform: translateY(-5px) scale(1.01); box-shadow: 0 35px 80px rgba(255, 0, 0, 0.5); border-color: rgba(255, 80, 80, 0.6); }
 
     .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .avatar {
       width: 130px; height: 130px; border-radius: 50%; object-fit: cover;
-      border: 3px solid rgba(255,50,50,0.7); box-shadow: 0 0 40px rgba(255,0,0,0.6), 0 0 80px rgba(255,0,0,0.3);
-      transition: transform 0.4s, border-color 0.4s, box-shadow 0.4s;
+      border: 3px solid rgba(255,50,50,0.7); box-shadow: 0 0 40px rgba(255,0,0,0.6);
       animation: avatarGlitch 3s infinite; background: #2d0000;
     }
-    @keyframes avatarGlitch {
-      0%,90%,100%{ transform: translate(0); }
-      92%{ transform: translate(-4px,3px) skew(2deg); }
-      94%{ transform: translate(5px,-3px) skew(-2deg); }
-      96%{ transform: translate(-3px,2px) skew(1deg); }
-      98%{ transform: translate(3px,-2px) skew(0); }
-    }
-    .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9), 0 0 120px rgba(255,0,0,0.5); }
-
+    @keyframes avatarGlitch { 0%,90%,100%{ transform: translate(0); } 92%{ transform: translate(-4px,3px) skew(2deg); } }
     .username, .clock {
-      color: #fff;
-      font-weight: 700;
-      letter-spacing: 4px;
-      position: relative;
-      z-index: 2;
-      filter: drop-shadow(0 0 8px #ff0000) drop-shadow(0 0 18px #ff1a1a) drop-shadow(0 0 40px #ff4d4d);
-      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff3333, 0 0 40px #ff0000;
+      color: #fff; font-weight: 700; letter-spacing: 4px; position: relative; z-index: 2;
+      text-shadow: 0 0 5px #fff, 0 0 10px #ff6666, 0 0 20px #ff1a1a;
       animation: glowPulse 1.5s infinite alternate;
-      will-change: filter, text-shadow;
     }
     .username { font-size: 2.6rem; margin-top: 25px; }
     .clock { font-size: 3rem; margin: 10px 0; }
-
-    @keyframes glowPulse {
-      from {
-        filter: drop-shadow(0 0 6px #ff0000) drop-shadow(0 0 14px #ff1a1a);
-        text-shadow: 0 0 5px #fff, 0 0 10px #ff6666, 0 0 20px #ff1a1a, 0 0 40px #ff0000;
-      }
-      to {
-        filter: drop-shadow(0 0 12px #ff3333) drop-shadow(0 0 30px #ff0000) drop-shadow(0 0 60px #ff4d4d);
-        text-shadow: 0 0 10px #fff, 0 0 20px #ff8080, 0 0 40px #ff3333, 0 0 80px #ff0000, 0 0 120px #ff0000;
-      }
-    }
+    @keyframes glowPulse { from { text-shadow: 0 0 5px #fff, 0 0 10px #ff6666; } to { text-shadow: 0 0 10px #fff, 0 0 20px #ff8080, 0 0 40px #ff3333; } }
 
     .section-title {
       font-size: 1.6rem; font-weight: 600; margin-bottom: 25px;
       display: flex; align-items: center; gap: 12px; color: #ffbbbb;
-      text-shadow: 0 0 15px rgba(255,80,80,0.6);
-      border-bottom: 2px solid rgba(255,50,50,0.4); padding-bottom: 12px; letter-spacing: 1px;
-      justify-content: center; position: relative; z-index: 2;
+      border-bottom: 2px solid rgba(255,50,50,0.4); padding-bottom: 12px; justify-content: center;
     }
-    .section-title svg { width: 24px; height: 24px; }
-
-    .spotify-widget { display: flex; flex-direction: column; gap: 15px; }
-    .spotify-embed {
-      border-radius: 18px; overflow: hidden; width: 100%;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.8), 0 0 30px rgba(255,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.05); transition: box-shadow 0.3s ease, transform 0.3s ease;
-    }
-    .spotify-embed:hover { box-shadow: 0 20px 50px rgba(255,0,0,0.5); transform: scale(1.02); }
-
-    .clock-card { text-align: center; }
-    .clock::after {
-      content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
-      width: 60%; height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-    }
-    .date {
-      color: #ffaaaa; font-size: 1.1rem; margin-top: 5px; font-weight: 300;
-      animation: softPulse 3s ease-in-out infinite; position: relative; z-index: 2;
-    }
-    @keyframes softPulse {
-      0%,100% { opacity: 0.7; }
-      50% { opacity: 1; }
-    }
-
-    .dot {
-      width: 14px; height: 14px; border-radius: 50%; background: #747f8d;
-      display: inline-block; margin-right: 8px; animation: pulse 2s infinite;
-    }
-    .dot.online { background: #43b581; }
-    .dot.idle { background: #faa61a; }
-    .dot.dnd { background: #f04747; }
-    .dot.offline { background: #747f8d; }
-
-    .time-footer {
-      margin-top: 30px; font-size: 0.9rem;
-      color: rgba(255,170,170,0.7); letter-spacing: 1px; font-weight: 400;
-      text-shadow: 0 0 8px rgba(255,0,0,0.5);
-      animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
-    }
-
-    .friend-card {
-      width: 280px; padding: 25px 20px;
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-    }
-    .friend-avatar {
-      width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-      border: 2px solid rgba(255,50,50,0.6);
-      box-shadow: 0 0 25px rgba(255,0,0,0.4);
-      transition: 0.3s;
-    }
-    .friend-avatar:hover { transform: scale(1.05); border-color: #ff5555; }
-    .friend-name {
-      font-size: 1.3rem; font-weight: 600; color: #fff;
-      margin-top: 15px; letter-spacing: 1px;
-      text-shadow: 0 0 8px rgba(255,0,0,0.5);
-    }
-
-    @media (max-width: 768px) {
-      .glass { width: 100%; max-width: 100%; }
-      .username { font-size: 2rem; }
-      .clock { font-size: 2.5rem; }
-    }
+    .spotify-embed { border-radius: 18px; overflow: hidden; width: 100%; box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+    .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+    .dot.online { background: #43b581; } .dot.idle { background: #faa61a; } .dot.dnd { background: #f04747; } .dot.offline { background: #747f8d; }
+    .date { color: #ffaaaa; font-size: 1.1rem; }
+    .time-footer { margin-top: 30px; color: rgba(255,170,170,0.7); }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
+  <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
   <canvas id="particles"></canvas>
 
   <div class="container">
@@ -239,35 +131,25 @@
       <div class="tab-btn active" data-tab="profile">Profile</div>
       <div class="tab-btn" data-tab="spotify">Spotify</div>
       <div class="tab-btn" data-tab="time">Time</div>
-      <div class="tab-btn" data-tab="friends">Friends</div>
     </div>
 
     <div class="tab-content active" id="profile">
       <div class="cards-grid">
         <div class="glass profile-card">
           <img class="avatar" id="avatar" src="" alt="Avatar">
-          <div class="username" id="username">nyx._.dev</div>
-          <div style="margin-top: 15px; color: #ffaaaa; font-size: 1.1rem; position:relative; z-index:2;">
-            <span class="dot" id="statusDot"></span>
-            <span id="statusText">Loading...</span>
-          </div>
-          <p style="margin-top: 10px; color: #ccc; font-style: italic; position:relative; z-index:2;" id="customStatus"></p>
+          <div class="username" id="username">Loading...</div>
+          <div style="margin-top: 15px;"><span class="dot" id="statusDot"></span><span id="statusText">Loading...</span></div>
+          <p style="margin-top: 10px; color: #ccc; font-style: italic;" id="customStatus"></p>
         </div>
       </div>
     </div>
 
     <div class="tab-content" id="spotify">
       <div class="cards-grid">
-        <div class="glass spotify-widget">
-          <div class="section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
-            Spotify
-          </div>
+        <div class="glass">
+          <div class="section-title">Spotify</div>
           <div class="spotify-embed">
-            <!-- Replace the playlist ID if this doesn't show – ensure the playlist is Public -->
-            <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
-                    width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy" style="border-radius:15px;"></iframe>
+            <iframe src="https://open.spotify.com/embed/playlist/0" width="100%" height="152" frameborder="0" allow="autoplay; encrypted-media"></iframe>
           </div>
         </div>
       </div>
@@ -275,196 +157,54 @@
 
     <div class="tab-content" id="time">
       <div class="cards-grid">
-        <div class="glass clock-card">
-          <div class="section-title">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            Time (IST)
-          </div>
+        <div class="glass" style="text-align: center;">
+          <div class="section-title">Time (IST)</div>
           <div class="clock" id="clock">--:--:--</div>
           <div class="date" id="date">---</div>
-          <div class="time-footer">Made with love by NyX</div>
         </div>
       </div>
-    </div>
-
-    <div class="tab-content" id="friends">
-      <div class="cards-grid" id="friendsGrid"></div>
     </div>
   </div>
 
   <script>
-    // ---------- Particle Background ----------
+    // Particles (Simplified)
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
-    let particles = [];
     let w, h;
-
-    function resizeCanvas() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * w;
-        this.y = Math.random() * h;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.4;
-        this.opacity = Math.random() * 0.4 + 0.1;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > w) this.speedX *= -1;
-        if (this.y < 0 || this.y > h) this.speedY *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 80, 80, ${this.opacity})`;
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < 120; i++) particles.push(new Particle());
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, w, h);
-      particles.forEach(p => { p.update(); p.draw(); });
-      for (let a = 0; a < particles.length; a++) {
-        for (let b = a + 1; b < particles.length; b++) {
-          let dx = particles[a].x - particles[b].x;
-          let dy = particles[a].y - particles[b].y;
-          let dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(particles[b].x, particles[b].y);
-            ctx.strokeStyle = `rgba(255, 80, 80, ${0.06 * (1 - dist / 100)})`;
-            ctx.lineWidth = 0.4;
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
-
-    // ---------- Tabs (with smooth opacity transition) ----------
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        contents.forEach(c => c.classList.remove('active'));
-        const activeContent = document.getElementById(target);
-        activeContent.classList.add('active');
-        // Force opacity transition by re-adding the class after a tick
-        void activeContent.offsetWidth; // reflow
-        activeContent.style.opacity = '1';
-        if (target === 'friends') loadFriends();
+    function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+    
+    // Tab Logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
       });
     });
 
-    // ---------- IST Clock ----------
-    function updateClock() {
+    // Clock
+    setInterval(() => {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
-      const dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-      document.getElementById('clock').textContent = timeStr;
-      document.getElementById('date').textContent = dateStr;
-    }
-    updateClock();
-    setInterval(updateClock, 1000);
+      document.getElementById('clock').innerText = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+      document.getElementById('date').innerText = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'long', month: 'long', day: 'numeric' });
+    }, 1000);
 
-    // ---------- Profile via Lanyard ----------
+    // Lanyard API
     const USER_ID = "1418597263479144471";
-    async function loadDiscord() {
+    async function updateDiscord() {
       try {
         const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-        const json = await res.json();
-        if (!json.success) throw new Error("Lanyard failed");
-        const data = json.data;
-
-        document.getElementById("username").innerText =
-          data.discord_user.global_name || data.discord_user.username || "NyX";
-
-        const avatar = data.discord_user.avatar;
-        if (avatar) {
-          const ext = avatar.startsWith("a_") ? "gif" : "png";
-          document.getElementById("avatar").src =
-            `https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${ext}?size=512`;
-        } else {
-          document.getElementById("avatar").src = "https://cdn.discordapp.com/embed/avatars/0.png";
-        }
-
-        const status = data.discord_status || "offline";
-        document.getElementById("statusDot").className = "dot " + status;
-        document.getElementById("statusText").innerText = status.charAt(0).toUpperCase() + status.slice(1);
-
-        const custom = data.activities.find(a => a.type === 4);
-        document.getElementById("customStatus").innerText = custom?.state || "";
-      } catch (err) {
-        console.error(err);
-        document.getElementById("statusText").innerText = "Offline";
-        document.getElementById("customStatus").innerText = "";
-        document.getElementById("avatar").src = "https://cdn.discordapp.com/embed/avatars/0.png";
-      }
+        const data = (await res.json()).data;
+        document.getElementById("username").innerText = data.discord_user.global_name;
+        document.getElementById("avatar").src = `https://cdn.discordapp.com/avatars/${USER_ID}/${data.discord_user.avatar}.png?size=512`;
+        document.getElementById("statusDot").className = "dot " + data.discord_status;
+        document.getElementById("statusText").innerText = data.discord_status.toUpperCase();
+        document.getElementById("customStatus").innerText = data.activities.find(a => a.type === 4)?.state || "";
+      } catch(e) { console.error(e); }
     }
-    loadDiscord();
-    setInterval(loadDiscord, 30000);
-
-    // ---------- Friends (Discord API via proxy – works without Lanyard) ----------
-    const FRIEND_IDS = [
-      "838897771439587379",
-      "1246472494437630023",
-      "1281996800340791452",
-      "931192109707460668",
-      "738501782413639790"
-    ];
-
-    let friendsLoaded = false;
-
-    async function loadFriends() {
-      if (friendsLoaded) return;
-      friendsLoaded = true;
-      const grid = document.getElementById("friendsGrid");
-      grid.innerHTML = "";
-
-      for (const id of FRIEND_IDS) {
-        const card = document.createElement('div');
-        card.className = 'glass friend-card';
-        card.innerHTML = `
-          <img class="friend-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Avatar">
-          <div class="friend-name">Loading...</div>
-        `;
-        grid.appendChild(card);
-
-        try {
-          const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=https://discord.com/api/v9/users/${id}`;
-          const res = await fetch(proxyUrl);
-          if (!res.ok) throw new Error("Proxy failed");
-          const data = await res.json();
-          const username = data.username || "Unknown";
-          const avatar = data.avatar;
-          const avatarUrl = avatar
-            ? `https://cdn.discordapp.com/avatars/${id}/${avatar}.${avatar.startsWith("a_") ? "gif" : "png"}?size=256`
-            : "https://cdn.discordapp.com/embed/avatars/0.png";
-
-          card.querySelector('.friend-avatar').src = avatarUrl;
-          card.querySelector('.friend-name').textContent = username;
-        } catch (e) {
-          console.error(`Failed to load friend ${id}`, e);
-          card.querySelector('.friend-name').textContent = "Unknown";
-        }
-      }
-    }
+    updateDiscord(); setInterval(updateDiscord, 30000);
   </script>
 </body>
 </html>
