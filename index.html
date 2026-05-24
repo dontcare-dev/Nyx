@@ -600,14 +600,14 @@
 
     // ---------- Watermark Typing Effect ----------
     const watermarkEl = document.getElementById('watermark');
-    const fullText = "nyx.tuff";
+    const fullText = "NYX.exe";
     let charIndex = 0;
 
     function typeWriter() {
       if (charIndex < fullText.length) {
         watermarkEl.textContent += fullText.charAt(charIndex);
         charIndex++;
-        setTimeout(typeWriter, 150); // typing speed in ms
+        setTimeout(typeWriter, 250);
       } else {
         // reset after pause
         setTimeout(() => {
