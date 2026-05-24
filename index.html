@@ -41,14 +41,14 @@
 
     .dashboard {
       position: relative; z-index: 1;
-      width: 100%; max-width: 1250px;
+      width: 100%; max-width: 1300px;
       padding: 30px 20px;
       display: flex; flex-direction: column; align-items: center;
       gap: 25px;
     }
 
     .header {
-      width: 100%; max-width: 950px;
+      width: 100%; max-width: 980px;
       background: rgba(18, 0, 0, 0.25);
       backdrop-filter: blur(18px);
       border: 1px solid rgba(255, 70, 70, 0.2);
@@ -104,6 +104,7 @@
     .glass:nth-child(5) { animation-delay: 0.5s; }
     .glass:nth-child(6) { animation-delay: 0.6s; }
     .glass:nth-child(7) { animation-delay: 0.7s; }
+    .glass:nth-child(8) { animation-delay: 0.8s; }
 
     @keyframes cardPop {
       from { opacity: 0; transform: scale(0.92); }
@@ -239,6 +240,21 @@
     }
     .discord-link:hover { background: #5865F2; }
 
+    /* Weather */
+    .weather-temp {
+      font-size: 2.5rem; font-weight: 700;
+      text-shadow: 0 0 15px #ff0000;
+    }
+    .weather-icon {
+      font-size: 2.5rem; margin-bottom: 5px;
+      animation: weatherSwing 2s ease-in-out infinite;
+    }
+    @keyframes weatherSwing {
+      0%,100% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
+    }
+
     @media (max-width: 768px) {
       .header { flex-direction: column; text-align: center; }
       .glass { width: 100%; }
@@ -260,6 +276,7 @@
     </div>
 
     <div class="cards-grid">
+      <!-- Profile Card -->
       <div class="glass">
         <div class="card-content">
           <img class="avatar" id="avatar" src="" alt="Avatar">
@@ -272,6 +289,7 @@
         </div>
       </div>
 
+      <!-- Spotify Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">
@@ -286,6 +304,7 @@
         </div>
       </div>
 
+      <!-- Luau Tip Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Luau Tip</div>
@@ -293,6 +312,7 @@
         </div>
       </div>
 
+      <!-- Pomodoro Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Pomodoro</div>
@@ -305,6 +325,7 @@
         </div>
       </div>
 
+      <!-- Bitcoin Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">₿ Bitcoin</div>
@@ -313,6 +334,7 @@
         </div>
       </div>
 
+      <!-- Roblox Status Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Roblox Status</div>
@@ -323,6 +345,7 @@
         </div>
       </div>
 
+      <!-- Quick Links Card -->
       <div class="glass">
         <div class="card-content">
           <div class="section-title">Quick Links</div>
@@ -332,10 +355,20 @@
           </a>
         </div>
       </div>
+
+      <!-- Weather Card (Delhi) -->
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">Delhi Weather</div>
+          <div class="weather-icon" id="weatherIcon">🌤️</div>
+          <div class="weather-temp" id="weatherTemp">--°C</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    // ---------- Particle Background ----------
     const pCanvas = document.getElementById('particles');
     const pCtx = pCanvas.getContext('2d');
     let particles = [];
@@ -381,6 +414,7 @@
     }
     animateParticles();
 
+    // ---------- Matrix Rain ----------
     const mCanvas = document.getElementById('matrixCanvas');
     const mCtx = mCanvas.getContext('2d');
     let mw, mh, columns, drops;
@@ -416,6 +450,7 @@
     }
     setInterval(drawMatrix, 80);
 
+    // ---------- Clock & Greeting ----------
     function updateClockAndGreeting() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
@@ -431,6 +466,7 @@
     updateClockAndGreeting();
     setInterval(updateClockAndGreeting, 1000);
 
+    // ---------- Luau Tips ----------
     const luauTips = [
       "Use task.wait() instead of wait() for better performance.",
       "Local variables are faster than global ones – always use local.",
@@ -454,6 +490,7 @@
       }, 400);
     }, 10000);
 
+    // ---------- Discord Profile via Lanyard ----------
     const USER_ID = "1418597263479144471";
     async function loadDiscord() {
       try {
@@ -482,6 +519,7 @@
     loadDiscord();
     setInterval(loadDiscord, 30000);
 
+    // ---------- Pomodoro Timer ----------
     const timerDisplay = document.getElementById('timerDisplay');
     const pomoStatus = document.getElementById('pomoStatus');
     const startBtn = document.getElementById('pomoStart');
@@ -555,6 +593,7 @@
     resetBtn.addEventListener('click', resetTimer);
     updateTimerDisplay();
 
+    // ---------- Bitcoin Ticker ----------
     async function fetchCrypto() {
       try {
         const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
@@ -573,6 +612,7 @@
     fetchCrypto();
     setInterval(fetchCrypto, 60000);
 
+    // ---------- Roblox Status ----------
     async function fetchRobloxStatus() {
       const dot = document.getElementById('robloxDot');
       const text = document.getElementById('robloxStatus');
@@ -595,6 +635,30 @@
     }
     fetchRobloxStatus();
     setInterval(fetchRobloxStatus, 300000);
+
+    // ---------- Delhi Weather ----------
+    const weatherIconMap = {
+      0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
+      51: '🌦️', 53: '🌦️', 55: '🌧️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
+      71: '❄️', 73: '❄️', 75: '❄️', 77: '❄️', 80: '🌧️', 81: '🌧️', 82: '⛈️',
+      85: '❄️', 86: '❄️', 95: '⛈️', 96: '⛈️', 99: '⛈️'
+    };
+
+    async function fetchWeather() {
+      try {
+        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.65&longitude=77.22&current_weather=true&timezone=Asia/Kolkata');
+        const data = await res.json();
+        const temp = Math.round(data.current_weather.temperature);
+        const code = data.current_weather.weathercode;
+        document.getElementById('weatherTemp').textContent = `${temp}°C`;
+        document.getElementById('weatherIcon').textContent = weatherIconMap[code] || '🌤️';
+      } catch (err) {
+        document.getElementById('weatherTemp').textContent = '--°C';
+        document.getElementById('weatherIcon').textContent = '🌤️';
+      }
+    }
+    fetchWeather();
+    setInterval(fetchWeather, 600000);
   </script>
 </body>
 </html>
