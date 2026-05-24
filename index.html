@@ -19,7 +19,6 @@
       justify-content: center;
     }
 
-    /* ---- Background Layers ---- */
     .orb {
       position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12;
       z-index: 0; pointer-events: none;
@@ -41,18 +40,16 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.35;
     }
 
-    /* ---- Main Layout ---- */
     .dashboard {
       position: relative; z-index: 1;
-      width: 100%; max-width: 1100px;
+      width: 100%; max-width: 1200px;
       padding: 30px 20px;
       display: flex; flex-direction: column; align-items: center;
       gap: 25px;
     }
 
-    /* ---- Top Header ---- */
     .header {
-      width: 100%; max-width: 750px;
+      width: 100%; max-width: 900px;
       background: rgba(20, 0, 0, 0.2);
       backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 60, 60, 0.15);
@@ -82,13 +79,11 @@
       text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
     }
 
-    /* ---- Cards Grid ---- */
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
       gap: 20px; width: 100%;
     }
 
-    /* ---- Glass Card ---- */
     .glass {
       background: rgba(20, 0, 0, 0.22);
       backdrop-filter: blur(10px);
@@ -107,6 +102,8 @@
     .glass:nth-child(2) { animation-delay: 0.2s; }
     .glass:nth-child(3) { animation-delay: 0.3s; }
     .glass:nth-child(4) { animation-delay: 0.4s; }
+    .glass:nth-child(5) { animation-delay: 0.5s; }
+    .glass:nth-child(6) { animation-delay: 0.6s; }
 
     @keyframes cardPop {
       from { opacity: 0; transform: scale(0.92); }
@@ -138,7 +135,6 @@
       display: flex; flex-direction: column; align-items: center; text-align: center;
     }
 
-    /* ---- Profile Card ---- */
     .avatar {
       width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
       border: 3px solid rgba(255,50,50,0.7);
@@ -172,19 +168,19 @@
     .dot.idle { background: #faa61a; }
     .dot.dnd { background: #f04747; }
     .dot.offline { background: #747f8d; }
+    .dot.operational { background: #43b581; }
+    .dot.issue { background: #f04747; }
 
     .custom-status {
       margin-top: 8px; color: #ccc; font-style: italic; font-size: 0.9rem;
       opacity: 0.8;
     }
 
-    /* ---- Spotify Card ---- */
     .spotify-embed {
       width: 100%; border-radius: 18px; overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
 
-    /* ---- Luau Tips Card ---- */
     .luau-tip {
       font-size: 1rem; color: #ffbbbb; margin-top: 10px;
       text-align: center; line-height: 1.5;
@@ -192,7 +188,6 @@
       text-shadow: 0 0 6px rgba(255,0,0,0.4);
     }
 
-    /* ---- Pomodoro ---- */
     .timer-display {
       font-size: 2.2rem; font-weight: 700; letter-spacing: 3px;
       margin: 8px 0;
@@ -219,6 +214,34 @@
     }
     .section-title svg { width: 18px; height: 18px; }
 
+    /* Crypto */
+    .crypto-price {
+      font-size: 2.2rem; font-weight: 700;
+      text-shadow: 0 0 12px #ff0000;
+      animation: priceFade 0.5s ease;
+    }
+    @keyframes priceFade {
+      from { opacity: 0.5; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Roblox status */
+    .status-text {
+      font-size: 1.2rem; font-weight: 500;
+      color: #ffbbbb;
+      margin-top: 8px;
+    }
+
+    /* Quick Links */
+    .discord-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 15px;
+      background: rgba(88,101,242,0.15); border: 1px solid #5865F2;
+      color: #fff; padding: 10px 20px; border-radius: 30px;
+      text-decoration: none; font-weight: 600; transition: 0.3s;
+    }
+    .discord-link:hover { background: #5865F2; }
+
     @media (max-width: 768px) {
       .header { flex-direction: column; text-align: center; }
       .glass { width: 100%; }
@@ -234,13 +257,11 @@
   <canvas id="matrixCanvas"></canvas>
 
   <div class="dashboard">
-    <!-- Top Header -->
     <div class="header">
       <div class="greeting" id="greeting">Good Evening, NyX</div>
       <div class="live-clock" id="liveClock">00:00:00</div>
     </div>
 
-    <!-- Cards -->
     <div class="cards-grid">
       <!-- Profile Card -->
       <div class="glass">
@@ -288,6 +309,37 @@
             <button class="pomo-btn" id="pomoReset">Reset</button>
           </div>
           <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.85rem;" id="pomoStatus">Work session</p>
+        </div>
+      </div>
+
+      <!-- Crypto Ticker Card -->
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">₿ Bitcoin</div>
+          <div class="crypto-price" id="btcPrice">...</div>
+          <p style="color: #ffaaaa; font-size: 0.8rem; margin-top: 4px;" id="btcChange">–</p>
+        </div>
+      </div>
+
+      <!-- Roblox Status Card -->
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">Roblox Status</div>
+          <div class="status-row" style="margin-top: 5px;">
+            <span class="dot operational" id="robloxDot"></span>
+            <span class="status-text" id="robloxStatus">Checking...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links Card (Discord only) -->
+      <div class="glass">
+        <div class="card-content">
+          <div class="section-title">Quick Links</div>
+          <a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg>
+            Discord
+          </a>
         </div>
       </div>
     </div>
@@ -520,6 +572,50 @@
     startBtn.addEventListener('click', startTimer);
     resetBtn.addEventListener('click', resetTimer);
     updateTimerDisplay();
+
+    // ---------- Crypto Ticker (CoinGecko) ----------
+    async function fetchCrypto() {
+      try {
+        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
+        const data = await res.json();
+        const price = data.bitcoin.usd;
+        const change = data.bitcoin.usd_24h_change?.toFixed(2) || 0;
+        const priceEl = document.getElementById('btcPrice');
+        priceEl.textContent = `$${price.toLocaleString()}`;
+        const changeEl = document.getElementById('btcChange');
+        changeEl.textContent = `${change > 0 ? '↑' : '↓'} ${Math.abs(change)}%`;
+        changeEl.style.color = change >= 0 ? '#4caf50' : '#f44336';
+      } catch (err) {
+        console.error('Crypto fetch error', err);
+        document.getElementById('btcPrice').textContent = '—';
+      }
+    }
+    fetchCrypto();
+    setInterval(fetchCrypto, 60000);
+
+    // ---------- Roblox Status ----------
+    async function fetchRobloxStatus() {
+      try {
+        const res = await fetch('https://status.roblox.com/api/v2/status.json');
+        const data = await res.json();
+        const status = data.status.description;
+        const indicator = data.status.indicator; // 'none', 'minor', 'major', 'critical'
+        const dot = document.getElementById('robloxDot');
+        const text = document.getElementById('robloxStatus');
+        text.textContent = status;
+        dot.className = 'dot';
+        if (indicator === 'none') {
+          dot.classList.add('operational');
+        } else {
+          dot.classList.add('issue');
+        }
+      } catch (err) {
+        console.error('Roblox status error', err);
+        document.getElementById('robloxStatus').textContent = 'Error';
+      }
+    }
+    fetchRobloxStatus();
+    setInterval(fetchRobloxStatus, 300000); // every 5 minutes
   </script>
 </body>
 </html>
