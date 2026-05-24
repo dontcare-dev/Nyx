@@ -11,8 +11,8 @@
       background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 50%, #020000 100%);
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
       color: #fff;
-      overflow-x: hidden;             /* stop horizontal scroll */
-      width: 100vw;                 /* lock to exact viewport width */
+      overflow-x: hidden;
+      width: 100vw;
       position: relative;
       animation: bgShift 10s ease-in-out infinite alternate;
     }
@@ -22,7 +22,20 @@
       100% { background: radial-gradient(ellipse at 30% 90%, #1a0000 0%, #0a0000 50%, #020000 100%); }
     }
 
-    /* ---- ORBS – now only scale, no translation ---- */
+    /* Subtle grid overlay */
+    .grid-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      z-index: 0; pointer-events: none;
+      animation: gridFade 4s ease-in-out infinite alternate;
+    }
+    @keyframes gridFade {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
+
     .orb {
       position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15;
       z-index: 0; pointer-events: none;
@@ -48,10 +61,21 @@
 
     .container {
       position: relative; z-index: 1; width: 100%; max-width: 1300px; padding: 20px;
-      display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 30px;
+      display: flex; flex-direction: column; align-items: center;
       animation: fadeInUp 0.8s ease-out;
     }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Tab Navigation (still works, but we show all cards at once now) */
+    .tab-nav {
+      position: relative; z-index: 2;
+      display: none; /* hide tabs, we show everything directly */
+    }
+
+    .cards-grid {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 30px; width: 100%;
+    }
 
     .glass {
       background: rgba(20, 0, 0, 0.25);
@@ -62,7 +86,7 @@
       width: 380px; max-width: 100%;
       flex-shrink: 0;
       position: relative;
-      overflow: visible;               /* glow outside, shine inside via bg */
+      overflow: visible;
       animation: cardBreath 6s ease-in-out infinite;
     }
     @keyframes cardBreath {
@@ -75,8 +99,7 @@
       background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
       background-size: 200% 100%;
       animation: shine 4s ease-in-out infinite;
-      z-index: 0;
-      pointer-events: none;
+      z-index: 0; pointer-events: none;
       border-radius: 32px;
     }
     @keyframes shine {
@@ -89,7 +112,7 @@
       border-color: rgba(255, 80, 80, 0.6);
     }
 
-    .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .profile-card, .greeting-card, .quote-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
     .avatar {
       width: 130px; height: 130px; border-radius: 50%; object-fit: cover;
       border: 3px solid rgba(255,50,50,0.7);
@@ -111,9 +134,7 @@
     }
     .avatar:hover { transform: scale(1.1) rotate(3deg); border-color: #ff4444; box-shadow: 0 0 80px rgba(255,0,0,0.9); }
 
-    /* ---- Glowing Text (safe, no layout shift) ---- */
-    .username,
-    .clock {
+    .username, .clock, .greeting-text {
       color: #fff;
       font-weight: 700;
       letter-spacing: 4px;
@@ -126,6 +147,7 @@
     }
     .username { font-size: 2.6rem; margin-top: 25px; }
     .clock { font-size: 3rem; margin: 10px 0; }
+    .greeting-text { font-size: 1.8rem; }
 
     @keyframes glowPulse {
       from {
@@ -138,19 +160,12 @@
       }
     }
 
-    .section-title,
-    .date,
-    .time-footer {
-      position: relative;
-      z-index: 2;
-    }
-
     .section-title {
       font-size: 1.6rem; font-weight: 600; margin-bottom: 25px;
       display: flex; align-items: center; gap: 12px; color: #ffbbbb;
       text-shadow: 0 0 15px rgba(255,80,80,0.6);
       border-bottom: 2px solid rgba(255,50,50,0.4); padding-bottom: 12px; letter-spacing: 1px;
-      justify-content: center;
+      justify-content: center; position: relative; z-index: 2;
     }
     .section-title svg { width: 24px; height: 24px; }
 
@@ -175,7 +190,7 @@
     }
     .date {
       color: #ffaaaa; font-size: 1.1rem; margin-top: 5px; font-weight: 300;
-      animation: softPulse 3s ease-in-out infinite;
+      animation: softPulse 3s ease-in-out infinite; position: relative; z-index: 2;
     }
     @keyframes softPulse {
       0%,100% { opacity: 0.7; }
@@ -195,57 +210,75 @@
       margin-top: 30px; font-size: 0.9rem;
       color: rgba(255,170,170,0.7); letter-spacing: 1px; font-weight: 400;
       text-shadow: 0 0 8px rgba(255,0,0,0.5);
-      animation: softPulse 4s ease-in-out infinite;
+      animation: softPulse 4s ease-in-out infinite; position: relative; z-index: 2;
+    }
+
+    /* Quote card */
+    .quote-text {
+      font-size: 1.3rem; font-weight: 400; font-style: italic;
+      color: #ffcccc; text-shadow: 0 0 10px rgba(255,0,0,0.4);
+      transition: opacity 0.5s ease;
     }
 
     @media (max-width: 768px) {
       .glass { width: 100%; max-width: 100%; }
       .username { font-size: 2rem; }
       .clock { font-size: 2.5rem; }
+      .greeting-text { font-size: 1.5rem; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="grid-overlay"></div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
   <canvas id="particles"></canvas>
 
   <div class="container">
-    <!-- Profile Card -->
-    <div class="glass profile-card">
-      <img class="avatar" id="avatar" src="" alt="Avatar">
-      <div class="username" id="username">nyx._.dev</div>
-      <div style="margin-top: 15px; color: #ffaaaa; font-size: 1.1rem;">
-        <span class="dot" id="statusDot"></span>
-        <span id="statusText">Loading...</span>
+    <!-- Cards Grid (2x2) -->
+    <div class="cards-grid">
+      <!-- Profile Card -->
+      <div class="glass profile-card">
+        <img class="avatar" id="avatar" src="" alt="Avatar">
+        <div class="username" id="username">nyx._.dev</div>
+        <div style="margin-top: 15px; color: #ffaaaa; font-size: 1.1rem; position:relative; z-index:2;">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">Loading...</span>
+        </div>
+        <p style="margin-top: 10px; color: #ccc; font-style: italic; position:relative; z-index:2;" id="customStatus"></p>
       </div>
-      <p style="margin-top: 10px; color: #ccc; font-style: italic;" id="customStatus"></p>
-    </div>
 
-    <!-- Spotify Card -->
-    <div class="glass spotify-widget">
-      <div class="section-title" style="justify-content: center;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
-        Spotify
+      <!-- Spotify Card -->
+      <div class="glass spotify-widget">
+        <div class="section-title" style="justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
+          Spotify
+        </div>
+        <div class="spotify-embed">
+          <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
+                  width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                  loading="lazy" style="border-radius:15px;"></iframe>
+        </div>
       </div>
-      <div class="spotify-embed">
-        <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
-                width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                loading="lazy" style="border-radius:15px;"></iframe>
-      </div>
-    </div>
 
-    <!-- Time Card -->
-    <div class="glass clock-card">
-      <div class="section-title" style="justify-content: center;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        Time (IST)
+      <!-- Time Card -->
+      <div class="glass clock-card">
+        <div class="section-title" style="justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Time (IST)
+        </div>
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">---</div>
+        <div class="time-footer">Made with love by NyX</div>
       </div>
-      <div class="clock" id="clock">--:--:--</div>
-      <div class="date" id="date">---</div>
-      <div class="time-footer">Made with ❤️ by NyX</div>
+
+      <!-- Greeting + Quote Card -->
+      <div class="glass greeting-card">
+        <div class="greeting-text" id="greeting">Good Evening, NyX</div>
+        <div class="quote-text" id="quote" style="margin-top:20px;">"Code is like humor. When you have to explain it, it’s bad."</div>
+      </div>
     </div>
   </div>
 
@@ -318,9 +351,35 @@
       const dateStr = now.toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       document.getElementById('clock').textContent = timeStr;
       document.getElementById('date').textContent = dateStr;
+
+      // Update greeting
+      const hour = now.getHours();
+      let greet = "Good Evening, NyX";
+      if (hour < 12) greet = "Good Morning, NyX";
+      else if (hour < 17) greet = "Good Afternoon, NyX";
+      document.getElementById('greeting').innerText = greet;
     }
     updateClock();
     setInterval(updateClock, 1000);
+
+    // ---------- Rotating Quotes ----------
+    const quotes = [
+      "\"Code is like humor. When you have to explain it, it’s bad.\"",
+      "\"First, solve the problem. Then, write the code.\"",
+      "\"Make it work, make it right, make it fast.\"",
+      "\"Simplicity is the soul of efficiency.\"",
+      "\"Talk is cheap. Show me the code.\""
+    ];
+    let quoteIndex = 0;
+    const quoteEl = document.getElementById('quote');
+    setInterval(() => {
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+      quoteEl.style.opacity = '0';
+      setTimeout(() => {
+        quoteEl.innerText = quotes[quoteIndex];
+        quoteEl.style.opacity = '1';
+      }, 500);
+    }, 8000);
 
     // ---------- Discord via Lanyard ----------
     const USER_ID = "1418597263479144471";
