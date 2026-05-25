@@ -3,747 +3,568 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>nyx · terminal heart</title>
+  <title>nyx · crimson nexus</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-    }
-
-    :root {
-      --purple-glow: #b77dff;
-      --purple-soft: #a56eff;
-      --purple-deep: #7c3aed;
-      --bg-radial-start: #0c0a1a;
-      --bg-radial-end: #02000c;
-      --glass-bg: rgba(15, 10, 30, 0.55);
-      --glass-border: rgba(167, 110, 255, 0.45);
+      user-select: none;
     }
 
     body {
-      font-family: 'Poppins', 'Inter', system-ui, sans-serif;
-      background: radial-gradient(ellipse at 30% 20%, #0c0a1a 0%, #02000c 100%);
+      font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+      background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 45%, #020000 100%);
       min-height: 100vh;
-      color: #f2eaff;
+      color: #fff;
       overflow-x: hidden;
-      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
     }
 
-    /* animated grid floor */
-    .grid-floor {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 70%;
-      background-image: 
-        linear-gradient(90deg, rgba(155, 100, 220, 0.1) 1px, transparent 1px),
-        linear-gradient(0deg, rgba(155, 100, 220, 0.15) 1px, transparent 1px);
-      background-size: 50px 50px;
-      transform-origin: bottom center;
-      transform: perspective(500px) rotateX(60deg) translateZ(0);
-      animation: driftGrid 20s linear infinite;
-      opacity: 0.3;
-      pointer-events: none;
-      mask-image: linear-gradient(to top, transparent 10%, black 85%);
-      z-index: 0;
-    }
-
-    @keyframes driftGrid {
-      0% { background-position: 0 0; }
-      100% { background-position: 50px 50px; }
-    }
-
-    /* floating orbs */
     .orb {
       position: fixed;
       border-radius: 50%;
-      filter: blur(110px);
+      filter: blur(100px);
       opacity: 0.2;
-      pointer-events: none;
       z-index: 0;
-      animation: floatOrb 14s infinite alternate ease-in-out;
-    }
-    .orb-1 { width: 750px; height: 750px; background: radial-gradient(circle, #b77dff, transparent); top: -20%; left: -20%; }
-    .orb-2 { width: 700px; height: 700px; background: radial-gradient(circle, #7c3aed, transparent); bottom: -25%; right: -15%; animation-duration: 17s; }
-    .orb-3 { width: 500px; height: 500px; background: radial-gradient(circle, #dbb0ff, transparent); top: 50%; left: 70%; animation-duration: 19s; opacity: 0.15; }
-
-    @keyframes floatOrb {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(30px, -30px) scale(1.1); }
-    }
-
-    /* particle canvas */
-    canvas#particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
       pointer-events: none;
-      z-index: 1;
+      animation: orbDrift 14s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 750px; height: 750px; background: radial-gradient(circle, #ff2a2a, #990000); top: -300px; left: -280px; }
+    .orb-2 { width: 650px; height: 650px; background: radial-gradient(circle, #cc1a1a, #4d0000); bottom: -280px; right: -280px; animation-delay: -5s; }
+    .orb-3 { width: 500px; height: 500px; background: radial-gradient(circle, #ff4d4d, #660000); top: 45%; left: 50%; transform: translate(-50%, -50%); animation-duration: 18s; }
+    @keyframes orbDrift {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+      100% { transform: translate(40px, 30px) scale(1.1); opacity: 0.28; }
+    }
+
+    canvas#particles {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5;
+    }
+
+    #matrixCanvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.3;
+      transition: opacity 0.3s;
     }
 
     .scanlines {
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 3px);
-      pointer-events: none;
-      z-index: 12;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.12) 0px, rgba(0,0,0,0.12) 1px, transparent 1px, transparent 3px);
+      pointer-events: none; z-index: 2;
     }
 
-    /* loading overlay */
+    /* ---------- Loading Overlay (polished) ---------- */
     #loadingOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: rgba(2, 0, 12, 0.92);
-      backdrop-filter: blur(30px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.6s ease;
+      position: fixed; inset: 0; z-index: 999;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(8px);
+      transition: opacity 0.8s cubic-bezier(0.2,0.9,0.4,1.1), visibility 0.8s;
     }
+    #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
 
+    .loading-container {
+      display: flex; flex-direction: column; align-items: center; gap: 40px;
+    }
     .test-tube-panel {
-      background: rgba(20, 12, 40, 0.8);
-      backdrop-filter: blur(40px);
-      border: 1px solid #b77dff;
-      border-radius: 56px;
-      padding: 40px 50px;
-      text-align: center;
-      box-shadow: 0 0 90px rgba(155, 100, 255, 0.5);
+      background: rgba(8,0,0,0.85); backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,70,70,0.7);
+      border-radius: 48px;
+      padding: 45px 50px;
+      box-shadow: 0 0 140px rgba(255,20,20,0.9), inset 0 0 20px rgba(255,50,50,0.3);
+      display: flex; flex-direction: column; align-items: center; gap: 35px;
+      transition: box-shadow 0.3s;
     }
-
     .tube {
-      width: 85px;
-      height: 250px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid #b77dff;
-      border-radius: 0 0 45px 45px;
+      width: 88px; height: 280px;
+      background: rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,100,100,0.9);
+      border-radius: 0 0 50px 50px;
       position: relative;
       overflow: hidden;
-      margin: 0 auto 30px auto;
+      box-shadow: 0 0 40px rgba(255,0,0,0.7), inset 0 0 18px rgba(0,0,0,0.8);
     }
-
+    .tube::before {
+      content: "";
+      position: absolute;
+      top: -3px; left: -8%; width: 116%; height: 14px;
+      background: rgba(255,210,210,0.9);
+      border-radius: 50%;
+      z-index: 3;
+      filter: blur(2px);
+    }
     .liquid {
       position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: linear-gradient(to top, #6a2eae, #b77dff, #e3bcff);
+      bottom: 0; left: 0; width: 100%;
+      height: 0%;
+      background: linear-gradient(135deg, #ff1a1a, #ff4d4d, #ff8080);
+      box-shadow: 0 0 35px #ff2a2a;
       transition: height 0.08s linear;
-      border-radius: 0 0 43px 43px;
-      box-shadow: inset 0 0 20px #d9aaff;
+      border-radius: 0 0 47px 47px;
     }
-
+    .bubble {
+      position: absolute;
+      bottom: 5px;
+      background: radial-gradient(circle, rgba(255,255,245,0.7), rgba(255,100,100,0.4));
+      border-radius: 50%;
+      animation: rise 2s infinite ease-out;
+      z-index: 5;
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.7); opacity: 0.9; }
+      100% { transform: translateY(-240px) scale(0.3); opacity: 0; }
+    }
     .loading-text {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: #cfaeff;
-      text-shadow: 0 0 25px #b77dff;
-      letter-spacing: 3px;
+      font-size: 2rem; font-weight: 600;
+      background: linear-gradient(135deg, #ffaaaa, #ff4d4d);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 20px #ff2a2a;
+      letter-spacing: 4px;
+      animation: textPulse 1.8s infinite;
+    }
+    @keyframes textPulse {
+      0%, 100% { opacity: 0.9; text-shadow: 0 0 15px #ff0000; }
+      50% { opacity: 1; text-shadow: 0 0 35px #ff6666; }
     }
 
     .error-panel {
-      margin-top: 20px;
-      background: rgba(180, 100, 255, 0.15);
-      border: 1px solid #b77dff;
-      border-radius: 40px;
-      padding: 14px 30px;
-      display: none;
+      background: rgba(30,0,0,0.9); backdrop-filter: blur(20px);
+      border: 1px solid #ff2a2a;
+      border-radius: 48px; padding: 25px 50px; display: none;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255,0,0,0.5);
     }
+    .error-title { font-size: 1.8rem; font-weight: 700; color: #ff6a6a; letter-spacing: 1px; }
+    .error-sub { color: #ffaaaa; font-size: 1rem; margin-top: 8px; }
 
-    /* welcome overlay */
+    /* ---------- WELCOME OVERLAY (elevated) ---------- */
     #welcomeOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 990;
+      position: fixed; inset: 0; z-index: 998;
       display: none;
-      background: radial-gradient(circle at center, #130b2a, #010004);
+      background: #030000;
+      transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), visibility 0.7s;
     }
-    #welcomeOverlay.active { display: block; animation: fadeRise 0.8s ease; }
-    @keyframes fadeRise { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+    #welcomeOverlay.active { display: block; }
+    #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
 
     #welcomeVideo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      pointer-events: none;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; pointer-events: none;
+      filter: brightness(0.65) contrast(1.2);
     }
     .video-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.4), rgba(0,0,0,0.8));
       z-index: 1;
     }
     #welcomeMatrixCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;
     }
-
+    .welcome-content {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 3;
+      display: flex; flex-direction: column; align-items: center;
+    }
     .welcome-card {
-      width: 480px;
-      height: 480px;
-      border-radius: 50%;
-      background: rgba(25, 15, 55, 0.65);
-      backdrop-filter: blur(55px);
-      border: 2px solid #b77dff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      box-shadow: 0 0 120px rgba(155, 90, 255, 0.6), inset 0 0 50px rgba(155, 90, 255, 0.2);
-      animation: gentlePulse 2.4s infinite alternate;
-    }
-
-    @keyframes gentlePulse {
-      0% { box-shadow: 0 0 60px rgba(155, 90, 255, 0.5), inset 0 0 30px rgba(155, 90, 255, 0.1); border-color: #b77dff; }
-      100% { box-shadow: 0 0 140px rgba(155, 90, 255, 0.8), inset 0 0 60px rgba(155, 90, 255, 0.3); border-color: #e0bcff; }
-    }
-
-    .welcome-title {
-      font-size: 3.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #dbb4ff, #b681ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 4px;
-    }
-
-    .enter-btn {
-      background: rgba(0, 0, 0, 0.5);
-      border: 2px solid #b77dff;
-      font-size: 1.5rem;
-      padding: 14px 48px;
-      border-radius: 60px;
-      backdrop-filter: blur(12px);
-      color: white;
-      font-weight: 600;
-      transition: 0.2s;
-      cursor: pointer;
-      margin-top: 30px;
-    }
-    .enter-btn:hover { transform: scale(1.04); background: #b77dffcc; box-shadow: 0 0 45px #b77dff; }
-
-    /* main dashboard */
-    #mainDashboard {
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
       position: relative;
-      z-index: 20;
-      width: 100%;
-      padding: 24px 28px 60px;
+      width: 460px; height: 460px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(10,0,0,0.5);
+      backdrop-filter: blur(48px);
+      border: 1px solid rgba(255,80,80,0.7);
+      border-radius: 50%;
+      box-shadow: 0 0 180px rgba(255,30,30,0.7), inset 0 0 70px rgba(255,20,20,0.2);
+      transition: all 0.3s;
+      animation: cardBreathing 3s infinite alternate;
     }
-    #mainDashboard.visible {
-      opacity: 1;
-      visibility: visible;
+    @keyframes cardBreathing {
+      0% { box-shadow: 0 0 140px rgba(255,30,30,0.6), inset 0 0 60px rgba(255,30,30,0.2); border-color: rgba(255,70,70,0.6); }
+      100% { box-shadow: 0 0 220px rgba(255,60,60,0.9), inset 0 0 90px rgba(255,60,60,0.4); border-color: rgba(255,100,100,0.9); }
     }
-
-    .dashboard {
-      max-width: 1520px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 48px;
+    .welcome-ring {
+      position: absolute;
+      top: -12px; left: -12px; right: -12px; bottom: -12px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: #ff4d4d;
+      border-right-color: #ff1a1a;
+      animation: spinRing 4s linear infinite;
+      filter: drop-shadow(0 0 12px #ff0000);
     }
-
-    /* header */
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(18, 10, 38, 0.7);
-      backdrop-filter: blur(40px);
-      border: 1px solid rgba(183, 125, 255, 0.65);
-      border-radius: 80px;
-      padding: 20px 40px;
-      gap: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    @keyframes spinRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-
-    .greeting {
-      font-size: 1.9rem;
-      font-weight: 600;
-      background: linear-gradient(120deg, #ffffff, #dbb4ff);
+    .welcome-title {
+      font-size: 4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #ffb3b3);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      letter-spacing: 6px;
+      text-shadow: 0 0 20px rgba(255,0,0,0.6);
+      animation: gentleGlow 1.8s infinite alternate;
     }
-
-    .live-clock {
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
-      font-size: 2rem;
+    @keyframes gentleGlow {
+      0% { filter: drop-shadow(0 0 4px #ff2a2a); }
+      100% { filter: drop-shadow(0 0 20px #ff5e5e); }
+    }
+    .enter-btn {
+      background: rgba(0,0,0,0.55);
+      border: 1.5px solid #ff5e5e;
+      color: white;
+      font-size: 1.5rem;
       font-weight: 600;
-      color: #ddbbff;
-      text-shadow: 0 0 12px #b77dff;
-    }
-
-    .music-btn {
-      background: rgba(183, 125, 255, 0.2);
-      border: 1px solid #b77dff;
-      border-radius: 60px;
-      padding: 12px 28px;
-      font-weight: 500;
-      display: flex;
-      gap: 12px;
-      align-items: center;
+      padding: 14px 48px;
+      border-radius: 100px;
       cursor: pointer;
-      transition: 0.2s;
-      color: #f0e6ff;
+      letter-spacing: 4px;
+      backdrop-filter: blur(15px);
+      transition: all 0.3s ease;
+      margin-top: 35px;
+      box-shadow: 0 0 20px rgba(255,30,30,0.5);
     }
-    .music-btn:hover { background: rgba(183, 125, 255, 0.45); box-shadow: 0 0 20px #b77dff; transform: scale(0.97); }
+    .enter-btn:hover {
+      background: #ff3333;
+      transform: scale(1.06);
+      box-shadow: 0 0 55px #ff4d4d;
+      border-color: #fff;
+    }
 
-    /* cards */
-    .cards-grid {
+    /* ---------- MAIN DASHBOARD refined ---------- */
+    #mainDashboard {
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), visibility 0.9s;
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
       display: flex;
-      flex-flow: row wrap;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      gap: 30px;
+      padding: 30px 20px;
+      z-index: 1;
     }
+    #mainDashboard.visible { opacity: 1; visibility: visible; }
 
+    #mainBgImage {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.22;
+      filter: blur(6px) brightness(0.55);
+      transform: scale(1.02);
+    }
+    .dashboard {
+      position: relative; z-index: 2; width:100%; max-width:1550px; display:flex; flex-direction:column; align-items:center; gap: 45px;
+    }
+    .header {
+      width:100%; max-width:1150px; background: rgba(5,0,0,0.55); backdrop-filter: blur(40px);
+      border:1px solid rgba(255,80,80,0.6); border-radius: 80px; padding: 28px 48px;
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.08);
+      transition: all 0.3s;
+    }
+    .greeting {
+      font-size: 2rem; font-weight: 600; letter-spacing: 1px;
+      background: linear-gradient(120deg, #fff, #ffc0c0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 20px #ff2a2a;
+    }
+    .live-clock {
+      font-family: 'Courier New', monospace;
+      font-size: 2.1rem; font-weight: 600; background: #00000055; padding: 6px 18px;
+      border-radius: 60px; backdrop-filter: blur(12px);
+      letter-spacing: 3px; color: #ffcaca;
+      box-shadow: inset 0 0 8px rgba(255,0,0,0.3), 0 0 14px rgba(255,0,0,0.5);
+    }
+    .music-btn {
+      background: rgba(255,50,50,0.2); backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,100,100,0.7);
+      color:#fff; padding: 12px 30px; border-radius: 60px;
+      cursor:pointer; font-weight: 500; transition: 0.25s; font-size: 1rem;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 0 12px rgba(255,0,0,0.3);
+    }
+    .music-btn:hover { background: #ff3a3a; border-color: white; box-shadow: 0 0 28px #ff4d4d; transform: scale(1.02); }
+
+    /* cards grid — deep glass premium */
+    .cards-grid {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; width: 100%;
+    }
     .glass {
-      background: rgba(18, 10, 35, 0.6);
-      backdrop-filter: blur(32px);
-      border: 1px solid rgba(183, 125, 255, 0.5);
-      border-radius: 48px;
-      padding: 28px 24px;
+      background: rgba(8,0,0,0.5); backdrop-filter: blur(28px);
+      border: 1px solid rgba(255,70,70,0.45);
+      border-radius: 52px;
+      padding: 32px 28px;
+      box-shadow: 0 30px 55px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
       width: 340px;
-      transition: all 0.35s ease;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 100%;
+      flex-shrink: 0;
       position: relative;
       overflow: hidden;
+      animation: cardFloatUp 0.7s ease-out backwards;
     }
-
     .glass:hover {
-      transform: translateY(-10px) scale(1.01);
-      border-color: #cc9eff;
-      box-shadow: 0 30px 55px rgba(155, 100, 255, 0.4);
+      transform: translateY(-12px) scale(1.02);
+      border-color: rgba(255,100,100,0.9);
+      box-shadow: 0 40px 70px rgba(255,0,0,0.5), inset 0 0 12px rgba(255,70,70,0.3);
     }
-
-    /* gradient animated border */
+    @keyframes cardFloatUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     .glass::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      padding: 2px;
-      border-radius: 48px;
-      background: linear-gradient(125deg, #b77dff, #7c3aed, #b77dff);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0.4;
-      transition: opacity 0.3s;
+      content: "";
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(255,70,70,0.15), transparent 70%);
       pointer-events: none;
     }
-    .glass:hover::before { opacity: 0.8; }
-
-    .card-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
+    .card-content { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; text-align: center; }
 
     .avatar {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      border: 3px solid #cc9eff;
-      box-shadow: 0 0 45px #b77dff;
-      transition: 0.2s;
+      width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid #ff5e5e;
+      box-shadow: 0 0 45px rgba(255,0,0,0.8); transition: all 0.3s ease;
     }
-    .avatar:hover { transform: scale(1.02) rotate(2deg); border-color: #ffffffaa; }
-
-    .username {
-      font-size: 1.9rem;
-      font-weight: 700;
-      margin-top: 18px;
-      background: linear-gradient(to right, #fff, #e0bcff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      display: inline-block;
-      animation: softPulse 1.8s infinite;
-    }
-    .dot.online { background: #2ecc71; box-shadow: 0 0 12px #2ecc71; }
-    .dot.idle { background: #f1c40f; }
-    .dot.dnd { background: #e74c3c; }
-    @keyframes softPulse { 0% { opacity: 0.6; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
+    .avatar:hover { transform: scale(1.07) rotate(2deg); border-color: #ffa0a0; box-shadow: 0 0 70px red; }
+    .username { font-size: 2rem; font-weight: 700; margin-top: 18px; letter-spacing: 1px; background: linear-gradient(135deg,#fff,#ffaaaa); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .status-row { margin-top: 12px; display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.4); padding: 5px 15px; border-radius: 60px; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+    .custom-status { margin-top: 12px; color: #ffbcbc; font-style: italic; font-size: 0.9rem; background: rgba(0,0,0,0.3); padding: 5px 14px; border-radius: 50px; }
 
     .section-title {
-      font-size: 1.45rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #e5ceff;
-      text-shadow: 0 0 8px #b77dff;
-      border-bottom: 2px solid rgba(183, 125, 255, 0.6);
-      padding-bottom: 12px;
-      justify-content: center;
+      font-size: 1.5rem; font-weight: 600; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 10px; color: #ffcbcb;
+      border-bottom: 2px solid rgba(255,80,80,0.6); padding-bottom: 12px; width: 100%; justify-content: center;
     }
+    .about-text { font-size: 1rem; line-height: 1.7; color: #ffdddd; font-weight: 400; margin-top: 12px; }
 
-    .skills-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-
+    .skills-tags { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 12px; }
     .skill-tag {
-      background: rgba(183, 125, 255, 0.2);
-      border: 1px solid #b77dff;
-      padding: 8px 22px;
-      border-radius: 60px;
-      font-weight: 500;
-      transition: all 0.2s;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      color: #eeddff;
+      background: rgba(255,60,60,0.25); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,80,80,0.7);
+      padding: 8px 24px; border-radius: 60px; font-weight: 500; color: #ffe0e0;
+      transition: 0.2s; cursor: pointer; font-size: 1rem;
     }
-    .skill-tag:hover {
-      background: #b77dffaa;
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 0 28px #b77dff;
-    }
+    .skill-tag:hover { background: #ff3a3a; transform: translateY(-4px); box-shadow: 0 0 20px #ff4d4d; border-color: white; }
 
-    .timer-display {
-      font-size: 3rem;
-      font-family: monospace;
-      letter-spacing: 6px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 60px;
-      padding: 12px;
-      margin: 12px 0;
-      color: #e2bcff;
-    }
-
+    .luau-tip { font-size: 1rem; color: #ffcaca; margin-top: 15px; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 32px; transition: 0.2s; }
+    .timer-display { font-size: 3rem; font-family: monospace; font-weight: 800; margin: 16px 0; text-shadow: 0 0 20px #ff2a2a; letter-spacing: 4px; }
+    .pomodoro-controls { display: flex; gap: 18px; }
     .pomo-btn {
-      background: rgba(183, 125, 255, 0.3);
-      border: 1px solid #b77dff;
-      padding: 12px 28px;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: 0.2s;
-      color: white;
-      cursor: pointer;
+      background: rgba(30,0,0,0.7); border: 1px solid #ff5e5e; color:#fff; padding: 12px 32px; border-radius: 48px;
+      cursor:pointer; font-weight: 600; transition:0.2s; font-size: 1rem;
     }
-    .pomo-btn:hover { background: #b77dffcc; box-shadow: 0 0 20px #b77dff; }
+    .pomo-btn:hover { background: #ff3a3a; box-shadow: 0 0 18px red; transform: scale(0.98);}
+    .pomo-btn.active { background: #ff2a2a; box-shadow: 0 0 24px #ff6666; }
 
-    .crypto-price {
-      font-size: 2.7rem;
-      font-weight: 700;
-      color: #ddbbff;
-      text-shadow: 0 0 12px #b77dff;
-    }
-
+    .crypto-price { font-size: 2.4rem; font-weight: 800; text-shadow: 0 0 15px #ff1a1a; margin: 10px 0; }
     .discord-link {
-      display: inline-flex;
-      gap: 12px;
-      background: rgba(88, 101, 242, 0.25);
-      border: 1px solid #5865f2;
-      padding: 12px 32px;
-      border-radius: 70px;
-      text-decoration: none;
-      color: white;
-      font-weight: 500;
-      transition: 0.2s;
+      display:inline-flex; align-items:center; gap:12px; margin-top: 25px;
+      background: rgba(88,101,242,0.2); border: 1px solid #5865F2; backdrop-filter: blur(8px);
+      padding: 12px 32px; border-radius: 60px; text-decoration:none; color:#fff; font-weight: 500; transition:0.3s;
     }
-    .discord-link:hover { background: #5865f2aa; box-shadow: 0 0 22px #5865f2; }
+    .discord-link:hover { background: #5865F2; box-shadow: 0 0 32px #5865F2; transform: scale(1.02); }
 
     .watermark-text {
-      font-size: 3.5rem;
-      font-family: 'Courier New', monospace;
-      font-weight: bold;
-      color: #cdabff;
-      text-shadow: 0 0 30px #b77dff;
-      border-right: 3px solid #cdabff;
-      white-space: nowrap;
-      overflow: hidden;
-      animation: blinkLine 0.7s step-end infinite;
+      font-family: 'Courier New', monospace; font-size: 5rem; font-weight: 800;
+      background: linear-gradient(135deg, #ff5e5e, #ffaaaa);
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent;
+      letter-spacing: 12px;
+      text-shadow: 0 0 20px #ff0000;
     }
-    @keyframes blinkLine { 0%,100%{ border-color: #cdabff; } 50%{ border-color: transparent; } }
 
-    /* side panel */
+    /* side panel luxury */
     .side-panel {
-      position: fixed;
-      top: 0;
-      right: -480px;
-      width: 400px;
-      max-width: 90vw;
-      height: 100%;
-      background: rgba(8, 2, 22, 0.97);
-      backdrop-filter: blur(60px);
-      border-left: 2px solid #b77dff;
-      z-index: 1100;
-      transition: right 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-      padding: 40px 32px;
-      box-shadow: -20px 0 80px rgba(155, 100, 255, 0.5);
+      position: fixed; top: 0; right: -450px; width: 400px; max-width: 85vw;
+      height: 100%; background: rgba(6,0,0,0.96); backdrop-filter: blur(48px);
+      border-left: 2px solid rgba(255,80,80,0.8);
+      box-shadow: -25px 0 80px rgba(0,0,0,0.8);
+      z-index: 1000;
+      transition: right 0.4s cubic-bezier(0.2,0.9,0.4,1.1);
+      padding: 60px 35px;
+      overflow-y: auto;
     }
     .side-panel.open { right: 0; }
     .close-panel {
-      background: none;
-      border: none;
-      font-size: 2.5rem;
-      color: #cdaaff;
-      cursor: pointer;
-      position: absolute;
-      top: 20px;
-      right: 28px;
+      background: none; border: none; color: #ff9f9f; font-size: 3rem; cursor: pointer; position: absolute; top: 20px; right: 30px;
+      transition: 0.2s;
     }
-    .panel-title { font-size: 2.2rem; margin-top: 45px; color: #ddbbff; text-shadow: 0 0 12px #b77dff; }
-    .panel-desc { font-size: 1.2rem; margin-top: 25px; line-height: 1.7; color: #decbff; }
+    .close-panel:hover { color: white; text-shadow: 0 0 12px red; transform: rotate(90deg);}
+    .panel-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; background: linear-gradient(135deg,#ffa0a0,#fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .panel-desc { font-size: 1.2rem; line-height: 1.7; color: #ffcfcf; }
 
     @media (max-width: 780px) {
-      .glass { width: 94%; max-width: 360px; }
-      .header { flex-direction: column; text-align: center; }
-      .welcome-card { width: 320px; height: 320px; }
-      .welcome-title { font-size: 2.5rem; }
-      .watermark-text { font-size: 2.2rem; }
+      .header { flex-direction: column; text-align: center; padding: 24px; }
+      .greeting, .live-clock { font-size: 1.6rem; }
+      .welcome-card { width: 330px; height: 330px; }
+      .welcome-title { font-size: 2.6rem; letter-spacing: 3px; }
+      .enter-btn { font-size: 1.2rem; padding: 10px 30px; }
+      .watermark-text { font-size: 2.8rem; letter-spacing: 6px; }
+      .glass { width: 100%; max-width: 380px; }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="grid-floor"></div>
-<div class="orb orb-1"></div>
-<div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
-<canvas id="particles"></canvas>
-<div class="scanlines"></div>
+  <div class="scanlines"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <canvas id="particles"></canvas>
+  <canvas id="matrixCanvas"></canvas>
 
-<!-- loading screen -->
-<div id="loadingOverlay">
-  <div class="test-tube-panel">
-    <div class="tube"><div class="liquid" id="liquidFill" style="height:0%"></div></div>
-    <div class="loading-text" id="loadingLabel">booting nyx...</div>
-    <div class="error-panel" id="errorBox"><div class="error-title">⟳ handshake retry</div><div>reconnecting</div></div>
-  </div>
-</div>
-
-<!-- welcome gate -->
-<div id="welcomeOverlay">
-  <video id="welcomeVideo" autoplay muted loop playsinline>
-    <source src="Screen_Recording_20260525_212935_Pinterest.mp4" type="video/mp4">
-  </video>
-  <div class="video-overlay"></div>
-  <canvas id="welcomeMatrixCanvas"></canvas>
-  <div class="welcome-content" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; text-align:center;">
-    <div class="welcome-card">
-      <div class="welcome-title">nyx // core</div>
-      <button class="enter-btn" id="enterBtn">enter void</button>
+  <!-- LOADING -->
+  <div id="loadingOverlay">
+    <div class="loading-container">
+      <div class="test-tube-panel" id="progressPanel">
+        <div class="tube">
+          <div class="liquid" id="liquidFill">
+            <div class="bubble" style="left:15px; width:12px; height:12px; animation-duration:1.2s;"></div>
+            <div class="bubble" style="left:38px; width:10px; height:10px; animation-duration:1.6s; animation-delay:0.4s;"></div>
+            <div class="bubble" style="left:58px; width:14px; height:14px; animation-duration:1.9s; animation-delay:0.7s;"></div>
+          </div>
+        </div>
+        <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
+      </div>
+      <div class="error-panel" id="errorBox">
+        <div class="error-title">⚠ ERR_CONNECTION_REFUSED</div>
+        <div class="error-sub">Re-establishing link...</div>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- main dashboard -->
-<div id="mainDashboard">
-  <div class="dashboard">
-    <div class="header">
-      <div class="greeting" id="greeting">✦ good evening, nyx</div>
-      <div class="live-clock" id="liveClock">--:--:--</div>
-      <button class="music-btn" id="musicBtn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-        <span id="musicLabel">mute</span>
-      </button>
+  <!-- WELCOME -->
+  <div id="welcomeOverlay">
+    <video id="welcomeVideo" autoplay muted loop playsinline>
+      <source src="Screen_Recording_20260525_212935_Pinterest.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <canvas id="welcomeMatrixCanvas"></canvas>
+    <div class="welcome-content">
+      <div class="welcome-card">
+        <div class="welcome-ring"></div>
+        <div class="welcome-text-container">
+          <div class="welcome-title">WELCOME, NYX</div>
+          <button class="enter-btn" id="enterBtn">⟡ ENTER ⟡</button>
+        </div>
+      </div>
     </div>
-    <div class="cards-grid">
-      <div class="glass"><div class="card-content"><img class="avatar" id="avatar" src=""><div class="username" id="username">nyx._.dev</div><div class="status-row"><span class="dot" id="statusDot"></span><span id="statusText">--</span></div><div class="custom-status" id="customStatus"></div></div></div>
-      <div class="glass"><div class="card-content"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> about</div><p class="about-text">i'm nyx — 14, building stuff from scratch. i love clean ui, custom tools, and late night code.</p></div></div>
-      <div class="glass"><div class="card-content"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M8 2v20M16 2v20M2 8h20M2 16h20"/></svg> stack</div><div class="skills-tags" id="skillsContainer"><span class="skill-tag" data-lang="javascript">JavaScript</span><span class="skill-tag" data-lang="luau">Luau</span><span class="skill-tag" data-lang="python">Python</span><span class="skill-tag" data-lang="css">CSS</span><span class="skill-tag" data-lang="html">HTML</span></div></div></div>
-      <div class="glass"><div class="card-content"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> luau memo</div><div class="luau-tip" id="luauTip">"task.wait() over wait() — smoother loops"</div></div></div>
-      <div class="glass"><div class="card-content"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> focus timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="pomodoro-controls" style="display:flex; gap:15px; justify-content:center;"><button class="pomo-btn" id="pomoStart">▶ start</button><button class="pomo-btn" id="pomoReset">⟳ reset</button></div><p id="pomoStatus" style="margin-top:12px;">work mode</p></div></div>
-      <div class="glass"><div class="card-content"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/></svg> btc price</div><div class="crypto-price" id="btcPrice">---</div><div id="btcChange" style="font-size:1rem;">loading..</div></div></div>
-      <div class="glass"><div class="card-content"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> links</div><a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> discord</a></div></div>
-    </div>
-    <div class="watermark-cell" style="display:flex; justify-content:center; margin: 30px 0 10px;"><div class="watermark-text" id="watermark"></div></div>
   </div>
-</div>
 
-<div class="side-panel" id="sidePanel"><button class="close-panel" id="closePanel">✕</button><div class="panel-title" id="panelTitle"></div><div class="panel-desc" id="panelDesc"></div></div>
-<iframe id="ytPlayer" style="display:none;" src="https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig" allow="autoplay"></iframe>
+  <!-- MAIN DASHBOARD -->
+  <div id="mainDashboard">
+    <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="bg" />
+    <iframe id="ytPlayer" style="display:none;" src="https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig" allow="autoplay"></iframe>
 
-<script>
-  // particles (purple mist)
-  const pCanvas = document.getElementById('particles');
-  const pCtx = pCanvas.getContext('2d');
-  let parts = [], w, h;
-  function resizePart() { w = pCanvas.width = window.innerWidth; h = pCanvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizePart); resizePart();
-  class Flake { constructor() { this.x = Math.random() * w; this.y = Math.random() * h; this.s = Math.random() * 2.2 + 0.6; this.vx = (Math.random() - 0.5) * 0.45; this.vy = (Math.random() - 0.5) * 0.3; this.op = Math.random() * 0.45 + 0.1; } update() { this.x += this.vx; this.y += this.vy; if(this.x<0||this.x>w) this.vx*=-1; if(this.y<0||this.y>h) this.vy*=-1; } draw() { pCtx.beginPath(); pCtx.arc(this.x, this.y, this.s, 0, Math.PI*2); pCtx.fillStyle = `rgba(185, 130, 230, ${this.op})`; pCtx.fill(); } }
-  for(let i=0;i<110;i++) parts.push(new Flake()); function animateParts() { pCtx.clearRect(0,0,w,h); parts.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animateParts); } animateParts();
+    <div class="dashboard">
+      <div class="header">
+        <div class="greeting" id="greeting">Good Evening, nyx</div>
+        <div class="live-clock" id="liveClock">00:00:00</div>
+        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+          <svg id="musicIconOff" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+          <svg id="musicIconOn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <span id="musicLabel">Music Off</span>
+        </button>
+      </div>
 
-  // matrix rain for welcome
-  const matCanvas = document.getElementById('welcomeMatrixCanvas');
-  const mCtx = matCanvas.getContext('2d');
-  let matLive = false, matCols, matDrops;
-  function initMatRain() { matCanvas.width = window.innerWidth; matCanvas.height = window.innerHeight; matCols = Math.floor(matCanvas.width / 24); matDrops = Array(matCols).fill(1); }
-  function drawMatRain() { if(!matLive) return; mCtx.fillStyle = 'rgba(0,0,0,0.06)'; mCtx.fillRect(0,0,matCanvas.width,matCanvas.height); mCtx.font = 'bold 20px monospace'; for(let i=0;i<matDrops.length;i++){ let char = Math.random() > 0.5 ? '1' : '0'; let x = i * 24, y = matDrops[i] * 24; mCtx.fillStyle = '#b77dff'; mCtx.shadowBlur = 8; mCtx.fillText(char, x, y); if(y > matCanvas.height && Math.random() > 0.975) matDrops[i] = 0; matDrops[i]++; } requestAnimationFrame(drawMatRain); }
-  function startMatrixWelcome() { matLive = true; initMatRain(); drawMatRain(); }
-  function stopMatrixWelcome() { matLive = false; }
+      <div class="cards-grid">
+        <div class="glass"><div class="card-content"><img class="avatar" id="avatar" src=""><div class="username" id="username">nyx._.dev</div><div class="status-row"><span class="dot" id="statusDot"></span><span id="statusText">Loading...</span></div><div class="custom-status" id="customStatus"></div></div></div>
+        <div class="glass"><div class="card-content"><div class="section-title">◈ About NyX</div><p class="about-text">14‑year‑old architect of digital realms. Building sleek tools, immersive experiences, and futuristic interfaces.</p></div></div>
+        <div class="glass"><div class="card-content"><div class="section-title">✦ Skills</div><div class="skills-tags" id="skillsContainer"><span class="skill-tag" data-lang="javascript">JavaScript</span><span class="skill-tag" data-lang="html">HTML</span><span class="skill-tag" data-lang="luau">Luau</span><span class="skill-tag" data-lang="css">CSS</span><span class="skill-tag" data-lang="python">Python</span></div></div></div>
+        <div class="glass"><div class="card-content"><div class="section-title">⚡ Luau Wisdom</div><div class="luau-tip" id="luauTip">"Use task.wait() for better performance."</div></div></div>
+        <div class="glass"><div class="card-content"><div class="section-title">🍅 Pomodoro</div><div class="timer-display" id="timerDisplay">25:00</div><div class="pomodoro-controls"><button class="pomo-btn active" id="pomoStart">Start</button><button class="pomo-btn" id="pomoReset">Reset</button></div><p style="margin-top:16px; color:#ffaaaa;" id="pomoStatus">Work session</p></div></div>
+        <div class="glass"><div class="card-content"><div class="section-title">₿ BTC</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.9rem;" id="btcChange">–</p></div></div>
+        <div class="glass"><div class="card-content"><div class="section-title">🔗 Nexus</div><a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
+      </div>
+      <div class="watermark-cell"><div class="watermark-text" id="watermark"></div></div>
+    </div>
+  </div>
 
-  // loading progression
-  const loadingDiv = document.getElementById('loadingOverlay');
-  const liquid = document.getElementById('liquidFill');
-  const errorBox = document.getElementById('errorBox');
-  const loadingLabel = document.getElementById('loadingLabel');
-  const welcomeDiv = document.getElementById('welcomeOverlay');
-  let progVal = 0;
-  const progInterval = setInterval(() => {
-    progVal += Math.floor(Math.random() * 5) + 2;
-    if(progVal > 100) progVal = 100;
-    liquid.style.height = progVal + '%';
-    if(progVal > 28 && !errorBox.style.display) { errorBox.style.display = 'block'; loadingLabel.innerText = 'handshake unstable'; }
-    if(progVal > 70 && errorBox.style.display) { errorBox.style.display = 'none'; loadingLabel.innerText = 'link stable'; }
-    if(progVal >= 100) {
-      clearInterval(progInterval);
-      loadingDiv.style.opacity = '0';
-      setTimeout(() => { loadingDiv.style.display = 'none'; welcomeDiv.classList.add('active'); startMatrixWelcome(); }, 280);
-    }
-  }, 60);
+  <div class="side-panel" id="sidePanel"><button class="close-panel" id="closePanel">✕</button><div class="panel-title" id="panelTitle"></div><div class="panel-desc" id="panelDesc"></div></div>
 
-  // youtube music
-  let player, musicActive = false;
-  const musicBtn = document.getElementById('musicBtn'), musicLabelSpan = document.getElementById('musicLabel');
-  function onYouTubeIframeAPIReady() { player = new YT.Player('ytPlayer', { events: { 'onReady': () => {}, 'onStateChange': (e) => { if(e.data === YT.PlayerState.ENDED) player.playVideo(); } } }); }
-  window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
-  const ytScript = document.createElement('script'); ytScript.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(ytScript);
-  function toggleAmbient() { if(!player) return; if(musicActive) { player.pauseVideo(); musicLabelSpan.innerText = 'mute'; musicActive = false; } else { player.playVideo(); musicLabelSpan.innerText = 'wave'; musicActive = true; } }
-  musicBtn.addEventListener('click', toggleAmbient);
+  <script>
+    (function(){
+      const pCanvas=document.getElementById('particles'), pCtx=pCanvas.getContext('2d');
+      let particles=[], pw, ph;
+      function resizeParticles(){ pw=pCanvas.width=window.innerWidth; ph=pCanvas.height=window.innerHeight; }
+      window.addEventListener('resize',resizeParticles); resizeParticles();
+      class Particle { constructor(){ this.reset(); } reset(){ this.x=Math.random()*pw; this.y=Math.random()*ph; this.size=Math.random()*2+0.6; this.speedX=(Math.random()-0.5)*0.35; this.speedY=(Math.random()-0.5)*0.35; this.opacity=Math.random()*0.5+0.15; } update(){ this.x+=this.speedX; this.y+=this.speedY; if(this.x<0||this.x>pw)this.speedX*=-1; if(this.y<0||this.y>ph)this.speedY*=-1; } draw(){ pCtx.beginPath(); pCtx.arc(this.x,this.y,this.size,0,Math.PI*2); pCtx.fillStyle=`rgba(255,80,80,${this.opacity})`; pCtx.fill(); } }
+      for(let i=0;i<80;i++) particles.push(new Particle());
+      function animateParticles(){ pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animateParticles); }
+      animateParticles();
 
-  // enter dashboard
-  const mainDash = document.getElementById('mainDashboard');
-  document.getElementById('enterBtn').addEventListener('click', () => {
-    welcomeDiv.classList.remove('active'); welcomeDiv.style.display = 'none';
-    mainDash.classList.add('visible');
-    if(player && !musicActive) toggleAmbient();
-    stopMatrixWelcome();
-  });
+      const mCanvas=document.getElementById('matrixCanvas'), mCtx=mCanvas.getContext('2d'); let mw,mh,columns,drops,fontSize=22;
+      function setupMatrix(){ mw=mCanvas.width=window.innerWidth; mh=mCanvas.height=window.innerHeight; columns=Math.floor(mw/fontSize)+1; drops=Array(columns).fill(1); }
+      window.addEventListener('resize',setupMatrix); setupMatrix();
+      function drawMatrix(){ mCtx.fillStyle='rgba(0,0,0,0.07)'; mCtx.fillRect(0,0,mw,mh); mCtx.font=`${fontSize}px monospace`; mCtx.textAlign='center'; for(let i=0;i<drops.length;i++){ const text=Math.random()>0.5?'1':'0'; const x=i*fontSize+fontSize/2, y=drops[i]*fontSize; mCtx.fillStyle='#f44'; mCtx.shadowBlur=8; mCtx.fillText(text,x,y); if(y>mh&&Math.random()>0.975)drops[i]=0; drops[i]++; } }
+      setInterval(drawMatrix,75);
 
-  // clock and greeting (no ai terms)
-  function tick() {
-    const now = new Date();
-    document.getElementById('liveClock').innerText = now.toLocaleTimeString('en-IN', { hour12: false });
-    const hour = now.getHours();
-    let msg = hour < 12 ? '☀️ morning, nyx' : hour < 18 ? '🌤️ afternoon, nyx' : '🌙 evening, nyx';
-    document.getElementById('greeting').innerText = msg;
-  }
-  tick(); setInterval(tick, 1000);
+      const wCanvas=document.getElementById('welcomeMatrixCanvas'), wCtx=wCanvas.getContext('2d'); let welcomeDrops=[], welcomeColumns, welcomeActive=false, welcomeFontSize=20;
+      function resizeWelcomeMatrix(){ wCanvas.width=window.innerWidth; wCanvas.height=window.innerHeight; welcomeColumns=Math.floor(wCanvas.width/welcomeFontSize)+1; welcomeDrops=Array(welcomeColumns).fill(1); }
+      window.addEventListener('resize',()=>{if(welcomeActive)resizeWelcomeMatrix();});
+      function startWelcomeMatrix(){ resizeWelcomeMatrix(); welcomeActive=true; }
+      function drawWelcomeMatrix(){ if(!welcomeActive) return; wCtx.fillStyle='rgba(0,0,0,0.06)'; wCtx.fillRect(0,0,wCanvas.width,wCanvas.height); wCtx.font=`${welcomeFontSize}px monospace`; wCtx.textAlign='center'; for(let i=0;i<welcomeDrops.length;i++){ const text=Math.random()>0.5?'1':'0'; const x=i*welcomeFontSize+welcomeFontSize/2, y=welcomeDrops[i]*welcomeFontSize; wCtx.fillStyle='#0f8'; wCtx.shadowBlur=5; wCtx.fillText(text,x,y); if(y>wCanvas.height&&Math.random()>0.975)welcomeDrops[i]=0; welcomeDrops[i]++; } }
+      setInterval(drawWelcomeMatrix,55);
 
-  // discord presence (lanyard)
-  const USER_ID = '1418597263479144471';
-  async function fetchPresence() {
-    try {
-      const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-      const json = await res.json();
-      if(json.success) {
-        const data = json.data;
-        document.getElementById('username').innerText = data.discord_user.global_name || data.discord_user.username;
-        const avatar = data.discord_user.avatar;
-        if(avatar) document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${avatar.startsWith('a_') ? 'gif' : 'png'}?size=256`;
-        const status = data.discord_status;
-        const dotEl = document.getElementById('statusDot'); dotEl.className = `dot ${status}`;
-        document.getElementById('statusText').innerText = status.charAt(0).toUpperCase() + status.slice(1);
-        const customAct = data.activities.find(a => a.type === 4);
-        document.getElementById('customStatus').innerText = customAct?.state || 'vibing with code';
-      }
-    } catch(e) {}
-  }
-  fetchPresence(); setInterval(fetchPresence, 30000);
+      const liquidFill=document.getElementById('liquidFill'), loadingOverlay=document.getElementById('loadingOverlay'), errorBox=document.getElementById('errorBox'), loadingLabel=document.getElementById('loadingLabel'), welcomeOverlay=document.getElementById('welcomeOverlay');
+      let currentStep=0, steps=120, updateInterval=50;
+      let seqIndex=0;
+      const sequence=[{time:0,action:()=>{document.getElementById('progressPanel').style.display='flex'; errorBox.style.display='none'; loadingLabel.textContent='NYX.exe loading...';}},{time:1.5,action:()=>{errorBox.style.display='block'; loadingLabel.textContent='Connection failed';}},{time:2.5,action:()=>{errorBox.style.display='none'; loadingLabel.textContent='Retrying...';}},{time:6.0,action:()=>{loadingOverlay.classList.add('fade-out'); welcomeOverlay.classList.add('active'); startWelcomeMatrix();}}];
+      const loadInterval=setInterval(()=>{ currentStep++; let prog=Math.min(100,(currentStep/steps)*100); liquidFill.style.height=prog+'%'; while(seqIndex<sequence.length && sequence[seqIndex].time<=(currentStep*updateInterval)/1000){ sequence[seqIndex].action(); seqIndex++; } if(currentStep>=steps) clearInterval(loadInterval); },updateInterval);
 
-  // luau rotating tips (personal, no ai)
-  const tipList = ["task.wait() keeps things smooth", "use :Connect() instead of legacy", "local variables are faster", "type checking saves bugs", "debug.traceback() is your friend"];
-  let tipPtr = 0;
-  const tipElem = document.getElementById('luauTip');
-  setInterval(() => {
-    tipElem.style.opacity = '0';
-    setTimeout(() => { tipElem.innerText = `"${tipList[tipPtr % tipList.length]}"`; tipElem.style.opacity = '1'; tipPtr++; }, 220);
-  }, 7500);
+      let player, musicPlaying=false;
+      const musicIconOff=document.getElementById('musicIconOff'), musicIconOn=document.getElementById('musicIconOn'), musicLabelSpan=document.getElementById('musicLabel');
+      function setMusicUI(state){ if(state==='on'){ musicIconOff.style.display='none'; musicIconOn.style.display='inline'; musicLabelSpan.textContent='Music On'; musicPlaying=true; }else{ musicIconOn.style.display='none'; musicIconOff.style.display='inline'; musicLabelSpan.textContent='Music Off'; musicPlaying=false; } }
+      window.onYouTubeIframeAPIReady=function(){ player=new YT.Player('ytPlayer',{events:{'onReady':()=>{},'onStateChange':(e)=>{if(e.data===YT.PlayerState.ENDED)player.playVideo();}}});};
+      const tag=document.createElement('script'); tag.src="https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
+      window.startMusic=function(){ if(player&&player.playVideo){ player.playVideo(); setMusicUI('on'); } };
+      window.toggleMusic=function(){ if(!player) return; if(musicPlaying){ player.pauseVideo(); setMusicUI('off'); }else{ player.playVideo(); setMusicUI('on'); } };
 
-  // pomodoro
-  let pomoInterval = null, leftSec = 25*60, isWorkMode = true, isActive = false;
-  const timerSpan = document.getElementById('timerDisplay'), pomoStatusSpan = document.getElementById('pomoStatus');
-  function updateTimerView() { let mins = Math.floor(leftSec/60), secs = leftSec%60; timerSpan.innerText = `${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`; }
-  function stopPomo() { if(pomoInterval) clearInterval(pomoInterval); pomoInterval = null; isActive = false; document.getElementById('pomoStart').innerText = '▶ start'; }
-  function resetPomo() { stopPomo(); leftSec = isWorkMode ? 25*60 : 5*60; updateTimerView(); }
-  function startPomo() {
-    if(isActive) { stopPomo(); return; }
-    isActive = true; document.getElementById('pomoStart').innerText = '⏸ pause';
-    pomoInterval = setInterval(() => {
-      if(leftSec <= 0) {
-        stopPomo();
-        if(isWorkMode) { isWorkMode = false; leftSec = 5*60; pomoStatusSpan.innerText = 'break mode'; new Notification('focus', { body: 'take a breather — 5 minutes' }); }
-        else { isWorkMode = true; leftSec = 25*60; pomoStatusSpan.innerText = 'work mode'; new Notification('focus', { body: 'back to it' }); }
-        updateTimerView(); document.getElementById('pomoStart').innerText = '▶ start'; isActive = false;
-        return;
-      }
-      leftSec--; updateTimerView();
-    }, 1000);
-  }
-  document.getElementById('pomoStart').addEventListener('click', startPomo);
-  document.getElementById('pomoReset').addEventListener('click', resetPomo);
-  updateTimerView();
+      const mainDashboard=document.getElementById('mainDashboard');
+      document.getElementById('enterBtn').addEventListener('click',()=>{ welcomeOverlay.classList.remove('active'); welcomeOverlay.classList.add('fade-out'); mainDashboard.classList.add('visible'); if(window.startMusic) window.startMusic(); });
 
-  // bitcoin price
-  async function getBtc() {
-    try {
-      const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
-      const d = await r.json();
-      const price = d.bitcoin.usd, change = d.bitcoin.usd_24h_change?.toFixed(2);
-      document.getElementById('btcPrice').innerHTML = `$${price.toLocaleString()}`;
-      const changeSpan = document.getElementById('btcChange'); changeSpan.innerHTML = `${change >= 0 ? '▲' : '▼'} ${Math.abs(change)}%`;
-      changeSpan.style.color = change >= 0 ? '#b77dff' : '#f48fb1';
-    } catch(e) { document.getElementById('btcPrice').innerHTML = 'err'; }
-  }
-  getBtc(); setInterval(getBtc, 55000);
+      function updateClockGreeting(){ let now=new Date(); document.getElementById('liveClock').textContent=now.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:false}); let h=now.getHours(); let g=h<5?"Good Midnight, nyx":h<12?"Good Morning, nyx":h<17?"Good Afternoon, nyx":"Good Evening, nyx"; document.getElementById('greeting').textContent=g; }
+      updateClockGreeting(); setInterval(updateClockGreeting,1000);
 
-  // watermark typing
-  const wmDiv = document.getElementById('watermark');
-  const fullStr = 'nyx.tuff';
-  let idx = 0;
-  function typeLoopWm() { wmDiv.innerText = fullStr.slice(0, idx); idx++; if(idx > fullStr.length) { setTimeout(() => { idx = 0; typeLoopWm(); }, 1800); return; } setTimeout(typeLoopWm, 130); }
-  setTimeout(typeLoopWm, 800);
+      const tips=["Use task.wait() instead of wait() for performance.","Local variables are faster than globals.","Use :Connect() for events (Luau).","Avoid infinite loops without wait().","Type checking catches bugs early.","table.create() for pre-allocated arrays.","debug.traceback() helps errors.","pcall() for safe calls."];
+      let tIndex=0, tipEl=document.getElementById('luauTip'); setInterval(()=>{ tIndex=(tIndex+1)%tips.length; tipEl.style.opacity='0'; setTimeout(()=>{ tipEl.textContent=`✨ "${tips[tIndex]}"`; tipEl.style.opacity='1'; },300); },9000);
 
-  // skill side panel
-  const sidePanel = document.getElementById('sidePanel');
-  const panelTitleSpan = document.getElementById('panelTitle');
-  const panelDescSpan = document.getElementById('panelDesc');
-  const closePanelBtn = document.getElementById('closePanel');
-  const skillDesc = { javascript: 'js: browser magic, nodejs, interactive stuff', luau: 'luau: roblox scripting with speed and type safety', python: 'python: clean syntax, backend & automation', css: 'css: gradients, flex, animations, dark arts', html: 'html: structure of the web' };
-  document.getElementById('skillsContainer').addEventListener('click', (e) => {
-    const target = e.target.closest('.skill-tag');
-    if(target && target.dataset.lang) {
-      panelTitleSpan.innerText = target.innerText;
-      panelDescSpan.innerText = skillDesc[target.dataset.lang] || 'deep knowledge';
-      sidePanel.classList.add('open');
-    }
-  });
-  closePanelBtn.addEventListener('click', () => sidePanel.classList.remove('open'));
-  document.addEventListener('click', (e) => { if(!sidePanel.contains(e.target) && !e.target.closest('.skill-tag')) sidePanel.classList.remove('open'); });
-  if(Notification.permission !== 'granted') Notification.requestPermission();
-</script>
+      const USER_ID="1418597263479144471";
+      async function loadDiscord(){ try{ let res=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`); let json=await res.json(); if(json.success){ let d=json.data; document.getElementById('username').textContent=d.discord_user.global_name||d.discord_user.username; let av=d.discord_user.avatar; if(av) document.getElementById('avatar').src=`https://cdn.discordapp.com/avatars/${USER_ID}/${av}.${av.startsWith('a_')?'gif':'png'}?size=512`; let s=d.discord_status||"offline"; let dot=document.getElementById('statusDot'); dot.className="dot "+s; document.getElementById('statusText').textContent=s.charAt(0).toUpperCase()+s.slice(1); let custom=d.activities?.find(a=>a.type===4); document.getElementById('customStatus').textContent=custom?.state||""; } }catch(e){} }
+      loadDiscord(); setInterval(loadDiscord,30000);
+      async function fetchBTC(){ try{ let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true'); let d=await r.json(); let p=d.bitcoin.usd; let ch=d.bitcoin.usd_24h_change?.toFixed(2)||0; document.getElementById('btcPrice').innerHTML=`$${p.toLocaleString()}`; let chEl=document.getElementById('btcChange'); chEl.innerHTML=`${ch>0?'▲':'▼'} ${Math.abs(ch)}%`; chEl.style.color=ch>=0?'#6fcf97':'#ff7b72'; }catch(e){ document.getElementById('btcPrice').innerHTML='—'; } }
+      fetchBTC(); setInterval(fetchBTC,60000);
+
+      let timerDisplay=document.getElementById('timerDisplay'), pomoStatus=document.getElementById('pomoStatus'), startBtn=document.getElementById('pomoStart'), resetBtn=document.getElementById('pomoReset');
+      let WORK=25*60, BREAK=5*60, timeLeft=WORK, isWorking=true, isRunning=false, timerInt=null;
+      function updateTimerDisplayUI(){ let m=Math.floor(timeLeft/60), s=timeLeft%60; timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+      function stopTimerInt(){ if(timerInt){clearInterval(timerInt); timerInt=null;} isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); }
+      function resetTimerFunc(){ stopTimerInt(); timeLeft=isWorking?WORK:BREAK; updateTimerDisplayUI(); }
+      function startTimerFunc(){ if(isRunning){ stopTimerInt(); return; } isRunning=true; startBtn.textContent='Pause'; startBtn.classList.add('active'); timerInt=setInterval(()=>{ if(timeLeft<=0){ clearInterval(timerInt); timerInt=null; isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); if(isWorking){ isWorking=false; pomoStatus.textContent='Break session'; timeLeft=BREAK; } else { isWorking=true; pomoStatus.textContent='Work session'; timeLeft=WORK; } updateTimerDisplayUI(); return; } timeLeft--; updateTimerDisplayUI(); },1000); }
+      startBtn.addEventListener('click',startTimerFunc); resetBtn.addEventListener('click',resetTimerFunc); updateTimerDisplayUI();
+
+      const sidePanel=document.getElementById('sidePanel'), panelTitle=document.getElementById('panelTitle'), panelDesc=document.getElementById('panelDesc'), closePanelBtn=document.getElementById('closePanel');
+      const skillMap={javascript:"JavaScript is a versatile language for web dev, both client & server. Powers interactive features.",html:"HTML (HyperText Markup Language) structures web content – the skeleton of the web.",luau:"Luau is a Roblox scripting language derived from Lua, with type checking and performance boosts.",css:"CSS brings style to the web: colors, layouts, animations, and responsive design.",python:"Python: high‑level, readable, used for AI, data science, automation, and backend."};
+      document.getElementById('skillsContainer').addEventListener('click',(e)=>{ if(e.target.classList.contains('skill-tag')){ let lang=e.target.dataset.lang; panelTitle.textContent=e.target.textContent; panelDesc.textContent=skillMap[lang]||"Mastery in progress."; sidePanel.classList.add('open'); } });
+      closePanelBtn.addEventListener('click',()=>sidePanel.classList.remove('open'));
+      document.addEventListener('click',(e)=>{ if(!sidePanel.contains(e.target) && !e.target.classList.contains('skill-tag')) sidePanel.classList.remove('open'); });
+
+      const watermarkEl=document.getElementById('watermark'); const fullText="nyx.tuff"; let charIdx=0;
+      function typeWriter(){ if(charIdx<fullText.length){ watermarkEl.textContent+=fullText.charAt(charIdx); charIdx++; setTimeout(typeWriter,150); } else { setTimeout(()=>{watermarkEl.textContent=''; charIdx=0; typeWriter();},2000); } }
+      setTimeout(typeWriter, 2800);
+    })();
+  </script>
 </body>
 </html>
