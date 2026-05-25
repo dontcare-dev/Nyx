@@ -130,17 +130,52 @@
     .error-title { font-size: 2rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 25px #ff0000; }
     .error-sub { color: #ffaaaa; font-size: 1.1rem; }
 
-    /* ---------- Welcome Overlay (Next-Gen AI Hologram) ---------- */
+    /* ---------- Welcome Overlay (Video Background + Matrix Rain) ---------- */
     #welcomeOverlay {
       position: fixed; inset: 0; z-index: 998;
       display: none;
-      align-items: center; justify-content: center;
-      background: radial-gradient(circle, rgba(10,0,0,0.8) 0%, rgba(0,0,0,0.95) 100%);
-      backdrop-filter: blur(35px);
+      background: #000; /* fallback */
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
-    #welcomeOverlay.active { display: flex; }
+    #welcomeOverlay.active { display: block; }
     #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
+
+    /* Video background */
+    #welcomeVideo {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Dark overlay on top of video */
+    .video-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 1;
+    }
+
+    /* Matrix rain canvas */
+    #welcomeMatrixCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .welcome-content {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
     .welcome-card {
       position: relative;
@@ -208,19 +243,6 @@
       to { text-shadow: 0 0 80px #ff0000, 0 0 150px rgba(255,0,0,0.9); }
     }
 
-    .welcome-subtitle {
-      font-size: 1.2rem;
-      color: #ffbbbb;
-      text-shadow: 0 0 15px rgba(255,0,0,0.6);
-      letter-spacing: 3px;
-      opacity: 0.8;
-      animation: fadeUp 2s ease-out;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .enter-btn {
       background: rgba(0,0,0,0.6);
       border: 2px solid #ff5555;
@@ -251,15 +273,6 @@
       background: #ff3333;
       box-shadow: 0 0 60px #ff0000;
       transform: scale(1.05);
-    }
-
-    /* Particles around welcome card */
-    .welcome-particles {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 1;
     }
 
     /* ---------- Main Dashboard ---------- */
@@ -476,15 +489,23 @@
 
   <!-- WELCOME -->
   <div id="welcomeOverlay">
-    <div class="welcome-card">
-      <div class="welcome-ring"></div>
-      <div class="welcome-text-container">
-        <div class="welcome-title">Welcome, user</div>
-        <div class="welcome-subtitle">Initializing AI Holographic Interface</div>
-        <button class="enter-btn" id="enterBtn">Enter System</button>
+    <!-- Video background -->
+    <video id="welcomeVideo" autoplay muted loop playsinline>
+      <source src="Screen_Recording_20260525_212935_Pinterest.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+    <!-- Matrix Rain Canvas -->
+    <canvas id="welcomeMatrixCanvas"></canvas>
+    <!-- Centered content -->
+    <div class="welcome-content">
+      <div class="welcome-card">
+        <div class="welcome-ring"></div>
+        <div class="welcome-text-container">
+          <div class="welcome-title">Welcome, user</div>
+          <button class="enter-btn" id="enterBtn">Enter System</button>
+        </div>
       </div>
     </div>
-    <div class="welcome-particles" id="welcomeParticles"></div>
   </div>
 
   <!-- MAIN DASHBOARD -->
@@ -638,7 +659,7 @@
     function animateParticles() { pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw()}); requestAnimationFrame(animateParticles); }
     animateParticles();
 
-    // ---------- Matrix Rain ----------
+    // ---------- Matrix Rain (Main Background) ----------
     const mCanvas = document.getElementById('matrixCanvas');
     const mCtx = mCanvas.getContext('2d');
     let mw,mh,columns,drops,fontSize=22,chars="01";
@@ -661,7 +682,54 @@
     }
     setInterval(drawMatrix,80);
 
-    // ---------- Loading Sequence (Test tube fills to 100%) ----------
+    // ---------- Welcome Matrix Rain (Green on Black) ----------
+    const welcomeCanvas = document.getElementById('welcomeMatrixCanvas');
+    const wCtx = welcomeCanvas.getContext('2d');
+    let welcomeDrops = [];
+    let welcomeColumns;
+    const welcomeFontSize = 20;
+    const welcomeChars = "01";
+    let welcomeActive = false;
+
+    function resizeWelcomeMatrix() {
+      welcomeCanvas.width = window.innerWidth;
+      welcomeCanvas.height = window.innerHeight;
+      welcomeColumns = Math.floor(welcomeCanvas.width / welcomeFontSize) + 1;
+      welcomeDrops = Array(welcomeColumns).fill(1);
+    }
+    window.addEventListener('resize', () => {
+      if (welcomeActive) resizeWelcomeMatrix();
+    });
+
+    function startWelcomeMatrix() {
+      resizeWelcomeMatrix();
+      welcomeActive = true;
+    }
+
+    function drawWelcomeMatrix() {
+      if (!welcomeActive) return;
+      wCtx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+      wCtx.fillRect(0, 0, welcomeCanvas.width, welcomeCanvas.height);
+      wCtx.font = `${welcomeFontSize}px monospace`;
+      wCtx.textAlign = 'center';
+      for (let i = 0; i < welcomeDrops.length; i++) {
+        const text = welcomeChars[Math.floor(Math.random() * welcomeChars.length)];
+        const x = i * welcomeFontSize + welcomeFontSize / 2;
+        const y = welcomeDrops[i] * welcomeFontSize;
+        wCtx.fillStyle = '#0f0';
+        wCtx.shadowColor = '#0f0';
+        wCtx.shadowBlur = 8;
+        wCtx.fillText(text, x, y);
+        wCtx.shadowBlur = 0;
+        if (y > welcomeCanvas.height && Math.random() > 0.975) {
+          welcomeDrops[i] = 0;
+        }
+        welcomeDrops[i]++;
+      }
+    }
+    setInterval(drawWelcomeMatrix, 60);
+
+    // ---------- Loading Sequence ----------
     const loadingOverlay = document.getElementById('loadingOverlay');
     const liquidFill = document.getElementById('liquidFill');
     const progressPanel = document.getElementById('progressPanel');
@@ -670,7 +738,7 @@
     const welcomeOverlay = document.getElementById('welcomeOverlay');
 
     let progress = 0;
-    const totalDuration = 6000; // 6 seconds, test tube fills to 100%
+    const totalDuration = 6000;
     const updateInterval = 50;
     const steps = totalDuration / updateInterval;
     let currentStep = 0;
@@ -679,11 +747,10 @@
       { time: 0.0, action: () => { progressPanel.style.display='flex'; errorBox.style.display='none'; loadingLabel.textContent='NYX.exe loading...'; } },
       { time: 1.5, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
       { time: 2.5, action: () => { errorBox.style.display='none'; loadingLabel.textContent='Retrying...'; } },
-      // At the end, hide loading and show welcome
       { time: 6.0, action: () => {
         loadingOverlay.classList.add('fade-out');
         welcomeOverlay.classList.add('active');
-        startWelcomeParticles();
+        startWelcomeMatrix();
       }}
     ];
 
@@ -698,35 +765,6 @@
       }
       if(currentStep>=steps) clearInterval(loadInterval);
     },updateInterval);
-
-    // ---------- Welcome Particles (around the card) ----------
-    const welcomeParticlesContainer = document.getElementById('welcomeParticles');
-    let welcomeParticles = [];
-    function startWelcomeParticles() {
-      const count = 30;
-      for (let i = 0; i < count; i++) {
-        const particle = document.createElement('div');
-        particle.style.cssText = `
-          position: absolute;
-          width: 4px; height: 4px;
-          background: #ff3333;
-          border-radius: 50%;
-          box-shadow: 0 0 10px #ff0000;
-          animation: floatWelcome ${Math.random()*3+2}s linear infinite;
-          opacity: ${Math.random()*0.5+0.3};
-        `;
-        // Random position around the card
-        const angle = Math.random() * 360;
-        const radius = 230 + Math.random() * 50;
-        const x = Math.cos(angle * Math.PI / 180) * radius;
-        const y = Math.sin(angle * Math.PI / 180) * radius;
-        particle.style.left = `calc(50% + ${x}px)`;
-        particle.style.top = `calc(50% + ${y}px)`;
-        particle.style.animationDelay = Math.random() * 2 + 's';
-        welcomeParticlesContainer.appendChild(particle);
-        welcomeParticles.push(particle);
-      }
-    }
 
     // ---------- YouTube Music ----------
     const tag = document.createElement('script');
