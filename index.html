@@ -18,6 +18,86 @@
       justify-content: center;
     }
 
+    /* ===== LOADING SCREEN ===== */
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #loadingOverlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loading-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 25px;
+      background: rgba(10, 0, 0, 0.5);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 60, 60, 0.3);
+      border-radius: 40px;
+      padding: 45px 55px;
+      box-shadow: 0 0 80px rgba(255, 0, 0, 0.4);
+      animation: boxPulse 1.8s ease-in-out infinite alternate;
+    }
+    @keyframes boxPulse {
+      from { box-shadow: 0 0 60px rgba(255,0,0,0.3); }
+      to { box-shadow: 0 0 100px rgba(255,0,0,0.7); }
+    }
+    .loading-text {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #ff5555;
+      text-shadow: 0 0 20px #ff0000;
+      animation: textGlow 1.2s ease-in-out infinite alternate;
+    }
+    @keyframes textGlow {
+      from { text-shadow: 0 0 15px #ff0000; }
+      to { text-shadow: 0 0 40px #ff0000, 0 0 80px #ff3333; }
+    }
+    .progress-container {
+      width: 320px;
+      height: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff0000, #ff4d4d, #ff8080);
+      border-radius: 10px;
+      box-shadow: 0 0 20px #ff0000;
+      transition: width 0.1s ease;
+    }
+    .percentage {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 15px #ff0000;
+    }
+
+    /* ===== MAIN DASHBOARD (hidden until loading ends) ===== */
+    #mainDashboard {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    #mainDashboard.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ---- Background Layers ---- */
     .orb {
       position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12;
       z-index: 0; pointer-events: none;
@@ -103,7 +183,6 @@
     .glass:nth-child(4) { animation-delay: 0.4s; }
     .glass:nth-child(5) { animation-delay: 0.5s; }
     .glass:nth-child(6) { animation-delay: 0.6s; }
-    .glass:nth-child(7) { animation-delay: 0.7s; }
 
     @keyframes cardPop {
       from { opacity: 0; transform: scale(0.92); }
@@ -259,97 +338,114 @@
       .header { flex-direction: column; text-align: center; }
       .glass { width: 100%; }
       .watermark-text { font-size: 2.5rem; letter-spacing: 4px; }
+      .loading-box { padding: 30px 35px; }
+      .loading-text { font-size: 1.5rem; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Background elements (always present) -->
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
   <canvas id="particles"></canvas>
   <canvas id="matrixCanvas"></canvas>
 
-  <div class="dashboard">
-    <div class="header">
-      <div class="greeting" id="greeting">Good Evening, nyx</div>
-      <div class="live-clock" id="liveClock">00:00:00</div>
+  <!-- LOADING SCREEN -->
+  <div id="loadingOverlay">
+    <div class="loading-box">
+      <div class="loading-text">NYX.exe loading...</div>
+      <div class="progress-container">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="percentage" id="percentage">0%</div>
     </div>
+  </div>
 
-    <div class="cards-grid">
-      <!-- Profile Card -->
-      <div class="glass">
-        <div class="card-content">
-          <img class="avatar" id="avatar" src="" alt="Avatar">
-          <div class="username" id="username">nyx._.dev</div>
-          <div class="status-row">
-            <span class="dot" id="statusDot"></span>
-            <span id="statusText">Loading...</span>
-          </div>
-          <div class="custom-status" id="customStatus"></div>
-        </div>
+  <!-- MAIN DASHBOARD (hidden initially) -->
+  <div id="mainDashboard">
+    <div class="dashboard">
+      <div class="header">
+        <div class="greeting" id="greeting">Good Evening, nyx</div>
+        <div class="live-clock" id="liveClock">00:00:00</div>
       </div>
 
-      <!-- Spotify Card -->
-      <div class="glass">
-        <div class="card-content">
-          <div class="section-title">
-            <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
-            Spotify
-          </div>
-          <div class="spotify-embed">
-            <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
-                    width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                    loading="lazy" style="border-radius:12px;"></iframe>
+      <div class="cards-grid">
+        <!-- Profile Card -->
+        <div class="glass">
+          <div class="card-content">
+            <img class="avatar" id="avatar" src="" alt="Avatar">
+            <div class="username" id="username">nyx._.dev</div>
+            <div class="status-row">
+              <span class="dot" id="statusDot"></span>
+              <span id="statusText">Loading...</span>
+            </div>
+            <div class="custom-status" id="customStatus"></div>
           </div>
         </div>
-      </div>
 
-      <!-- Luau Tip Card -->
-      <div class="glass">
-        <div class="card-content">
-          <div class="section-title">Luau Tip</div>
-          <div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div>
-        </div>
-      </div>
-
-      <!-- Pomodoro Card -->
-      <div class="glass">
-        <div class="card-content">
-          <div class="section-title">Pomodoro</div>
-          <div class="timer-display" id="timerDisplay">25:00</div>
-          <div class="pomodoro-controls">
-            <button class="pomo-btn active" id="pomoStart">Start</button>
-            <button class="pomo-btn" id="pomoReset">Reset</button>
+        <!-- Spotify Card -->
+        <div class="glass">
+          <div class="card-content">
+            <div class="section-title">
+              <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
+              Spotify
+            </div>
+            <div class="spotify-embed">
+              <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
+                      width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                      loading="lazy" style="border-radius:12px;"></iframe>
+            </div>
           </div>
-          <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.85rem;" id="pomoStatus">Work session</p>
+        </div>
+
+        <!-- Luau Tip Card -->
+        <div class="glass">
+          <div class="card-content">
+            <div class="section-title">Luau Tip</div>
+            <div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div>
+          </div>
+        </div>
+
+        <!-- Pomodoro Card -->
+        <div class="glass">
+          <div class="card-content">
+            <div class="section-title">Pomodoro</div>
+            <div class="timer-display" id="timerDisplay">25:00</div>
+            <div class="pomodoro-controls">
+              <button class="pomo-btn active" id="pomoStart">Start</button>
+              <button class="pomo-btn" id="pomoReset">Reset</button>
+            </div>
+            <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.85rem;" id="pomoStatus">Work session</p>
+          </div>
+        </div>
+
+        <!-- Bitcoin Card -->
+        <div class="glass">
+          <div class="card-content">
+            <div class="section-title">₿ Bitcoin</div>
+            <div class="crypto-price" id="btcPrice">...</div>
+            <p style="color: #ffaaaa; font-size: 0.8rem; margin-top: 4px;" id="btcChange">–</p>
+          </div>
+        </div>
+
+        <!-- Quick Links Card -->
+        <div class="glass">
+          <div class="card-content">
+            <div class="section-title">Quick Links</div>
+            <a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg>
+              Discord
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- Bitcoin Card -->
-      <div class="glass">
-        <div class="card-content">
-          <div class="section-title">₿ Bitcoin</div>
-          <div class="crypto-price" id="btcPrice">...</div>
-          <p style="color: #ffaaaa; font-size: 0.8rem; margin-top: 4px;" id="btcChange">–</p>
-        </div>
+      <!-- Watermark Cell -->
+      <div class="watermark-cell">
+        <div class="watermark-text" id="watermark"></div>
       </div>
-
-      <!-- Quick Links Card -->
-      <div class="glass">
-        <div class="card-content">
-          <div class="section-title">Quick Links</div>
-          <a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg>
-            Discord
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Watermark Cell – big typing "nyx.tuff" -->
-    <div class="watermark-cell">
-      <div class="watermark-text" id="watermark"></div>
     </div>
   </div>
 
@@ -435,6 +531,35 @@
       }
     }
     setInterval(drawMatrix, 80);
+
+    // ---------- Loading Screen ----------
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const mainDashboard = document.getElementById('mainDashboard');
+    const progressFill = document.getElementById('progressFill');
+    const percentageEl = document.getElementById('percentage');
+    let loadProgress = 0;
+    const duration = 3000; // 3 seconds total
+    const interval = 30;   // update every 30ms
+
+    function simulateLoading() {
+      loadProgress += (100 / (duration / interval));
+      if (loadProgress >= 100) {
+        loadProgress = 100;
+        progressFill.style.width = '100%';
+        percentageEl.textContent = '100%';
+        // Finished loading – fade out overlay and show dashboard
+        setTimeout(() => {
+          loadingOverlay.classList.add('fade-out');
+          mainDashboard.classList.add('visible');
+        }, 200);
+        clearInterval(loadInterval);
+        return;
+      }
+      progressFill.style.width = loadProgress + '%';
+      percentageEl.textContent = Math.floor(loadProgress) + '%';
+    }
+
+    let loadInterval = setInterval(simulateLoading, interval);
 
     // ---------- Clock & Greeting ----------
     function updateClockAndGreeting() {
@@ -600,16 +725,15 @@
 
     // ---------- Watermark Typing Effect ----------
     const watermarkEl = document.getElementById('watermark');
-    const fullText = "NYX.exe";
+    const fullText = "nyx.tuff";
     let charIndex = 0;
 
     function typeWriter() {
       if (charIndex < fullText.length) {
         watermarkEl.textContent += fullText.charAt(charIndex);
         charIndex++;
-        setTimeout(typeWriter, 250);
+        setTimeout(typeWriter, 150);
       } else {
-        // reset after pause
         setTimeout(() => {
           watermarkEl.textContent = '';
           charIndex = 0;
@@ -618,7 +742,9 @@
       }
     }
 
-    typeWriter();
+    // Start watermark after main dashboard appears (or immediately)
+    // We'll start it with a slight delay to sync with the loading finish
+    setTimeout(typeWriter, 3200); // after loading completes
   </script>
 </body>
 </html>
