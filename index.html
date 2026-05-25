@@ -196,7 +196,9 @@
       background: rgba(255,50,50,0.2); border:1px solid rgba(255,50,50,0.4);
       color:#fff; padding:8px 16px; border-radius:25px;
       cursor:pointer; font-weight:600; transition:0.3s; font-size:0.9rem;
+      display: flex; align-items: center; gap: 8px;
     }
+    .music-btn svg { width: 18px; height: 18px; fill: currentColor; }
     .music-btn:hover { background:rgba(255,50,50,0.5); }
     .cards-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:22px; width:100%; }
     .glass {
@@ -283,7 +285,6 @@
   <div id="mainDashboard">
     <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="background" />
 
-    <!-- Hidden video for background music -->
     <video id="bgMusic" loop autoplay playsinline muted width="0" height="0" preload="auto"
            src="Screen_Recording_20260525_134650_Spotify.mp4"></video>
 
@@ -291,7 +292,21 @@
       <div class="header">
         <div class="greeting" id="greeting">Good Evening, nyx</div>
         <div class="live-clock" id="liveClock">00:00:00</div>
-        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔇 Music Off</button>
+        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+          <!-- speaker off icon -->
+          <svg id="musicIconOff" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+            <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
+            <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+          <svg id="musicIconOn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <span id="musicLabel">Music Off</span>
+        </button>
       </div>
       <div class="cards-grid">
         <div class="glass">
@@ -491,19 +506,47 @@
       if(currentStep>=steps) clearInterval(loadInterval);
     },updateInterval);
 
-    // ---- Music Controls ----
+    // ---- Music Controls (with SVG icons) ----
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
+    const musicIconOff = document.getElementById('musicIconOff');
+    const musicIconOn = document.getElementById('musicIconOn');
+    const musicLabel = document.getElementById('musicLabel');
+    let musicStarted = false;
+
     function toggleMusic() {
-      if (bgMusic.muted) {
+      if (!musicStarted) {
         bgMusic.muted = false;
-        bgMusic.play();
-        musicBtn.textContent = '🔊 Music On';
+        bgMusic.play()
+          .then(() => {
+            musicStarted = true;
+            musicIconOff.style.display = 'none';
+            musicIconOn.style.display = 'inline';
+            musicLabel.textContent = 'Music On';
+          })
+          .catch(err => {
+            console.error('Music play error:', err);
+            musicLabel.textContent = 'Error (check file)';
+            bgMusic.load();
+          });
       } else {
-        bgMusic.muted = true;
-        musicBtn.textContent = '🔇 Music Off';
+        if (bgMusic.muted) {
+          bgMusic.muted = false;
+          musicIconOff.style.display = 'none';
+          musicIconOn.style.display = 'inline';
+          musicLabel.textContent = 'Music On';
+        } else {
+          bgMusic.muted = true;
+          musicIconOn.style.display = 'none';
+          musicIconOff.style.display = 'inline';
+          musicLabel.textContent = 'Music Off';
+        }
       }
     }
+
+    window.addEventListener('load', () => {
+      bgMusic.play().catch(() => {});
+    });
 
     // ---- Main functions ----
     function updateClockAndGreeting() {
