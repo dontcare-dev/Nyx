@@ -35,7 +35,7 @@
 
     /* ---- Loading Overlay ---- */
     #loadingOverlay {
-      position: fixed; inset: 0; z-index: 999; background: transparent;
+      position: fixed; inset: 0; z-index: 999;
       display: flex; align-items: center; justify-content: center;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
@@ -135,6 +135,27 @@
     }
     .terminal-content { white-space: pre-wrap; height:100%; overflow:hidden; }
 
+    /* ---- Welcome Overlay ---- */
+    .welcome-overlay {
+      position: absolute; inset: 0; z-index: 100; display: none;
+      align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(20px);
+      transition: opacity 0.6s ease;
+    }
+    .welcome-overlay.show {
+      display: flex;
+    }
+    .welcome-text {
+      font-size: 4rem; font-weight: 700; color: #fff;
+      text-shadow: 0 0 30px #ff0000, 0 0 60px rgba(255,0,0,0.5);
+      letter-spacing: 6px;
+      animation: welcomeFadeIn 0.8s ease-out;
+    }
+    @keyframes welcomeFadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
     /* ---- Main Dashboard ---- */
     #mainDashboard { opacity:0; visibility:hidden; transition: opacity 0.8s ease, visibility 0.8s ease; }
     #mainDashboard.visible { opacity:1; visibility:visible; }
@@ -227,6 +248,9 @@
     </div>
     <div class="debug-title" id="debugTitle">DEBUGGING</div>
     <div class="terminals-container" id="terminalsContainer"></div>
+    <div class="welcome-overlay" id="welcomeOverlay">
+      <h1 class="welcome-text">Welcome, nyx</h1>
+    </div>
   </div>
 
   <div id="mainDashboard">
@@ -362,10 +386,11 @@
     const errorBox = document.getElementById('errorBox');
     const debugTitle = document.getElementById('debugTitle');
     const terminalsContainer = document.getElementById('terminalsContainer');
+    const welcomeOverlay = document.getElementById('welcomeOverlay');
     const loadingLabel = document.getElementById('loadingLabel');
 
     let progress = 0;
-    const totalDuration = 6500;
+    const totalDuration = 8500; // total 8.5 seconds (loading + welcome)
     const updateInterval = 50;
     const steps = totalDuration / updateInterval;
     let currentStep = 0;
@@ -408,6 +433,7 @@
       { time: 0.0, action: () => {
         progressGroup.style.display='flex'; errorBox.style.display='none';
         debugTitle.style.display='none'; terminalsContainer.style.display='none';
+        welcomeOverlay.classList.remove('show');
         loadingLabel.textContent='NYX.exe loading...';
       }},
       { time: 1.5, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
@@ -419,8 +445,16 @@
       }},
       { time: 6.5, action: () => {
         stopTerminalUpdates();
-        loadingOverlay.classList.add('fade-out');
-        mainDashboard.classList.add('visible');
+        debugTitle.style.display='none';
+        terminalsContainer.style.display='none';
+        welcomeOverlay.classList.add('show');
+      }},
+      { time: 8.5, action: () => {
+        welcomeOverlay.style.opacity = '0';
+        setTimeout(() => {
+          loadingOverlay.classList.add('fade-out');
+          mainDashboard.classList.add('visible');
+        }, 600);
       }}
     ];
 
@@ -530,7 +564,7 @@
       if(charIndex<fullText.length){ watermarkEl.textContent+=fullText.charAt(charIndex); charIndex++; setTimeout(typeWriter,150); }
       else{ setTimeout(()=>{watermarkEl.textContent=''; charIndex=0; typeWriter();},2000); }
     }
-    setTimeout(typeWriter,6600);
+    setTimeout(typeWriter, 8600); // after welcome overlay
   </script>
 </body>
 </html>
