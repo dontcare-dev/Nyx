@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>nyx ·</title>
+  <title>nyx · dashboard</title>
   <style>
     * {
       margin: 0;
@@ -57,7 +57,7 @@
       pointer-events: none; z-index: 2;
     }
 
-    /* ---------- Loading Overlay (polished) ---------- */
+    /* Loading Overlay */
     #loadingOverlay {
       position: fixed; inset: 0; z-index: 999;
       display: flex; align-items: center; justify-content: center;
@@ -143,7 +143,7 @@
     .error-title { font-size: 1.8rem; font-weight: 700; color: #ff6a6a; letter-spacing: 1px; }
     .error-sub { color: #ffaaaa; font-size: 1rem; margin-top: 8px; }
 
-    /* ---------- WELCOME OVERLAY (elevated) ---------- */
+    /* Welcome Overlay */
     #welcomeOverlay {
       position: fixed; inset: 0; z-index: 998;
       display: none;
@@ -236,7 +236,7 @@
       border-color: #fff;
     }
 
-    /* ---------- MAIN DASHBOARD refined ---------- */
+    /* Main Dashboard */
     #mainDashboard {
       opacity: 0; visibility: hidden;
       transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.2), visibility 0.9s;
@@ -297,7 +297,6 @@
     }
     .music-btn:hover { background: #ff3a3a; border-color: white; box-shadow: 0 0 28px #ff4d4d; transform: scale(1.02); }
 
-    /* cards grid — deep glass premium */
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; width: 100%;
     }
@@ -347,6 +346,9 @@
       display: flex; align-items: center; gap: 10px; color: #ffcbcb;
       border-bottom: 2px solid rgba(255,80,80,0.6); padding-bottom: 12px; width: 100%; justify-content: center;
     }
+    .section-title svg {
+      width: 26px; height: 26px; stroke: #ffaaaa; fill: none; stroke-width: 1.8;
+    }
     .about-text { font-size: 1rem; line-height: 1.7; color: #ffdddd; font-weight: 400; margin-top: 12px; }
 
     .skills-tags { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 12px; }
@@ -360,21 +362,21 @@
 
     .luau-tip { font-size: 1rem; color: #ffcaca; margin-top: 15px; background: rgba(0,0,0,0.4); padding: 18px; border-radius: 32px; transition: 0.2s; }
     .timer-display { font-size: 3rem; font-family: monospace; font-weight: 800; margin: 16px 0; text-shadow: 0 0 20px #ff2a2a; letter-spacing: 4px; }
-    .pomodoro-controls { display: flex; gap: 18px; }
-    .pomo-btn {
+    .timer-controls { display: flex; gap: 18px; }
+    .timer-btn {
       background: rgba(30,0,0,0.7); border: 1px solid #ff5e5e; color:#fff; padding: 12px 32px; border-radius: 48px;
       cursor:pointer; font-weight: 600; transition:0.2s; font-size: 1rem;
     }
-    .pomo-btn:hover { background: #ff3a3a; box-shadow: 0 0 18px red; transform: scale(0.98);}
-    .pomo-btn.active { background: #ff2a2a; box-shadow: 0 0 24px #ff6666; }
+    .timer-btn:hover { background: #ff3a3a; box-shadow: 0 0 18px red; transform: scale(0.98);}
+    .timer-btn.active { background: #ff2a2a; box-shadow: 0 0 24px #ff6666; }
 
     .crypto-price { font-size: 2.4rem; font-weight: 800; text-shadow: 0 0 15px #ff1a1a; margin: 10px 0; }
-    .discord-link {
+    .quick-link {
       display:inline-flex; align-items:center; gap:12px; margin-top: 25px;
       background: rgba(88,101,242,0.2); border: 1px solid #5865F2; backdrop-filter: blur(8px);
       padding: 12px 32px; border-radius: 60px; text-decoration:none; color:#fff; font-weight: 500; transition:0.3s;
     }
-    .discord-link:hover { background: #5865F2; box-shadow: 0 0 32px #5865F2; transform: scale(1.02); }
+    .quick-link:hover { background: #5865F2; box-shadow: 0 0 32px #5865F2; transform: scale(1.02); }
 
     .watermark-text {
       font-family: 'Courier New', monospace; font-size: 5rem; font-weight: 800;
@@ -385,7 +387,6 @@
       text-shadow: 0 0 20px #ff0000;
     }
 
-    /* side panel luxury */
     .side-panel {
       position: fixed; top: 0; right: -450px; width: 400px; max-width: 85vw;
       height: 100%; background: rgba(6,0,0,0.96); backdrop-filter: blur(48px);
@@ -425,7 +426,6 @@
   <canvas id="particles"></canvas>
   <canvas id="matrixCanvas"></canvas>
 
-  <!-- LOADING -->
   <div id="loadingOverlay">
     <div class="loading-container">
       <div class="test-tube-panel" id="progressPanel">
@@ -439,13 +439,12 @@
         <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
       </div>
       <div class="error-panel" id="errorBox">
-        <div class="error-title">⚠ ERR_CONNECTION_REFUSED</div>
+        <div class="error-title">ERR_CONNECTION_REFUSED</div>
         <div class="error-sub">Re-establishing link...</div>
       </div>
     </div>
   </div>
 
-  <!-- WELCOME -->
   <div id="welcomeOverlay">
     <video id="welcomeVideo" autoplay muted loop playsinline>
       <source src="Screen_Recording_20260525_212935_Pinterest.mp4" type="video/mp4">
@@ -457,13 +456,12 @@
         <div class="welcome-ring"></div>
         <div class="welcome-text-container">
           <div class="welcome-title">WELCOME, NYX</div>
-          <button class="enter-btn" id="enterBtn">⟡ ENTER ⟡</button>
+          <button class="enter-btn" id="enterBtn">ENTER SYSTEM</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- MAIN DASHBOARD -->
   <div id="mainDashboard">
     <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="bg" />
     <iframe id="ytPlayer" style="display:none;" src="https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig" allow="autoplay"></iframe>
@@ -481,12 +479,18 @@
 
       <div class="cards-grid">
         <div class="glass"><div class="card-content"><img class="avatar" id="avatar" src=""><div class="username" id="username">nyx._.dev</div><div class="status-row"><span class="dot" id="statusDot"></span><span id="statusText">Loading...</span></div><div class="custom-status" id="customStatus"></div></div></div>
-        <div class="glass"><div class="card-content"><div class="section-title">◈ About NyX</div><p class="about-text">14‑year‑old architect of digital realms. Building sleek tools, immersive experiences, and futuristic interfaces.</p></div></div>
-        <div class="glass"><div class="card-content"><div class="section-title">✦ Skills</div><div class="skills-tags" id="skillsContainer"><span class="skill-tag" data-lang="javascript">JavaScript</span><span class="skill-tag" data-lang="html">HTML</span><span class="skill-tag" data-lang="luau">Luau</span><span class="skill-tag" data-lang="css">CSS</span><span class="skill-tag" data-lang="python">Python</span></div></div></div>
-        <div class="glass"><div class="card-content"><div class="section-title">⚡ Luau Wisdom</div><div class="luau-tip" id="luauTip">"Use task.wait() for better performance."</div></div></div>
-        <div class="glass"><div class="card-content"><div class="section-title">🍅 Pomodoro</div><div class="timer-display" id="timerDisplay">25:00</div><div class="pomodoro-controls"><button class="pomo-btn active" id="pomoStart">Start</button><button class="pomo-btn" id="pomoReset">Reset</button></div><p style="margin-top:16px; color:#ffaaaa;" id="pomoStatus">Work session</p></div></div>
-        <div class="glass"><div class="card-content"><div class="section-title">₿ BTC</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.9rem;" id="btcChange">–</p></div></div>
-        <div class="glass"><div class="card-content"><div class="section-title">🔗 Nexus</div><a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
+        
+        <div class="glass"><div class="card-content"><div class="section-title"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> About NyX</div><p class="about-text">14‑year‑old developer building sleek tools and immersive experiences.</p></div></div>
+        
+        <div class="glass"><div class="card-content"><div class="section-title"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Skills</div><div class="skills-tags" id="skillsContainer"><span class="skill-tag" data-lang="javascript">JavaScript</span><span class="skill-tag" data-lang="html">HTML</span><span class="skill-tag" data-lang="luau">Luau</span><span class="skill-tag" data-lang="css">CSS</span><span class="skill-tag" data-lang="python">Python</span></div></div></div>
+        
+        <div class="glass"><div class="card-content"><div class="section-title"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Luau Tip</div><div class="luau-tip" id="luauTip">"Use task.wait() instead of wait() for better performance."</div></div></div>
+        
+        <div class="glass"><div class="card-content"><div class="section-title"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="timer-controls"><button class="timer-btn active" id="timerStart">Start</button><button class="timer-btn" id="timerReset">Reset</button></div><p style="margin-top:16px; color:#ffaaaa;" id="timerStatus">Focus session</p></div></div>
+        
+        <div class="glass"><div class="card-content"><div class="section-title"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Bitcoin</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.9rem;" id="btcChange">–</p></div></div>
+        
+        <div class="glass"><div class="card-content"><div class="section-title"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Quick Links</div><a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
       </div>
       <div class="watermark-cell"><div class="watermark-text" id="watermark"></div></div>
     </div>
@@ -539,7 +543,7 @@
       updateClockGreeting(); setInterval(updateClockGreeting,1000);
 
       const tips=["Use task.wait() instead of wait() for performance.","Local variables are faster than globals.","Use :Connect() for events (Luau).","Avoid infinite loops without wait().","Type checking catches bugs early.","table.create() for pre-allocated arrays.","debug.traceback() helps errors.","pcall() for safe calls."];
-      let tIndex=0, tipEl=document.getElementById('luauTip'); setInterval(()=>{ tIndex=(tIndex+1)%tips.length; tipEl.style.opacity='0'; setTimeout(()=>{ tipEl.textContent=`✨ "${tips[tIndex]}"`; tipEl.style.opacity='1'; },300); },9000);
+      let tIndex=0, tipEl=document.getElementById('luauTip'); setInterval(()=>{ tIndex=(tIndex+1)%tips.length; tipEl.style.opacity='0'; setTimeout(()=>{ tipEl.textContent=`"${tips[tIndex]}"`; tipEl.style.opacity='1'; },300); },9000);
 
       const USER_ID="1418597263479144471";
       async function loadDiscord(){ try{ let res=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`); let json=await res.json(); if(json.success){ let d=json.data; document.getElementById('username').textContent=d.discord_user.global_name||d.discord_user.username; let av=d.discord_user.avatar; if(av) document.getElementById('avatar').src=`https://cdn.discordapp.com/avatars/${USER_ID}/${av}.${av.startsWith('a_')?'gif':'png'}?size=512`; let s=d.discord_status||"offline"; let dot=document.getElementById('statusDot'); dot.className="dot "+s; document.getElementById('statusText').textContent=s.charAt(0).toUpperCase()+s.slice(1); let custom=d.activities?.find(a=>a.type===4); document.getElementById('customStatus').textContent=custom?.state||""; } }catch(e){} }
@@ -547,16 +551,16 @@
       async function fetchBTC(){ try{ let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true'); let d=await r.json(); let p=d.bitcoin.usd; let ch=d.bitcoin.usd_24h_change?.toFixed(2)||0; document.getElementById('btcPrice').innerHTML=`$${p.toLocaleString()}`; let chEl=document.getElementById('btcChange'); chEl.innerHTML=`${ch>0?'▲':'▼'} ${Math.abs(ch)}%`; chEl.style.color=ch>=0?'#6fcf97':'#ff7b72'; }catch(e){ document.getElementById('btcPrice').innerHTML='—'; } }
       fetchBTC(); setInterval(fetchBTC,60000);
 
-      let timerDisplay=document.getElementById('timerDisplay'), pomoStatus=document.getElementById('pomoStatus'), startBtn=document.getElementById('pomoStart'), resetBtn=document.getElementById('pomoReset');
+      let timerDisplay=document.getElementById('timerDisplay'), timerStatus=document.getElementById('timerStatus'), startBtn=document.getElementById('timerStart'), resetBtn=document.getElementById('timerReset');
       let WORK=25*60, BREAK=5*60, timeLeft=WORK, isWorking=true, isRunning=false, timerInt=null;
       function updateTimerDisplayUI(){ let m=Math.floor(timeLeft/60), s=timeLeft%60; timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
       function stopTimerInt(){ if(timerInt){clearInterval(timerInt); timerInt=null;} isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); }
       function resetTimerFunc(){ stopTimerInt(); timeLeft=isWorking?WORK:BREAK; updateTimerDisplayUI(); }
-      function startTimerFunc(){ if(isRunning){ stopTimerInt(); return; } isRunning=true; startBtn.textContent='Pause'; startBtn.classList.add('active'); timerInt=setInterval(()=>{ if(timeLeft<=0){ clearInterval(timerInt); timerInt=null; isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); if(isWorking){ isWorking=false; pomoStatus.textContent='Break session'; timeLeft=BREAK; } else { isWorking=true; pomoStatus.textContent='Work session'; timeLeft=WORK; } updateTimerDisplayUI(); return; } timeLeft--; updateTimerDisplayUI(); },1000); }
+      function startTimerFunc(){ if(isRunning){ stopTimerInt(); return; } isRunning=true; startBtn.textContent='Pause'; startBtn.classList.add('active'); timerInt=setInterval(()=>{ if(timeLeft<=0){ clearInterval(timerInt); timerInt=null; isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); if(isWorking){ isWorking=false; timerStatus.textContent='Break session'; timeLeft=BREAK; } else { isWorking=true; timerStatus.textContent='Focus session'; timeLeft=WORK; } updateTimerDisplayUI(); return; } timeLeft--; updateTimerDisplayUI(); },1000); }
       startBtn.addEventListener('click',startTimerFunc); resetBtn.addEventListener('click',resetTimerFunc); updateTimerDisplayUI();
 
       const sidePanel=document.getElementById('sidePanel'), panelTitle=document.getElementById('panelTitle'), panelDesc=document.getElementById('panelDesc'), closePanelBtn=document.getElementById('closePanel');
-      const skillMap={javascript:"JavaScript is a versatile language for web dev, both client & server. Powers interactive features.",html:"HTML (HyperText Markup Language) structures web content – the skeleton of the web.",luau:"Luau is a Roblox scripting language derived from Lua, with type checking and performance boosts.",css:"CSS brings style to the web: colors, layouts, animations, and responsive design.",python:"Python: high‑level, readable, used for AI, data science, automation, and backend."};
+      const skillMap={javascript:"JavaScript is a versatile language for web development, both client & server.",html:"HTML structures web content – the skeleton of the web.",luau:"Luau is a Roblox scripting language derived from Lua, with type checking.",css:"CSS brings style to the web: colors, layouts, animations.",python:"Python: high-level, readable, used for AI, data science, automation."};
       document.getElementById('skillsContainer').addEventListener('click',(e)=>{ if(e.target.classList.contains('skill-tag')){ let lang=e.target.dataset.lang; panelTitle.textContent=e.target.textContent; panelDesc.textContent=skillMap[lang]||"Mastery in progress."; sidePanel.classList.add('open'); } });
       closePanelBtn.addEventListener('click',()=>sidePanel.classList.remove('open'));
       document.addEventListener('click',(e)=>{ if(!sidePanel.contains(e.target) && !e.target.classList.contains('skill-tag')) sidePanel.classList.remove('open'); });
