@@ -53,7 +53,6 @@
     #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
 
     .loading-container {
-      position: relative;
       display: flex; flex-direction: column; align-items: center; gap: 35px;
     }
     .test-tube-panel {
@@ -131,7 +130,7 @@
     .error-title { font-size: 2rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 25px #ff0000; }
     .error-sub { color: #ffaaaa; font-size: 1.1rem; }
 
-    /* ---------- Welcome Overlay ---------- */
+    /* ---------- Welcome Overlay (Next-Gen AI Hologram) ---------- */
     #welcomeOverlay {
       position: fixed; inset: 0; z-index: 998;
       display: none;
@@ -144,68 +143,100 @@
     #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
 
     .welcome-card {
-      background: rgba(20,0,0,0.75);
-      backdrop-filter: blur(45px);
-      border: 2px solid rgba(255,70,70,0.9);
-      border-radius: 70px;
-      padding: 70px 90px;
-      text-align: center;
-      box-shadow: 0 0 180px rgba(255,0,0,0.9), inset 0 0 80px rgba(255,0,0,0.4);
-      animation: welcomeCardPulse 2s ease-in-out infinite alternate;
       position: relative;
+      width: 450px;
+      height: 450px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20,0,0,0.6);
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(255,70,70,0.8);
+      border-radius: 50%;
+      box-shadow: 0 0 150px rgba(255,0,0,0.8), inset 0 0 80px rgba(255,0,0,0.4);
+      animation: rotateRing 20s linear infinite, cardGlow 2s ease-in-out infinite alternate;
     }
-    @keyframes welcomeCardPulse {
-      from { box-shadow: 0 0 130px rgba(255,0,0,0.7); }
-      to { box-shadow: 0 0 220px rgba(255,0,0,1); }
+    @keyframes rotateRing {
+      0% { box-shadow: 0 0 150px rgba(255,0,0,0.8), inset 0 0 80px rgba(255,0,0,0.4); }
+      100% { box-shadow: 0 0 200px rgba(255,0,0,1), inset 0 0 100px rgba(255,0,0,0.6); }
     }
-    .welcome-card::before {
-      content: "";
+    @keyframes cardGlow {
+      from { border-color: rgba(255,70,70,0.8); }
+      to { border-color: rgba(255,70,70,1); }
+    }
+
+    .welcome-ring {
       position: absolute;
-      top: -2px; left: -2px; right: -2px; bottom: -2px;
-      border-radius: 72px;
-      background: linear-gradient(45deg, #ff0000, #ff5555, #ff0000, #ff5555);
-      z-index: -1;
-      opacity: 0.6;
-      animation: rotateBorder 3s linear infinite;
-      filter: blur(10px);
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #ff3333;
+      border-right-color: #ff5555;
+      animation: spinRing 3s linear infinite;
+      opacity: 0.8;
+      pointer-events: none;
     }
-    @keyframes rotateBorder {
+    @keyframes spinRing {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .welcome-text-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
     .welcome-title {
-      font-size: 5rem;
+      font-size: 4rem;
       font-weight: 700;
       color: #fff;
-      text-shadow: 0 0 50px #ff0000, 0 0 100px rgba(255,0,0,0.9);
-      letter-spacing: 10px;
-      margin-bottom: 60px;
+      text-shadow: 0 0 40px #ff0000, 0 0 80px rgba(255,0,0,0.9);
+      letter-spacing: 8px;
       animation: textGlowWelcome 2s ease-in-out infinite alternate;
-      font-family: 'Poppins', sans-serif;
       background: linear-gradient(to right, #fff, #ffaaaa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      position: relative;
     }
     @keyframes textGlowWelcome {
       from { text-shadow: 0 0 40px #ff0000, 0 0 80px rgba(255,0,0,0.6); }
       to { text-shadow: 0 0 80px #ff0000, 0 0 150px rgba(255,0,0,0.9); }
     }
+
+    .welcome-subtitle {
+      font-size: 1.2rem;
+      color: #ffbbbb;
+      text-shadow: 0 0 15px rgba(255,0,0,0.6);
+      letter-spacing: 3px;
+      opacity: 0.8;
+      animation: fadeUp 2s ease-out;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .enter-btn {
-      background: rgba(255,0,0,0.25);
+      background: rgba(0,0,0,0.6);
       border: 2px solid #ff5555;
       color: #fff;
-      font-size: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      padding: 22px 70px;
-      border-radius: 80px;
+      padding: 16px 50px;
+      border-radius: 50px;
       cursor: pointer;
-      letter-spacing: 8px;
+      letter-spacing: 5px;
       transition: all 0.3s ease;
       text-transform: uppercase;
-      animation: btnPulse 2s infinite;
+      backdrop-filter: blur(10px);
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(255,0,0,0.6);
     }
     .enter-btn::before {
       content: "";
@@ -216,15 +247,19 @@
       transition: left 0.5s;
     }
     .enter-btn:hover::before { left: 100%; }
-    @keyframes btnPulse {
-      0% { box-shadow: 0 0 30px #ff0000; }
-      50% { box-shadow: 0 0 80px #ff0000, 0 0 120px rgba(255,0,0,0.7); }
-      100% { box-shadow: 0 0 30px #ff0000; }
-    }
     .enter-btn:hover {
       background: #ff3333;
-      box-shadow: 0 0 120px #ff0000;
-      transform: scale(1.08);
+      box-shadow: 0 0 60px #ff0000;
+      transform: scale(1.05);
+    }
+
+    /* Particles around welcome card */
+    .welcome-particles {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* ---------- Main Dashboard ---------- */
@@ -403,9 +438,9 @@
     @media (max-width: 768px) {
       .header { flex-direction: column; text-align: center; padding: 28px; }
       .glass { width: 100%; max-width: 400px; }
-      .welcome-card { padding: 50px 40px; }
-      .welcome-title { font-size: 3.5rem; }
-      .enter-btn { font-size: 1.6rem; padding: 18px 50px; }
+      .welcome-card { width: 320px; height: 320px; }
+      .welcome-title { font-size: 2.8rem; }
+      .enter-btn { font-size: 1.3rem; padding: 12px 35px; }
       .watermark-text { font-size: 3rem; }
     }
   </style>
@@ -442,9 +477,14 @@
   <!-- WELCOME -->
   <div id="welcomeOverlay">
     <div class="welcome-card">
-      <div class="welcome-title">Welcome, user</div>
-      <button class="enter-btn" id="enterBtn">Click to Enter</button>
+      <div class="welcome-ring"></div>
+      <div class="welcome-text-container">
+        <div class="welcome-title">Welcome, user</div>
+        <div class="welcome-subtitle">Initializing AI Holographic Interface</div>
+        <button class="enter-btn" id="enterBtn">Enter System</button>
+      </div>
     </div>
+    <div class="welcome-particles" id="welcomeParticles"></div>
   </div>
 
   <!-- MAIN DASHBOARD -->
@@ -621,7 +661,7 @@
     }
     setInterval(drawMatrix,80);
 
-    // ---------- Loading Sequence ----------
+    // ---------- Loading Sequence (Test tube fills to 100%) ----------
     const loadingOverlay = document.getElementById('loadingOverlay');
     const liquidFill = document.getElementById('liquidFill');
     const progressPanel = document.getElementById('progressPanel');
@@ -630,7 +670,7 @@
     const welcomeOverlay = document.getElementById('welcomeOverlay');
 
     let progress = 0;
-    const totalDuration = 6000; // 6 seconds to fill test tube
+    const totalDuration = 6000; // 6 seconds, test tube fills to 100%
     const updateInterval = 50;
     const steps = totalDuration / updateInterval;
     let currentStep = 0;
@@ -639,10 +679,11 @@
       { time: 0.0, action: () => { progressPanel.style.display='flex'; errorBox.style.display='none'; loadingLabel.textContent='NYX.exe loading...'; } },
       { time: 1.5, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
       { time: 2.5, action: () => { errorBox.style.display='none'; loadingLabel.textContent='Retrying...'; } },
-      { time: 4.0, action: () => { progressPanel.style.display='none'; } }, // test tube gone
-      { time: 5.0, action: () => {
+      // At the end, hide loading and show welcome
+      { time: 6.0, action: () => {
         loadingOverlay.classList.add('fade-out');
         welcomeOverlay.classList.add('active');
+        startWelcomeParticles();
       }}
     ];
 
@@ -657,6 +698,35 @@
       }
       if(currentStep>=steps) clearInterval(loadInterval);
     },updateInterval);
+
+    // ---------- Welcome Particles (around the card) ----------
+    const welcomeParticlesContainer = document.getElementById('welcomeParticles');
+    let welcomeParticles = [];
+    function startWelcomeParticles() {
+      const count = 30;
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: absolute;
+          width: 4px; height: 4px;
+          background: #ff3333;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #ff0000;
+          animation: floatWelcome ${Math.random()*3+2}s linear infinite;
+          opacity: ${Math.random()*0.5+0.3};
+        `;
+        // Random position around the card
+        const angle = Math.random() * 360;
+        const radius = 230 + Math.random() * 50;
+        const x = Math.cos(angle * Math.PI / 180) * radius;
+        const y = Math.sin(angle * Math.PI / 180) * radius;
+        particle.style.left = `calc(50% + ${x}px)`;
+        particle.style.top = `calc(50% + ${y}px)`;
+        particle.style.animationDelay = Math.random() * 2 + 's';
+        welcomeParticlesContainer.appendChild(particle);
+        welcomeParticles.push(particle);
+      }
+    }
 
     // ---------- YouTube Music ----------
     const tag = document.createElement('script');
