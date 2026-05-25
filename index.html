@@ -285,10 +285,11 @@
   <div id="mainDashboard">
     <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="background" />
 
-    <audio id="bgMusic" loop preload="auto">
-      <source src="Screen_Recording_20260525_134650_Spotify.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
+    <!-- Hidden YouTube player with your chosen song -->
+    <iframe id="ytPlayer" style="display:none;" 
+            src="https://www.youtube.com/embed/AcJUYGD8zjk?enablejsapi=1&autoplay=0&loop=1&playlist=AcJUYGD8zjk"
+            allow="autoplay">
+    </iframe>
 
     <div class="dashboard">
       <div class="header">
@@ -507,44 +508,59 @@
       if(currentStep>=steps) clearInterval(loadInterval);
     },updateInterval);
 
-    // ---- Music Controls ----
-    const bgMusic = document.getElementById('bgMusic');
+    // ---- YouTube Music Controller ----
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    let player;
+    let musicPlaying = false;
     const musicBtn = document.getElementById('musicBtn');
     const musicIconOff = document.getElementById('musicIconOff');
     const musicIconOn = document.getElementById('musicIconOn');
     const musicLabel = document.getElementById('musicLabel');
-    let musicStarted = false;
 
-    function setMusicUI(state, label) {
+    function setMusicUI(state) {
       if (state === 'on') {
         musicIconOff.style.display = 'none';
         musicIconOn.style.display = 'inline';
+        musicLabel.textContent = 'Music On';
+        musicPlaying = true;
       } else {
         musicIconOn.style.display = 'none';
         musicIconOff.style.display = 'inline';
+        musicLabel.textContent = 'Music Off';
+        musicPlaying = false;
       }
-      musicLabel.textContent = label;
     }
 
-    function toggleMusic() {
-      if (!musicStarted) {
-        bgMusic.play()
-          .then(() => {
-            musicStarted = true;
-            setMusicUI('on', 'Music On');
-          })
-          .catch(() => {
-            musicStarted = false;
-            setMusicUI('off', 'Click again');
-          });
-      } else {
-        if (bgMusic.paused) {
-          bgMusic.play();
-          setMusicUI('on', 'Music On');
-        } else {
-          bgMusic.pause();
-          setMusicUI('off', 'Music Off');
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytPlayer', {
+        events: {
+          'onReady': () => {},
+          'onStateChange': (event) => {
+            if (event.data === YT.PlayerState.ENDED) {
+              player.playVideo(); // loop
+            }
+          }
         }
+      });
+    }
+
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+
+    function toggleMusic() {
+      if (!player || !player.playVideo) {
+        setMusicUI('off');
+        return;
+      }
+      if (musicPlaying) {
+        player.pauseVideo();
+        setMusicUI('off');
+      } else {
+        player.playVideo();
+        setMusicUI('on');
       }
     }
 
