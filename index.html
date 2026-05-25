@@ -285,8 +285,10 @@
   <div id="mainDashboard">
     <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="background" />
 
-    <video id="bgMusic" loop autoplay playsinline muted width="0" height="0" preload="auto"
-           src="Screen_Recording_20260525_134650_Spotify.mp4"></video>
+    <audio id="bgMusic" loop preload="auto">
+      <source src="Screen_Recording_20260525_134650_Spotify.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
 
     <div class="dashboard">
       <div class="header">
@@ -505,7 +507,7 @@
       if(currentStep>=steps) clearInterval(loadInterval);
     },updateInterval);
 
-    // ---- Music Controls (with error handling) ----
+    // ---- Music Controls ----
     const bgMusic = document.getElementById('bgMusic');
     const musicBtn = document.getElementById('musicBtn');
     const musicIconOff = document.getElementById('musicIconOff');
@@ -524,41 +526,27 @@
       musicLabel.textContent = label;
     }
 
-    function handleMusicError() {
-      musicStarted = false;
-      setMusicUI('off', 'No audio (file missing?)');
-    }
-
-    bgMusic.addEventListener('error', handleMusicError);
-
     function toggleMusic() {
       if (!musicStarted) {
-        bgMusic.muted = false;
         bgMusic.play()
           .then(() => {
             musicStarted = true;
             setMusicUI('on', 'Music On');
           })
-          .catch(err => {
-            console.error('Music play error:', err);
+          .catch(() => {
             musicStarted = false;
-            setMusicUI('off', 'Error (check file)');
+            setMusicUI('off', 'Click again');
           });
       } else {
-        if (bgMusic.muted) {
-          bgMusic.muted = false;
+        if (bgMusic.paused) {
+          bgMusic.play();
           setMusicUI('on', 'Music On');
         } else {
-          bgMusic.muted = true;
+          bgMusic.pause();
           setMusicUI('off', 'Music Off');
         }
       }
     }
-
-    // Attempt silent autoplay (won't work without interaction)
-    window.addEventListener('load', () => {
-      bgMusic.play().catch(() => {});
-    });
 
     // ---- Main functions ----
     function updateClockAndGreeting() {
