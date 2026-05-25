@@ -25,10 +25,7 @@
     .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, #ff3333, transparent); top: -200px; left: -200px; }
     .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #cc0000, transparent); bottom: -200px; right: -200px; animation-delay: -3s; }
     .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, #ff5555, transparent); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -5s; }
-    @keyframes orbFade {
-      0% { opacity: 0.08; }
-      100% { opacity: 0.18; }
-    }
+    @keyframes orbFade { 0% { opacity: 0.08; } 100% { opacity: 0.18; } }
     canvas#particles {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6;
     }
@@ -38,342 +35,166 @@
 
     /* ---- Loading Overlay ---- */
     #loadingOverlay {
-      position: fixed;
-      inset: 0;
-      z-index: 999;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0; z-index: 999; background: transparent;
+      display: flex; align-items: center; justify-content: center;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
-    #loadingOverlay.fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
+    #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
+
     .center-box {
       position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      z-index: 10;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      z-index: 10; transition: opacity 0.3s ease, visibility 0.3s ease;
     }
-    .progress-box {
-      background: rgba(10, 0, 0, 0.5);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 60, 60, 0.3);
-      border-radius: 20px;
-      padding: 20px 30px;
-      box-shadow: 0 0 60px rgba(255, 0, 0, 0.4);
-      text-align: center;
+
+    /* Test Tube */
+    .test-tube-container {
+      display: flex; flex-direction: column; align-items: center; gap: 15px;
     }
-    .loading-text {
-      font-size: 1.4rem;
-      font-weight: 600;
+    .tube {
+      width: 60px; height: 180px;
+      background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 0 0 30px 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(255,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.5);
+      backdrop-filter: blur(2px);
+    }
+    .tube::before {
+      content: "";
+      position: absolute;
+      top: -2px; left: -10%; width: 120%; height: 10px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      z-index: 3;
+    }
+    .liquid {
+      position: absolute;
+      bottom: 0; left: 0; width: 100%;
+      height: 0%;
+      background: linear-gradient(to top, #cc0000, #ff3333, #ff4d4d);
+      box-shadow: 0 0 30px #ff0000;
+      transition: height 0.1s ease;
+      border-radius: 0 0 28px 28px;
+      overflow: hidden;
+    }
+    .bubble {
+      position: absolute;
+      bottom: 0;
+      background: rgba(255,255,255,0.3);
+      border-radius: 50%;
+      animation: rise linear infinite;
+      z-index: 2;
+    }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-160px) scale(0.6); opacity: 0; }
+    }
+    .glow-text {
+      font-size: 1.4rem; font-weight: 600;
       color: #ff5555;
       text-shadow: 0 0 15px #ff0000;
       letter-spacing: 2px;
     }
-    .progress-bar-bg {
-      height: 8px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #ff0000, #ff4d4d);
-      border-radius: 8px;
-      box-shadow: 0 0 15px #ff0000;
-      transition: width 0.1s ease;
-    }
+
     .error-box {
-      background: rgba(255,0,0,0.15);
-      border: 1px solid #ff0000;
-      border-radius: 12px;
-      padding: 12px 20px;
-      display: none;
-      text-align: center;
-      animation: errorFlash 0.3s ease;
+      background: rgba(255,0,0,0.15); border: 1px solid #ff0000;
+      border-radius: 12px; padding: 12px 20px; display: none;
+      text-align: center; animation: errorFlash 0.3s ease;
     }
-    @keyframes errorFlash {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    @keyframes errorFlash { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     .error-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #ff4444;
-      text-shadow: 0 0 20px #ff0000;
+      font-size: 1.5rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 20px #ff0000;
     }
-    .error-sub {
-      color: #ffaaaa;
-      font-size: 0.9rem;
-    }
+    .error-sub { color: #ffaaaa; font-size: 0.9rem; }
+
     .debug-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #fff;
-      text-shadow: 0 0 30px #ff0000;
-      letter-spacing: 4px;
-      display: none;
+      font-size: 2.5rem; font-weight: 700; color: #fff;
+      text-shadow: 0 0 30px #ff0000; letter-spacing: 4px; display: none;
     }
+
     .terminals-container {
-      position: absolute;
-      inset: 0;
-      display: none;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      z-index: 5;
+      position: absolute; inset: 0; display: none; flex-wrap: wrap;
+      justify-content: center; align-items: center; gap: 20px; z-index: 5;
     }
     .terminal {
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(255, 50, 50, 0.4);
-      border-radius: 12px;
-      padding: 10px;
-      font-family: 'Courier New', monospace;
-      font-size: 0.8rem;
-      line-height: 1.3;
-      color: #0f0;
-      text-shadow: 0 0 4px #0f0;
-      backdrop-filter: blur(4px);
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      animation: terminalFlicker 2s infinite;
+      background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 50, 50, 0.4);
+      border-radius: 12px; padding: 10px; font-family: 'Courier New', monospace;
+      font-size: 0.8rem; line-height: 1.3; color: #0f0; text-shadow: 0 0 4px #0f0;
+      backdrop-filter: blur(4px); overflow: hidden; position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: terminalFlicker 2s infinite;
     }
     @keyframes terminalFlicker {
-      0%, 100% { opacity: 1; }
-      92% { opacity: 0.9; }
-      94% { opacity: 0.8; }
-      96% { opacity: 1; }
+      0%,100%{opacity:1} 92%{opacity:0.9} 94%{opacity:0.8} 96%{opacity:1}
     }
     .terminal::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
+      content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
       background: repeating-linear-gradient(0deg, rgba(0,255,0,0.04) 0px, rgba(0,255,0,0.04) 2px, transparent 2px, transparent 4px);
       pointer-events: none;
     }
-    .terminal-content {
-      white-space: pre-wrap;
-      height: 100%;
-      overflow: hidden;
-    }
+    .terminal-content { white-space: pre-wrap; height:100%; overflow:hidden; }
 
     /* ---- Main Dashboard ---- */
-    #mainDashboard {
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    #mainDashboard.visible {
-      opacity: 1;
-      visibility: visible;
-    }
-    .dashboard {
-      position: relative; z-index: 1;
-      width: 100%; max-width: 1350px;
-      padding: 30px 20px;
-      display: flex; flex-direction: column; align-items: center;
-      gap: 25px;
-    }
+    #mainDashboard { opacity:0; visibility:hidden; transition: opacity 0.8s ease, visibility 0.8s ease; }
+    #mainDashboard.visible { opacity:1; visibility:visible; }
+    .dashboard { position:relative; z-index:1; width:100%; max-width:1350px; padding:30px 20px; display:flex; flex-direction:column; align-items:center; gap:25px; }
     .header {
-      width: 100%; max-width: 1000px;
-      background: rgba(18, 0, 0, 0.25);
-      backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 70, 70, 0.2);
-      border-radius: 44px;
-      padding: 22px 35px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 15px;
+      width:100%; max-width:1000px; background: rgba(18,0,0,0.25); backdrop-filter: blur(18px);
+      border:1px solid rgba(255,70,70,0.2); border-radius:44px; padding:22px 35px;
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;
       box-shadow: 0 22px 55px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.05);
       animation: headerSlide 0.7s ease-out;
     }
-    @keyframes headerSlide {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .greeting {
-      font-size: 1.85rem; font-weight: 600;
-      letter-spacing: 1px;
-      color: #fff;
-      text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
-    }
-    .live-clock {
-      font-size: 1.85rem; font-weight: 700;
-      letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5);
-    }
-    .cards-grid {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 22px; width: 100%;
-    }
+    @keyframes headerSlide { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+    .greeting { font-size:1.85rem; font-weight:600; letter-spacing:1px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5); }
+    .live-clock { font-size:1.85rem; font-weight:700; letter-spacing:2px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5); }
+    .cards-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:22px; width:100%; }
     .glass {
-      background: rgba(20, 0, 0, 0.22);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 70, 70, 0.18);
-      border-radius: 38px;
-      padding: 25px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      background: rgba(20,0,0,0.22); backdrop-filter: blur(12px); border:1px solid rgba(255,70,70,0.18);
+      border-radius:38px; padding:25px; box-shadow: 0 25px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
       transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      width: 310px; max-width: 100%;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
+      width:310px; max-width:100%; flex-shrink:0; position:relative; overflow:hidden;
       animation: cardPop 0.5s ease-out backwards;
     }
-    .glass:nth-child(1) { animation-delay: 0.1s; }
-    .glass:nth-child(2) { animation-delay: 0.2s; }
-    .glass:nth-child(3) { animation-delay: 0.3s; }
-    .glass:nth-child(4) { animation-delay: 0.4s; }
-    .glass:nth-child(5) { animation-delay: 0.5s; }
-    .glass:nth-child(6) { animation-delay: 0.6s; }
-
-    @keyframes cardPop {
-      from { opacity: 0; transform: scale(0.92); }
-      to { opacity: 1; transform: scale(1); }
-    }
+    .glass:nth-child(1){animation-delay:0.1s} .glass:nth-child(2){animation-delay:0.2s} .glass:nth-child(3){animation-delay:0.3s}
+    .glass:nth-child(4){animation-delay:0.4s} .glass:nth-child(5){animation-delay:0.5s} .glass:nth-child(6){animation-delay:0.6s}
+    @keyframes cardPop { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
     .glass::after {
-      content: '';
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      content:''; position:absolute; top:0; left:0; width:100%; height:100%;
       background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.02) 50%, transparent 55%);
-      background-size: 200% 100%;
-      animation: shine 4s ease-in-out infinite;
-      z-index: 0; pointer-events: none;
-      border-radius: 38px;
+      background-size:200% 100%; animation: shine 4s ease-in-out infinite; z-index:0; pointer-events:none; border-radius:38px;
     }
-    @keyframes shine {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    .glass:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 35px 80px rgba(255, 0, 0, 0.55);
-      border-color: rgba(255, 90, 90, 0.6);
-    }
-    .card-content {
-      position: relative; z-index: 2;
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-    }
-    .avatar {
-      width: 115px; height: 115px; border-radius: 50%; object-fit: cover;
-      border: 3px solid rgba(255,50,50,0.7);
-      box-shadow: 0 0 30px rgba(255,0,0,0.5);
-      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
-      animation: ringPulse 2s infinite;
-    }
-    @keyframes ringPulse {
-      0%,100% { border-color: rgba(255,50,50,0.7); box-shadow: 0 0 30px rgba(255,0,0,0.5); }
-      50% { border-color: rgba(255,90,90,0.9); box-shadow: 0 0 60px rgba(255,0,0,0.8); }
-    }
-    .avatar:hover { transform: scale(1.07); border-color: #ff4444; box-shadow: 0 0 70px rgba(255,0,0,0.9); }
-    .username {
-      font-size: 1.8rem; font-weight: 700;
-      margin-top: 15px;
-      color: #fff;
-      text-shadow: 0 0 8px #ff0000, 0 0 20px rgba(255,0,0,0.6);
-    }
-    .status-row {
-      margin-top: 10px; display: flex; align-items: center; gap: 6px;
-      color: #ffaaaa; font-size: 0.95rem;
-    }
-    .dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      animation: pulse 2s infinite;
-    }
-    .dot.online { background: #43b581; }
-    .dot.idle { background: #faa61a; }
-    .dot.dnd { background: #f04747; }
-    .dot.offline { background: #747f8d; }
-    .custom-status {
-      margin-top: 8px; color: #ccc; font-style: italic; font-size: 0.9rem;
-      opacity: 0.8;
-    }
-    .spotify-embed {
-      width: 100%; border-radius: 18px; overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    .luau-tip {
-      font-size: 1rem; color: #ffbbbb; margin-top: 10px;
-      text-align: center; line-height: 1.5;
-      transition: opacity 0.3s;
-      text-shadow: 0 0 6px rgba(255,0,0,0.4);
-    }
-    .timer-display {
-      font-size: 2.2rem; font-weight: 700; letter-spacing: 3px;
-      margin: 8px 0;
-      text-shadow: 0 0 15px #ff0000;
-    }
-    .pomodoro-controls {
-      display: flex; gap: 10px; margin-top: 15px;
-    }
-    .pomo-btn {
-      background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.4);
-      color: #fff; padding: 8px 18px; border-radius: 25px;
-      cursor: pointer; font-weight: 600; transition: 0.3s;
-      font-size: 0.9rem; letter-spacing: 1px;
-    }
-    .pomo-btn:hover { background: rgba(255,50,50,0.4); }
-    .pomo-btn.active { background: rgba(255,50,50,0.6); border-color: #ff5555; }
-    .section-title {
-      font-size: 1.2rem; font-weight: 600; margin-bottom: 12px;
-      display: flex; align-items: center; gap: 8px; color: #ffbbbb;
-      text-shadow: 0 0 10px rgba(255,80,80,0.5);
-      border-bottom: 2px solid rgba(255,50,50,0.3); padding-bottom: 8px;
-      justify-content: center;
-    }
-    .section-title svg { width: 18px; height: 18px; }
-    .crypto-price {
-      font-size: 2.2rem; font-weight: 700;
-      text-shadow: 0 0 12px #ff0000;
-      animation: priceFade 0.5s ease;
-    }
-    @keyframes priceFade {
-      from { opacity: 0.5; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-    .discord-link {
-      display: inline-flex; align-items: center; gap: 8px;
-      margin-top: 15px;
-      background: rgba(88,101,242,0.15); border: 1px solid #5865F2;
-      color: #fff; padding: 10px 20px; border-radius: 30px;
-      text-decoration: none; font-weight: 600; transition: 0.3s;
-    }
-    .discord-link:hover { background: #5865F2; }
-    .watermark-cell {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      padding: 20px 0;
-    }
-    .watermark-text {
-      font-family: 'Courier New', monospace;
-      font-size: 4rem;
-      font-weight: bold;
-      color: #ff5555;
-      text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 80px #ff0000;
-      letter-spacing: 8px;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 4px solid #ff5555;
-      animation: blinkCursor 0.8s infinite;
-    }
-    @keyframes blinkCursor {
-      0%, 100% { border-color: transparent; }
-      50% { border-color: #ff5555; }
-    }
-    @media (max-width: 768px) {
-      .header { flex-direction: column; text-align: center; }
-      .glass { width: 100%; }
-      .watermark-text { font-size: 2.5rem; letter-spacing: 4px; }
+    @keyframes shine { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .glass:hover { transform:translateY(-6px); box-shadow:0 35px 80px rgba(255,0,0,0.55); border-color:rgba(255,90,90,0.6); }
+    .card-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; }
+    .avatar { width:115px; height:115px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,50,50,0.7); box-shadow:0 0 30px rgba(255,0,0,0.5); transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s; animation: ringPulse 2s infinite; }
+    @keyframes ringPulse { 0%,100%{border-color:rgba(255,50,50,0.7);box-shadow:0 0 30px rgba(255,0,0,0.5)} 50%{border-color:rgba(255,90,90,0.9);box-shadow:0 0 60px rgba(255,0,0,0.8)} }
+    .avatar:hover { transform:scale(1.07); border-color:#ff4444; box-shadow:0 0 70px rgba(255,0,0,0.9); }
+    .username { font-size:1.8rem; font-weight:700; margin-top:15px; color:#fff; text-shadow:0 0 8px #ff0000, 0 0 20px rgba(255,0,0,0.6); }
+    .status-row { margin-top:10px; display:flex; align-items:center; gap:6px; color:#ffaaaa; font-size:0.95rem; }
+    .dot { width:10px; height:10px; border-radius:50%; animation: pulse 2s infinite; }
+    .dot.online{background:#43b581} .dot.idle{background:#faa61a} .dot.dnd{background:#f04747} .dot.offline{background:#747f8d}
+    .custom-status { margin-top:8px; color:#ccc; font-style:italic; font-size:0.9rem; opacity:0.8; }
+    .spotify-embed { width:100%; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.6); }
+    .luau-tip { font-size:1rem; color:#ffbbbb; margin-top:10px; text-align:center; line-height:1.5; transition:opacity 0.3s; text-shadow:0 0 6px rgba(255,0,0,0.4); }
+    .timer-display { font-size:2.2rem; font-weight:700; letter-spacing:3px; margin:8px 0; text-shadow:0 0 15px #ff0000; }
+    .pomodoro-controls { display:flex; gap:10px; margin-top:15px; }
+    .pomo-btn { background:rgba(255,50,50,0.2); border:1px solid rgba(255,50,50,0.4); color:#fff; padding:8px 18px; border-radius:25px; cursor:pointer; font-weight:600; transition:0.3s; font-size:0.9rem; letter-spacing:1px; }
+    .pomo-btn:hover{background:rgba(255,50,50,0.4)} .pomo-btn.active{background:rgba(255,50,50,0.6);border-color:#ff5555}
+    .section-title { font-size:1.2rem; font-weight:600; margin-bottom:12px; display:flex; align-items:center; gap:8px; color:#ffbbbb; text-shadow:0 0 10px rgba(255,80,80,0.5); border-bottom:2px solid rgba(255,50,50,0.3); padding-bottom:8px; justify-content:center; }
+    .section-title svg{width:18px; height:18px}
+    .crypto-price { font-size:2.2rem; font-weight:700; text-shadow:0 0 12px #ff0000; animation:priceFade 0.5s ease; }
+    @keyframes priceFade { from{opacity:0.5;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
+    .discord-link { display:inline-flex; align-items:center; gap:8px; margin-top:15px; background:rgba(88,101,242,0.15); border:1px solid #5865F2; color:#fff; padding:10px 20px; border-radius:30px; text-decoration:none; font-weight:600; transition:0.3s; }
+    .discord-link:hover{background:#5865F2}
+    .watermark-cell { width:100%; display:flex; justify-content:center; padding:20px 0; }
+    .watermark-text { font-family:'Courier New', monospace; font-size:4rem; font-weight:bold; color:#ff5555; text-shadow:0 0 20px #ff0000, 0 0 40px #ff0000, 0 0 80px #ff0000; letter-spacing:8px; white-space:nowrap; overflow:hidden; border-right:4px solid #ff5555; animation: blinkCursor 0.8s infinite; }
+    @keyframes blinkCursor { 0%,100%{border-color:transparent} 50%{border-color:#ff5555} }
+    @media (max-width:768px) {
+      .header{flex-direction:column; text-align:center}
+      .glass{width:100%}
+      .watermark-text{font-size:2.5rem; letter-spacing:4px}
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -387,11 +208,17 @@
 
   <div id="loadingOverlay">
     <div class="center-box" id="progressGroup">
-      <div class="progress-box">
-        <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
-        <div class="progress-bar-bg">
-          <div class="progress-fill" id="progressFill"></div>
+      <div class="test-tube-container">
+        <div class="tube">
+          <div class="liquid" id="liquidFill">
+            <div class="bubble" style="left:10px; width:8px; height:8px; animation-duration:1.2s;"></div>
+            <div class="bubble" style="left:25px; width:6px; height:6px; animation-duration:1.5s; animation-delay:0.3s;"></div>
+            <div class="bubble" style="left:40px; width:10px; height:10px; animation-duration:1.8s; animation-delay:0.6s;"></div>
+            <div class="bubble" style="left:18px; width:5px; height:5px; animation-duration:1.1s; animation-delay:0.9s;"></div>
+            <div class="bubble" style="left:35px; width:7px; height:7px; animation-duration:1.4s; animation-delay:1.2s;"></div>
+          </div>
         </div>
+        <div class="glow-text" id="loadingLabel">NYX.exe loading...</div>
       </div>
       <div class="error-box" id="errorBox">
         <div class="error-title">ERR_CONNECTION_REFUSED</div>
@@ -474,6 +301,7 @@
   </div>
 
   <script>
+    // ---------- Particle Background ----------
     const pCanvas = document.getElementById('particles');
     const pCtx = pCanvas.getContext('2d');
     let particles = [];
@@ -496,68 +324,40 @@
         this.speedY = (Math.random() - 0.5) * 0.3;
         this.opacity = Math.random() * 0.3 + 0.05;
       }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > pw) this.speedX *= -1;
-        if (this.y < 0 || this.y > ph) this.speedY *= -1;
-      }
-      draw() {
-        pCtx.beginPath();
-        pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        pCtx.fillStyle = `rgba(255, 80, 80, ${this.opacity})`;
-        pCtx.fill();
-      }
+      update() { this.x += this.speedX; this.y += this.speedY; if(this.x<0||this.x>pw)this.speedX*=-1; if(this.y<0||this.y>ph)this.speedY*=-1; }
+      draw() { pCtx.beginPath(); pCtx.arc(this.x,this.y,this.size,0,Math.PI*2); pCtx.fillStyle=`rgba(255,80,80,${this.opacity})`; pCtx.fill(); }
     }
-
-    for (let i = 0; i < 50; i++) particles.push(new Particle());
-
-    function animateParticles() {
-      pCtx.clearRect(0, 0, pw, ph);
-      particles.forEach(p => { p.update(); p.draw(); });
-      requestAnimationFrame(animateParticles);
-    }
+    for(let i=0;i<50;i++) particles.push(new Particle());
+    function animateParticles() { pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw()}); requestAnimationFrame(animateParticles); }
     animateParticles();
 
+    // ---------- Matrix Rain ----------
     const mCanvas = document.getElementById('matrixCanvas');
     const mCtx = mCanvas.getContext('2d');
-    let mw, mh, columns, drops;
-    const fontSize = 20;
-    const chars = "01";
-
+    let mw,mh,columns,drops,fontSize=20,chars="01";
     function setupMatrix() {
-      mw = mCanvas.width = window.innerWidth;
-      mh = mCanvas.height = window.innerHeight;
-      columns = Math.floor(mw / fontSize) + 1;
-      drops = Array(columns).fill(1);
+      mw=mCanvas.width=window.innerWidth; mh=mCanvas.height=window.innerHeight;
+      columns=Math.floor(mw/fontSize)+1; drops=Array(columns).fill(1);
     }
-    window.addEventListener('resize', setupMatrix);
-    setupMatrix();
-
+    window.addEventListener('resize',setupMatrix); setupMatrix();
     function drawMatrix() {
-      mCtx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-      mCtx.fillRect(0, 0, mw, mh);
-      mCtx.font = `${fontSize}px monospace`;
-      mCtx.textAlign = 'center';
-      for (let i = 0; i < drops.length; i++) {
-        const text = chars[Math.floor(Math.random() * chars.length)];
-        const x = i * fontSize + fontSize / 2;
-        const y = drops[i] * fontSize;
-        mCtx.fillStyle = '#ff3333';
-        mCtx.shadowColor = '#ff0000';
-        mCtx.shadowBlur = 6;
-        mCtx.fillText(text, x, y);
-        mCtx.shadowBlur = 0;
-        if (y > mh && Math.random() > 0.975) drops[i] = 0;
+      mCtx.fillStyle='rgba(0,0,0,0.08)'; mCtx.fillRect(0,0,mw,mh);
+      mCtx.font=`${fontSize}px monospace`; mCtx.textAlign='center';
+      for(let i=0;i<drops.length;i++) {
+        const text=chars[Math.floor(Math.random()*chars.length)];
+        const x=i*fontSize+fontSize/2, y=drops[i]*fontSize;
+        mCtx.fillStyle='#ff3333'; mCtx.shadowColor='#ff0000'; mCtx.shadowBlur=6;
+        mCtx.fillText(text,x,y); mCtx.shadowBlur=0;
+        if(y>mh&&Math.random()>0.975)drops[i]=0;
         drops[i]++;
       }
     }
-    setInterval(drawMatrix, 80);
+    setInterval(drawMatrix,80);
 
     // ---------- Loading Sequence ----------
     const loadingOverlay = document.getElementById('loadingOverlay');
     const mainDashboard = document.getElementById('mainDashboard');
-    const progressFill = document.getElementById('progressFill');
+    const liquidFill = document.getElementById('liquidFill');
     const progressGroup = document.getElementById('progressGroup');
     const errorBox = document.getElementById('errorBox');
     const debugTitle = document.getElementById('debugTitle');
@@ -571,7 +371,7 @@
     let currentStep = 0;
 
     function randomHex() { return Math.floor(Math.random()*16).toString(16).toUpperCase(); }
-    function randomAddr() { return '0x' + Array.from({length:8}, () => randomHex()).join(''); }
+    function randomAddr() { return '0x'+Array.from({length:8},()=>randomHex()).join(''); }
 
     const NUM_TERMINALS = 14;
     const terminalElements = [];
@@ -579,59 +379,43 @@
 
     function createTerminals() {
       const frag = document.createDocumentFragment();
-      for (let i = 0; i < NUM_TERMINALS; i++) {
-        const div = document.createElement('div');
-        div.className = 'terminal';
-        const w = Math.floor(Math.random() * 160) + 140; // 140-300px
-        const h = Math.floor(Math.random() * 100) + 80; // 80-180px
-        div.style.width = w + 'px';
-        div.style.height = h + 'px';
-        div.style.position = 'absolute';
-        div.style.left = Math.floor(Math.random() * (window.innerWidth - w)) + 'px';
-        div.style.top = Math.floor(Math.random() * (window.innerHeight - h)) + 'px';
-        const contentDiv = document.createElement('div');
-        contentDiv.className = 'terminal-content';
-        div.appendChild(contentDiv);
-        frag.appendChild(div);
-        terminalElements.push({ div, contentDiv });
+      for(let i=0;i<NUM_TERMINALS;i++) {
+        const div=document.createElement('div'); div.className='terminal';
+        const w=Math.floor(Math.random()*160)+140, h=Math.floor(Math.random()*100)+80;
+        div.style.width=w+'px'; div.style.height=h+'px'; div.style.position='absolute';
+        div.style.left=Math.floor(Math.random()*(window.innerWidth-w))+'px';
+        div.style.top=Math.floor(Math.random()*(window.innerHeight-h))+'px';
+        const contentDiv=document.createElement('div'); contentDiv.className='terminal-content';
+        div.appendChild(contentDiv); frag.appendChild(div);
+        terminalElements.push({div,contentDiv});
       }
       terminalsContainer.appendChild(frag);
     }
 
     function startTerminalUpdates() {
-      terminalElements.forEach(({ contentDiv }) => {
-        const interval = setInterval(() => {
-          const line = `[${new Date().toISOString().substr(11,8)}] ${randomAddr()} | PID:${Math.floor(Math.random()*9999)} | SEGFAULT`;
-          contentDiv.innerHTML += line + '\n';
-          contentDiv.scrollTop = contentDiv.scrollHeight;
-        }, 200 + Math.random() * 150);
+      terminalElements.forEach(({contentDiv})=>{
+        const interval=setInterval(()=>{
+          const line=`[${new Date().toISOString().substr(11,8)}] ${randomAddr()} | PID:${Math.floor(Math.random()*9999)} | SEGFAULT`;
+          contentDiv.innerHTML+=line+'\n'; contentDiv.scrollTop=contentDiv.scrollHeight;
+        },200+Math.random()*150);
         terminalIntervals.push(interval);
       });
     }
 
-    function stopTerminalUpdates() {
-      terminalIntervals.forEach(clearInterval);
-    }
+    function stopTerminalUpdates() { terminalIntervals.forEach(clearInterval); }
 
     const sequence = [
       { time: 0.0, action: () => {
-        progressGroup.style.display = 'flex';
-        errorBox.style.display = 'none';
-        debugTitle.style.display = 'none';
-        terminalsContainer.style.display = 'none';
-        loadingLabel.textContent = 'NYX.exe loading...';
+        progressGroup.style.display='flex'; errorBox.style.display='none';
+        debugTitle.style.display='none'; terminalsContainer.style.display='none';
+        loadingLabel.textContent='NYX.exe loading...';
       }},
-      { time: 1.0, action: () => { progress = 30; } },
-      { time: 1.5, action: () => { errorBox.style.display = 'block'; loadingLabel.textContent = 'Connection failed'; } },
-      { time: 2.2, action: () => { errorBox.style.display = 'none'; loadingLabel.textContent = 'Retrying...'; } },
+      { time: 1.5, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
+      { time: 2.2, action: () => { errorBox.style.display='none'; loadingLabel.textContent='Retrying...'; } },
       { time: 2.8, action: () => {
-        progressGroup.style.display = 'none';
-        debugTitle.style.display = 'block';
-        terminalsContainer.style.display = 'block';
-        if (terminalElements.length === 0) {
-          createTerminals();
-          startTerminalUpdates();
-        }
+        progressGroup.style.display='none'; debugTitle.style.display='block';
+        terminalsContainer.style.display='block';
+        if(terminalElements.length===0){ createTerminals(); startTerminalUpdates(); }
       }},
       { time: 6.5, action: () => {
         stopTerminalUpdates();
@@ -640,37 +424,32 @@
       }}
     ];
 
-    let seqIndex = 0;
-    const loadInterval = setInterval(() => {
+    let seqIndex=0;
+    const loadInterval=setInterval(()=>{
       currentStep++;
-      progress = Math.min(100, (currentStep / steps) * 100);
-      progressFill.style.width = progress + '%';
+      progress=Math.min(100,(currentStep/steps)*100);
+      liquidFill.style.height=progress+'%';
 
-      while (seqIndex < sequence.length && sequence[seqIndex].time <= (currentStep * updateInterval) / 1000) {
-        sequence[seqIndex].action();
-        seqIndex++;
+      while(seqIndex<sequence.length && sequence[seqIndex].time<=(currentStep*updateInterval)/1000){
+        sequence[seqIndex].action(); seqIndex++;
       }
-
-      if (currentStep >= steps) {
-        clearInterval(loadInterval);
-      }
-    }, updateInterval);
+      if(currentStep>=steps) clearInterval(loadInterval);
+    },updateInterval);
 
     // ---- Main functions ----
     function updateClockAndGreeting() {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
-      document.getElementById('liveClock').textContent = timeStr;
-      const hour = now.getHours();
+      const now=new Date();
+      const timeStr=now.toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata',hour12:false});
+      document.getElementById('liveClock').textContent=timeStr;
+      const hour=now.getHours();
       let greet;
-      if (hour < 5) greet = "Good Midnight, nyx";
-      else if (hour < 12) greet = "Good Morning, nyx";
-      else if (hour < 17) greet = "Good Afternoon, nyx";
-      else greet = "Good Evening, nyx";
-      document.getElementById('greeting').textContent = greet;
+      if(hour<5) greet="Good Midnight, nyx";
+      else if(hour<12) greet="Good Morning, nyx";
+      else if(hour<17) greet="Good Afternoon, nyx";
+      else greet="Good Evening, nyx";
+      document.getElementById('greeting').textContent=greet;
     }
-    updateClockAndGreeting();
-    setInterval(updateClockAndGreeting, 1000);
+    updateClockAndGreeting(); setInterval(updateClockAndGreeting,1000);
 
     const luauTips = [
       "Use task.wait() instead of wait() for better performance.",
@@ -684,154 +463,74 @@
       "Don't forget to disconnect connections when they're no longer needed.",
       "Use pcall() to safely call functions that may error.",
     ];
-    let tipIndex = 0;
-    const tipEl = document.getElementById('luauTip');
-    setInterval(() => {
-      tipIndex = (tipIndex + 1) % luauTips.length;
-      tipEl.style.opacity = '0';
-      setTimeout(() => {
-        tipEl.textContent = `"${luauTips[tipIndex]}"`;
-        tipEl.style.opacity = '1';
-      }, 400);
-    }, 10000);
+    let tipIndex=0; const tipEl=document.getElementById('luauTip');
+    setInterval(()=>{
+      tipIndex=(tipIndex+1)%luauTips.length; tipEl.style.opacity='0';
+      setTimeout(()=>{ tipEl.textContent=`"${luauTips[tipIndex]}"`; tipEl.style.opacity='1'; },400);
+    },10000);
 
-    const USER_ID = "1418597263479144471";
+    const USER_ID="1418597263479144471";
     async function loadDiscord() {
       try {
-        const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-        const json = await res.json();
-        if (!json.success) return;
-        const data = json.data;
-        document.getElementById('username').textContent = data.discord_user.global_name || data.discord_user.username || "nyx._.dev";
-        const avatar = data.discord_user.avatar;
-        const avatarImg = document.getElementById('avatar');
-        if (avatar) {
-          const ext = avatar.startsWith("a_") ? "gif" : "png";
-          avatarImg.src = `https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${ext}?size=512`;
-        } else {
-          avatarImg.src = "https://cdn.discordapp.com/embed/avatars/0.png";
-        }
-        const status = data.discord_status || "offline";
-        const dot = document.getElementById('statusDot');
-        const text = document.getElementById('statusText');
-        dot.className = "dot " + status;
-        text.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-        const custom = data.activities.find(a => a.type === 4);
-        document.getElementById('customStatus').textContent = custom?.state || "";
-      } catch (err) {}
+        const res=await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+        const json=await res.json(); if(!json.success)return;
+        const data=json.data;
+        document.getElementById('username').textContent=data.discord_user.global_name||data.discord_user.username||"nyx._.dev";
+        const avatar=data.discord_user.avatar; const avatarImg=document.getElementById('avatar');
+        if(avatar){ const ext=avatar.startsWith("a_")?"gif":"png"; avatarImg.src=`https://cdn.discordapp.com/avatars/${USER_ID}/${avatar}.${ext}?size=512`; }
+        else avatarImg.src="https://cdn.discordapp.com/embed/avatars/0.png";
+        const status=data.discord_status||"offline"; const dot=document.getElementById('statusDot'), text=document.getElementById('statusText');
+        dot.className="dot "+status; text.textContent=status.charAt(0).toUpperCase()+status.slice(1);
+        const custom=data.activities.find(a=>a.type===4);
+        document.getElementById('customStatus').textContent=custom?.state||"";
+      } catch(err) {}
     }
-    loadDiscord();
-    setInterval(loadDiscord, 30000);
+    loadDiscord(); setInterval(loadDiscord,30000);
 
-    const timerDisplay = document.getElementById('timerDisplay');
-    const pomoStatus = document.getElementById('pomoStatus');
-    const startBtn = document.getElementById('pomoStart');
-    const resetBtn = document.getElementById('pomoReset');
-    const WORK_TIME = 25 * 60;
-    const BREAK_TIME = 5 * 60;
-    let timerInterval = null;
-    let timeLeft = WORK_TIME;
-    let isWorking = true;
-    let isRunning = false;
-
-    function updateTimerDisplay() {
-      const mins = Math.floor(timeLeft / 60);
-      const secs = timeLeft % 60;
-      timerDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
-    }
-
-    function stopTimer() {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      isRunning = false;
-      startBtn.textContent = 'Start';
-      startBtn.classList.remove('active');
-    }
-
-    function resetTimer() {
-      stopTimer();
-      timeLeft = isWorking ? WORK_TIME : BREAK_TIME;
-      updateTimerDisplay();
-    }
-
-    function notify(title, body) {
-      if (Notification.permission === 'granted') {
-        new Notification(title, { body, icon: 'https://cdn.discordapp.com/embed/avatars/0.png' });
-      }
-    }
-
-    function startTimer() {
-      if (isRunning) { stopTimer(); return; }
-      if (Notification.permission === 'default') Notification.requestPermission();
-      isRunning = true;
-      startBtn.textContent = 'Pause';
-      startBtn.classList.add('active');
-      timerInterval = setInterval(() => {
-        if (timeLeft <= 0) {
-          clearInterval(timerInterval);
-          timerInterval = null;
-          isRunning = false;
-          startBtn.textContent = 'Start';
-          startBtn.classList.remove('active');
-          if (isWorking) {
-            notify('Pomodoro finished!', 'Time for a 5‑minute break.');
-            isWorking = false;
-            pomoStatus.textContent = 'Break session';
-            timeLeft = BREAK_TIME;
+    const timerDisplay=document.getElementById('timerDisplay'); const pomoStatus=document.getElementById('pomoStatus');
+    const startBtn=document.getElementById('pomoStart'); const resetBtn=document.getElementById('pomoReset');
+    const WORK_TIME=25*60, BREAK_TIME=5*60; let timerInterval=null, timeLeft=WORK_TIME, isWorking=true, isRunning=false;
+    function updateTimerDisplay(){ const mins=Math.floor(timeLeft/60), secs=timeLeft%60; timerDisplay.textContent=`${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`; }
+    function stopTimer(){ clearInterval(timerInterval); timerInterval=null; isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); }
+    function resetTimer(){ stopTimer(); timeLeft=isWorking?WORK_TIME:BREAK_TIME; updateTimerDisplay(); }
+    function notify(title,body){ if(Notification.permission==='granted') new Notification(title,{body,icon:'https://cdn.discordapp.com/embed/avatars/0.png'}); }
+    function startTimer(){
+      if(isRunning){stopTimer();return;}
+      if(Notification.permission==='default') Notification.requestPermission();
+      isRunning=true; startBtn.textContent='Pause'; startBtn.classList.add('active');
+      timerInterval=setInterval(()=>{
+        if(timeLeft<=0){
+          clearInterval(timerInterval); timerInterval=null; isRunning=false;
+          startBtn.textContent='Start'; startBtn.classList.remove('active');
+          if(isWorking){
+            notify('Pomodoro finished!','Time for a 5‑minute break.'); isWorking=false; pomoStatus.textContent='Break session'; timeLeft=BREAK_TIME;
           } else {
-            notify('Break over!', 'Time to get back to work.');
-            isWorking = true;
-            pomoStatus.textContent = 'Work session';
-            timeLeft = WORK_TIME;
+            notify('Break over!','Time to get back to work.'); isWorking=true; pomoStatus.textContent='Work session'; timeLeft=WORK_TIME;
           }
-          updateTimerDisplay();
-          return;
+          updateTimerDisplay(); return;
         }
-        timeLeft--;
-        updateTimerDisplay();
-      }, 1000);
+        timeLeft--; updateTimerDisplay();
+      },1000);
     }
-
-    startBtn.addEventListener('click', startTimer);
-    resetBtn.addEventListener('click', resetTimer);
-    updateTimerDisplay();
+    startBtn.addEventListener('click',startTimer); resetBtn.addEventListener('click',resetTimer); updateTimerDisplay();
 
     async function fetchCrypto() {
       try {
-        const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
-        const data = await res.json();
-        const price = data.bitcoin.usd;
-        const change = data.bitcoin.usd_24h_change?.toFixed(2) || 0;
-        const priceEl = document.getElementById('btcPrice');
-        priceEl.textContent = `$${price.toLocaleString()}`;
-        const changeEl = document.getElementById('btcChange');
-        changeEl.textContent = `${change > 0 ? '↑' : '↓'} ${Math.abs(change)}%`;
-        changeEl.style.color = change >= 0 ? '#4caf50' : '#f44336';
-      } catch (err) {
-        document.getElementById('btcPrice').textContent = '—';
-      }
+        const res=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
+        const data=await res.json(); const price=data.bitcoin.usd; const change=data.bitcoin.usd_24h_change?.toFixed(2)||0;
+        const priceEl=document.getElementById('btcPrice'); priceEl.textContent=`$${price.toLocaleString()}`;
+        const changeEl=document.getElementById('btcChange'); changeEl.textContent=`${change>0?'↑':'↓'} ${Math.abs(change)}%`;
+        changeEl.style.color=change>=0?'#4caf50':'#f44336';
+      } catch(err) { document.getElementById('btcPrice').textContent='—'; }
     }
-    fetchCrypto();
-    setInterval(fetchCrypto, 60000);
+    fetchCrypto(); setInterval(fetchCrypto,60000);
 
-    const watermarkEl = document.getElementById('watermark');
-    const fullText = "nyx.tuff";
-    let charIndex = 0;
-
-    function typeWriter() {
-      if (charIndex < fullText.length) {
-        watermarkEl.textContent += fullText.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeWriter, 150);
-      } else {
-        setTimeout(() => {
-          watermarkEl.textContent = '';
-          charIndex = 0;
-          typeWriter();
-        }, 2000);
-      }
+    const watermarkEl=document.getElementById('watermark'); const fullText="nyx.tuff"; let charIndex=0;
+    function typeWriter(){
+      if(charIndex<fullText.length){ watermarkEl.textContent+=fullText.charAt(charIndex); charIndex++; setTimeout(typeWriter,150); }
+      else{ setTimeout(()=>{watermarkEl.textContent=''; charIndex=0; typeWriter();},2000); }
     }
-    setTimeout(typeWriter, 6600);
+    setTimeout(typeWriter,6600);
   </script>
 </body>
 </html>
