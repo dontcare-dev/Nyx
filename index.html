@@ -54,35 +54,35 @@
 
     .loading-container {
       position: relative;
-      display: flex; flex-direction: column; align-items: center; gap: 30px;
+      display: flex; flex-direction: column; align-items: center; gap: 35px;
     }
     .test-tube-panel {
-      background: rgba(10,0,0,0.8); backdrop-filter: blur(20px);
-      border: 2px solid rgba(255,60,60,0.5);
-      border-radius: 32px;
-      padding: 35px 40px;
-      box-shadow: 0 0 100px rgba(255,0,0,0.7);
-      display: flex; flex-direction: column; align-items: center; gap: 25px;
+      background: rgba(10,0,0,0.85); backdrop-filter: blur(25px);
+      border: 2px solid rgba(255,60,60,0.6);
+      border-radius: 36px;
+      padding: 40px 45px;
+      box-shadow: 0 0 120px rgba(255,0,0,0.8), inset 0 0 30px rgba(255,0,0,0.2);
+      display: flex; flex-direction: column; align-items: center; gap: 30px;
       animation: panelPulse 2s infinite alternate;
     }
     @keyframes panelPulse {
-      from { box-shadow: 0 0 80px rgba(255,0,0,0.5); }
-      to { box-shadow: 0 0 130px rgba(255,0,0,0.9); }
+      from { box-shadow: 0 0 100px rgba(255,0,0,0.6); }
+      to { box-shadow: 0 0 160px rgba(255,0,0,0.9); }
     }
     .tube {
-      width: 70px; height: 220px;
+      width: 80px; height: 260px;
       background: rgba(255,255,255,0.03);
-      border: 2px solid rgba(255,255,255,0.6);
-      border-radius: 0 0 35px 35px;
+      border: 3px solid rgba(255,255,255,0.7);
+      border-radius: 0 0 40px 40px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 40px rgba(255,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.7);
+      box-shadow: 0 0 50px rgba(255,0,0,0.7), inset 0 0 25px rgba(0,0,0,0.8);
     }
     .tube::before {
       content: "";
       position: absolute;
-      top: -2px; left: -10%; width: 120%; height: 10px;
-      background: rgba(255,255,255,0.7);
+      top: -2px; left: -10%; width: 120%; height: 12px;
+      background: rgba(255,255,255,0.8);
       border-radius: 50%;
       z-index: 3;
     }
@@ -93,7 +93,7 @@
       background: linear-gradient(to top, #cc0000, #ff3333, #ff4d4d);
       box-shadow: 0 0 30px #ff0000;
       transition: height 0.1s ease;
-      border-radius: 0 0 33px 33px;
+      border-radius: 0 0 37px 37px;
       overflow: hidden;
     }
     .bubble {
@@ -106,103 +106,125 @@
     }
     @keyframes rise {
       0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-180px) scale(0.6); opacity: 0; }
+      100% { transform: translateY(-200px) scale(0.6); opacity: 0; }
     }
     .loading-text {
-      font-size: 2rem; font-weight: 700;
+      font-size: 2.2rem; font-weight: 700;
       color: #ff5555;
-      text-shadow: 0 0 25px #ff0000;
-      letter-spacing: 4px;
+      text-shadow: 0 0 30px #ff0000;
+      letter-spacing: 5px;
       animation: textGlitch 2s infinite;
     }
     @keyframes textGlitch {
-      0%, 100% { text-shadow: 0 0 25px #ff0000; }
-      92% { text-shadow: 3px 0 #ff0000, -3px 0 #ff5555; }
-      94% { text-shadow: -3px 0 #ff0000, 3px 0 #ff5555; }
-      96% { text-shadow: 0 0 25px #ff0000; }
+      0%, 100% { text-shadow: 0 0 30px #ff0000; }
+      92% { text-shadow: 4px 0 #ff0000, -4px 0 #ff5555; }
+      94% { text-shadow: -4px 0 #ff0000, 4px 0 #ff5555; }
+      96% { text-shadow: 0 0 30px #ff0000; }
     }
 
     .error-panel {
-      background: rgba(255,0,0,0.1); border: 1px solid #ff0000;
-      border-radius: 16px; padding: 20px 30px; display: none;
+      background: rgba(255,0,0,0.15); border: 1px solid #ff0000;
+      border-radius: 18px; padding: 22px 35px; display: none;
       animation: errorFlash 0.3s ease;
     }
     @keyframes errorFlash { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-    .error-title { font-size: 1.8rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 20px #ff0000; }
-    .error-sub { color: #ffaaaa; font-size: 1rem; }
+    .error-title { font-size: 2rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 25px #ff0000; }
+    .error-sub { color: #ffaaaa; font-size: 1.1rem; }
 
     /* ---------- Welcome Overlay ---------- */
     #welcomeOverlay {
       position: fixed; inset: 0; z-index: 998;
       display: none;
       align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(30px);
+      background: radial-gradient(circle, rgba(10,0,0,0.8) 0%, rgba(0,0,0,0.95) 100%);
+      backdrop-filter: blur(35px);
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
     #welcomeOverlay.active { display: flex; }
     #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
 
     .welcome-card {
-      background: rgba(20,0,0,0.7);
-      backdrop-filter: blur(40px);
-      border: 2px solid rgba(255,70,70,0.8);
-      border-radius: 60px;
-      padding: 60px 80px;
+      background: rgba(20,0,0,0.75);
+      backdrop-filter: blur(45px);
+      border: 2px solid rgba(255,70,70,0.9);
+      border-radius: 70px;
+      padding: 70px 90px;
       text-align: center;
-      box-shadow: 0 0 150px rgba(255,0,0,0.8), inset 0 0 60px rgba(255,0,0,0.3);
+      box-shadow: 0 0 180px rgba(255,0,0,0.9), inset 0 0 80px rgba(255,0,0,0.4);
       animation: welcomeCardPulse 2s ease-in-out infinite alternate;
+      position: relative;
     }
     @keyframes welcomeCardPulse {
-      from { box-shadow: 0 0 100px rgba(255,0,0,0.6); }
-      to { box-shadow: 0 0 180px rgba(255,0,0,1); }
+      from { box-shadow: 0 0 130px rgba(255,0,0,0.7); }
+      to { box-shadow: 0 0 220px rgba(255,0,0,1); }
+    }
+    .welcome-card::before {
+      content: "";
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      border-radius: 72px;
+      background: linear-gradient(45deg, #ff0000, #ff5555, #ff0000, #ff5555);
+      z-index: -1;
+      opacity: 0.6;
+      animation: rotateBorder 3s linear infinite;
+      filter: blur(10px);
+    }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     .welcome-title {
-      font-size: 4.5rem;
+      font-size: 5rem;
       font-weight: 700;
       color: #fff;
-      text-shadow: 0 0 40px #ff0000, 0 0 80px rgba(255,0,0,0.8);
-      letter-spacing: 8px;
-      margin-bottom: 50px;
+      text-shadow: 0 0 50px #ff0000, 0 0 100px rgba(255,0,0,0.9);
+      letter-spacing: 10px;
+      margin-bottom: 60px;
       animation: textGlowWelcome 2s ease-in-out infinite alternate;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #fff, #ffaaaa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     @keyframes textGlowWelcome {
-      from { text-shadow: 0 0 30px #ff0000, 0 0 60px rgba(255,0,0,0.5); }
-      to { text-shadow: 0 0 60px #ff0000, 0 0 120px rgba(255,0,0,0.9); }
+      from { text-shadow: 0 0 40px #ff0000, 0 0 80px rgba(255,0,0,0.6); }
+      to { text-shadow: 0 0 80px #ff0000, 0 0 150px rgba(255,0,0,0.9); }
     }
     .enter-btn {
-      background: rgba(255,0,0,0.2);
+      background: rgba(255,0,0,0.25);
       border: 2px solid #ff5555;
       color: #fff;
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: 700;
-      padding: 20px 60px;
-      border-radius: 70px;
+      padding: 22px 70px;
+      border-radius: 80px;
       cursor: pointer;
-      letter-spacing: 6px;
+      letter-spacing: 8px;
       transition: all 0.3s ease;
       text-transform: uppercase;
       animation: btnPulse 2s infinite;
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(10px);
     }
     .enter-btn::before {
       content: "";
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
       transition: left 0.5s;
     }
     .enter-btn:hover::before { left: 100%; }
     @keyframes btnPulse {
-      0% { box-shadow: 0 0 25px #ff0000; }
-      50% { box-shadow: 0 0 70px #ff0000, 0 0 100px rgba(255,0,0,0.6); }
-      100% { box-shadow: 0 0 25px #ff0000; }
+      0% { box-shadow: 0 0 30px #ff0000; }
+      50% { box-shadow: 0 0 80px #ff0000, 0 0 120px rgba(255,0,0,0.7); }
+      100% { box-shadow: 0 0 30px #ff0000; }
     }
     .enter-btn:hover {
       background: #ff3333;
-      box-shadow: 0 0 100px #ff0000;
-      transform: scale(1.05);
+      box-shadow: 0 0 120px #ff0000;
+      transform: scale(1.08);
     }
 
     /* ---------- Main Dashboard ---------- */
@@ -230,36 +252,36 @@
       opacity: 0.25;
     }
 
-    .dashboard { position: relative; z-index: 1; width:100%; max-width:1500px; display:flex; flex-direction:column; align-items:center; gap:30px; }
+    .dashboard { position: relative; z-index: 1; width:100%; max-width:1550px; display:flex; flex-direction:column; align-items:center; gap:35px; }
     .header {
-      width:100%; max-width:1100px; background: rgba(10,0,0,0.6); backdrop-filter: blur(30px);
-      border:1px solid rgba(255,70,70,0.4); border-radius:50px; padding:25px 40px;
-      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
+      width:100%; max-width:1150px; background: rgba(10,0,0,0.65); backdrop-filter: blur(35px);
+      border:1px solid rgba(255,70,70,0.5); border-radius:55px; padding:28px 45px;
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:25px;
+      box-shadow: 0 35px 90px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
       animation: headerSlide 0.7s ease-out;
     }
     @keyframes headerSlide { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
-    .greeting { font-size:2rem; font-weight:600; letter-spacing:2px; color:#fff; text-shadow:0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.6); }
-    .live-clock { font-size:2rem; font-weight:700; letter-spacing:3px; color:#fff; text-shadow:0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.6); }
+    .greeting { font-size:2.2rem; font-weight:600; letter-spacing:2px; color:#fff; text-shadow:0 0 25px #ff0000, 0 0 50px rgba(255,0,0,0.7); }
+    .live-clock { font-size:2.2rem; font-weight:700; letter-spacing:4px; color:#fff; text-shadow:0 0 25px #ff0000, 0 0 50px rgba(255,0,0,0.7); }
     .music-btn {
-      background: rgba(255,50,50,0.3); border:1px solid rgba(255,50,50,0.7);
-      color:#fff; padding:12px 25px; border-radius:35px;
-      cursor:pointer; font-weight:600; transition:0.3s; font-size:1rem;
-      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,50,50,0.35); border:1px solid rgba(255,50,50,0.8);
+      color:#fff; padding:14px 28px; border-radius:40px;
+      cursor:pointer; font-weight:600; transition:0.3s; font-size:1.1rem;
+      display: flex; align-items: center; gap: 12px;
       touch-action: manipulation;
     }
-    .music-btn svg { width: 22px; height: 22px; }
-    .music-btn:hover { background:rgba(255,50,50,0.6); box-shadow: 0 0 30px rgba(255,0,0,0.8); }
+    .music-btn svg { width: 24px; height: 24px; }
+    .music-btn:hover { background:rgba(255,50,50,0.7); box-shadow: 0 0 35px rgba(255,0,0,0.9); }
 
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 25px; width: 100%;
+      gap: 28px; width: 100%;
     }
     .glass {
-      background: rgba(10,0,0,0.55); backdrop-filter: blur(20px); border:1px solid rgba(255,70,70,0.4);
-      border-radius:40px; padding:28px; box-shadow: 0 30px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06);
+      background: rgba(10,0,0,0.6); backdrop-filter: blur(25px); border:1px solid rgba(255,70,70,0.5);
+      border-radius:45px; padding:32px; box-shadow: 0 35px 90px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.08);
       transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-      width: 320px; max-width: 100%; flex-shrink: 0;
+      width: 340px; max-width: 100%; flex-shrink: 0;
       position: relative; overflow: hidden;
       animation: cardPop 0.6s ease-out backwards;
       touch-action: manipulation;
@@ -267,91 +289,91 @@
     .glass::before {
       content: "";
       position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-      background: conic-gradient(from 0deg, transparent, rgba(255,0,0,0.4), transparent, rgba(255,0,0,0.4), transparent);
+      background: conic-gradient(from 0deg, transparent, rgba(255,0,0,0.5), transparent, rgba(255,0,0,0.5), transparent);
       animation: rotateBorder 8s linear infinite;
       z-index: 0;
-      opacity: 0.3;
+      opacity: 0.25;
     }
     @keyframes rotateBorder { 100% { transform: rotate(360deg); } }
     .glass::after {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%;
-      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
-      background-size:200% 100%; animation: shine 5s ease-in-out infinite; z-index:1; pointer-events:none; border-radius:40px;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.04) 50%, transparent 55%);
+      background-size:200% 100%; animation: shine 5s ease-in-out infinite; z-index:1; pointer-events:none; border-radius:45px;
     }
     @keyframes shine { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
     .glass:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow:0 45px 100px rgba(255,0,0,0.7);
+      transform: translateY(-10px) scale(1.03);
+      box-shadow:0 50px 110px rgba(255,0,0,0.8);
       border-color:rgba(255,90,90,0.9);
     }
     .card-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; }
     .avatar {
-      width: 120px; height: 120px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,50,50,0.9);
-      box-shadow:0 0 50px rgba(255,0,0,0.7); transition: transform 0.3s; animation: ringPulse 2s infinite;
+      width: 130px; height: 130px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,50,50,0.9);
+      box-shadow:0 0 60px rgba(255,0,0,0.8); transition: transform 0.3s; animation: ringPulse 2s infinite;
     }
-    @keyframes ringPulse { 0%,100%{border-color:rgba(255,50,50,0.7);box-shadow:0 0 40px rgba(255,0,0,0.6)} 50%{border-color:rgba(255,90,90,0.9);box-shadow:0 0 80px rgba(255,0,0,0.9)} }
-    .avatar:hover { transform: scale(1.1) rotate(3deg); border-color:#ff4444; }
-    .username { font-size:1.9rem; font-weight:700; margin-top:18px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.7); }
-    .status-row { margin-top:12px; display:flex; align-items:center; gap:8px; color:#ffaaaa; font-size:1rem; }
-    .dot { width:12px; height:12px; border-radius:50%; animation: pulse 2s infinite; }
+    @keyframes ringPulse { 0%,100%{border-color:rgba(255,50,50,0.7);box-shadow:0 0 50px rgba(255,0,0,0.7)} 50%{border-color:rgba(255,90,90,0.9);box-shadow:0 0 90px rgba(255,0,0,0.9)} }
+    .avatar:hover { transform: scale(1.12) rotate(3deg); border-color:#ff4444; }
+    .username { font-size:2rem; font-weight:700; margin-top:20px; color:#fff; text-shadow:0 0 18px #ff0000, 0 0 40px rgba(255,0,0,0.8); }
+    .status-row { margin-top:14px; display:flex; align-items:center; gap:10px; color:#ffaaaa; font-size:1.1rem; }
+    .dot { width:14px; height:14px; border-radius:50%; animation: pulse 2s infinite; }
     .dot.online{background:#43b581} .dot.idle{background:#faa61a} .dot.dnd{background:#f04747} .dot.offline{background:#747f8d}
-    .custom-status { margin-top:8px; color:#ccc; font-style:italic; font-size:0.95rem; opacity:0.8; }
+    .custom-status { margin-top:10px; color:#ccc; font-style:italic; font-size:1rem; opacity:0.8; }
 
     .section-title {
-      font-size:1.3rem; font-weight:600; margin-bottom:15px;
-      display:flex; align-items:center; gap:10px; color:#ffbbbb;
-      text-shadow:0 0 15px rgba(255,80,80,0.7);
-      border-bottom:2px solid rgba(255,50,50,0.5); padding-bottom:10px; justify-content:center;
+      font-size:1.4rem; font-weight:600; margin-bottom:18px;
+      display:flex; align-items:center; gap:12px; color:#ffbbbb;
+      text-shadow:0 0 18px rgba(255,80,80,0.8);
+      border-bottom:2px solid rgba(255,50,50,0.6); padding-bottom:12px; justify-content:center;
     }
-    .section-title svg { width: 22px; height: 22px; }
+    .section-title svg { width: 24px; height: 24px; }
 
     .about-text {
-      font-size: 1.05rem; color: #ffbbbb; line-height: 1.7; margin-top: 12px;
-      text-shadow: 0 0 8px rgba(255,0,0,0.5);
+      font-size: 1.1rem; color: #ffbbbb; line-height: 1.8; margin-top: 15px;
+      text-shadow: 0 0 10px rgba(255,0,0,0.6);
     }
 
     .skills-tags {
-      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 18px;
+      display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 20px;
     }
     .skill-tag {
-      background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.6);
-      padding: 8px 20px; border-radius: 25px; font-size: 1rem;
-      font-weight: 500; color: #ffcccc; text-shadow: 0 0 8px rgba(255,0,0,0.6);
+      background: rgba(255,50,50,0.25); border: 1px solid rgba(255,50,50,0.7);
+      padding: 10px 24px; border-radius: 30px; font-size: 1.1rem;
+      font-weight: 500; color: #ffcccc; text-shadow: 0 0 10px rgba(255,0,0,0.7);
       cursor: pointer;
       transition: 0.3s;
       animation: tagFloat 3s ease-in-out infinite;
     }
-    .skill-tag:hover { background: rgba(255,50,50,0.5); transform: translateY(-4px); box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+    .skill-tag:hover { background: rgba(255,50,50,0.6); transform: translateY(-5px); box-shadow: 0 0 25px rgba(255,0,0,0.8); }
     .skill-tag:nth-child(1) { animation-delay: 0s; }
     .skill-tag:nth-child(2) { animation-delay: 0.2s; }
     .skill-tag:nth-child(3) { animation-delay: 0.4s; }
     .skill-tag:nth-child(4) { animation-delay: 0.6s; }
     .skill-tag:nth-child(5) { animation-delay: 0.8s; }
-    @keyframes tagFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    @keyframes tagFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
-    .luau-tip { font-size:1.05rem; color:#ffbbbb; margin-top:15px; text-align:center; line-height:1.6; transition:opacity 0.3s; text-shadow:0 0 8px rgba(255,0,0,0.5); }
-    .timer-display { font-size:2.5rem; font-weight:700; letter-spacing:4px; margin:10px 0; text-shadow:0 0 20px #ff0000; }
-    .pomodoro-controls { display:flex; gap:15px; margin-top:20px; }
+    .luau-tip { font-size:1.1rem; color:#ffbbbb; margin-top:18px; text-align:center; line-height:1.7; transition:opacity 0.3s; text-shadow:0 0 10px rgba(255,0,0,0.6); }
+    .timer-display { font-size:2.8rem; font-weight:700; letter-spacing:5px; margin:12px 0; text-shadow:0 0 25px #ff0000; }
+    .pomodoro-controls { display:flex; gap:18px; margin-top:22px; }
     .pomo-btn {
-      background: rgba(255,50,50,0.3); border:1px solid rgba(255,50,50,0.6);
-      color:#fff; padding:12px 25px; border-radius:35px;
-      cursor:pointer; font-weight:600; transition:0.3s; font-size:1rem; letter-spacing:1px;
+      background: rgba(255,50,50,0.35); border:1px solid rgba(255,50,50,0.7);
+      color:#fff; padding:14px 30px; border-radius:40px;
+      cursor:pointer; font-weight:600; transition:0.3s; font-size:1.1rem; letter-spacing:1px;
       touch-action: manipulation;
     }
-    .pomo-btn:hover{background:rgba(255,50,50,0.5)} .pomo-btn.active{background:rgba(255,50,50,0.7);border-color:#ff5555;box-shadow: 0 0 20px rgba(255,0,0,0.7);}
-    .crypto-price { font-size:2.5rem; font-weight:700; text-shadow:0 0 15px #ff0000; animation:priceFade 0.5s ease; }
+    .pomo-btn:hover{background:rgba(255,50,50,0.6)} .pomo-btn.active{background:rgba(255,50,50,0.8);border-color:#ff5555;box-shadow: 0 0 25px rgba(255,0,0,0.8);}
+    .crypto-price { font-size:2.8rem; font-weight:700; text-shadow:0 0 18px #ff0000; animation:priceFade 0.5s ease; }
     @keyframes priceFade { from{opacity:0.5;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
     .discord-link {
-      display:inline-flex; align-items:center; gap:10px; margin-top:18px;
-      background:rgba(88,101,242,0.25); border:1px solid #5865F2;
-      color:#fff; padding:12px 30px; border-radius:35px;
-      text-decoration:none; font-weight:600; transition:0.3s; font-size:1rem;
+      display:inline-flex; align-items:center; gap:12px; margin-top:20px;
+      background:rgba(88,101,242,0.3); border:1px solid #5865F2;
+      color:#fff; padding:14px 35px; border-radius:40px;
+      text-decoration:none; font-weight:600; transition:0.3s; font-size:1.1rem;
     }
-    .discord-link:hover{background:#5865F2; box-shadow: 0 0 25px rgba(88,101,242,0.7);}
-    .watermark-cell { width:100%; display:flex; justify-content:center; padding:25px 0; }
+    .discord-link:hover{background:#5865F2; box-shadow: 0 0 30px rgba(88,101,242,0.8);}
+    .watermark-cell { width:100%; display:flex; justify-content:center; padding:30px 0; }
     .watermark-text {
-      font-family:'Courier New', monospace; font-size:4rem; font-weight:bold; color:#ff5555;
-      text-shadow:0 0 30px #ff0000, 0 0 60px #ff0000; letter-spacing:8px;
+      font-family:'Courier New', monospace; font-size:4.5rem; font-weight:bold; color:#ff5555;
+      text-shadow:0 0 40px #ff0000, 0 0 80px #ff0000; letter-spacing:10px;
       white-space:nowrap; overflow:hidden; border-right:4px solid #ff5555;
       animation: blinkCursor 0.8s infinite;
     }
@@ -359,32 +381,32 @@
 
     /* Side Panel */
     .side-panel {
-      position: fixed; top: 0; right: -400px; width: 350px; max-width: 90vw;
-      height: 100%; background: rgba(10,0,0,0.95); backdrop-filter: blur(40px);
-      border-left: 1px solid rgba(255,70,70,0.8);
-      box-shadow: -15px 0 50px rgba(0,0,0,0.9);
+      position: fixed; top: 0; right: -420px; width: 380px; max-width: 90vw;
+      height: 100%; background: rgba(10,0,0,0.95); backdrop-filter: blur(45px);
+      border-left: 1px solid rgba(255,70,70,0.9);
+      box-shadow: -20px 0 60px rgba(0,0,0,0.9);
       z-index: 1000;
       transition: right 0.4s ease;
-      padding: 40px 25px;
+      padding: 50px 30px;
       overflow-y: auto;
       display: flex; flex-direction: column;
     }
     .side-panel.open { right: 0; }
     .close-panel {
       align-self: flex-end;
-      background: none; border: none; color: #fff; font-size: 2.5rem;
-      cursor: pointer; padding: 0 10px;
+      background: none; border: none; color: #fff; font-size: 2.8rem;
+      cursor: pointer; padding: 0 12px;
     }
-    .panel-title { font-size: 2rem; font-weight: 700; color: #fff; text-shadow: 0 0 30px #ff0000; margin-top: 25px; }
-    .panel-desc { font-size: 1.1rem; color: #ffbbbb; margin-top: 25px; line-height: 1.8; }
+    .panel-title { font-size: 2.2rem; font-weight: 700; color: #fff; text-shadow: 0 0 35px #ff0000; margin-top: 30px; }
+    .panel-desc { font-size: 1.2rem; color: #ffbbbb; margin-top: 30px; line-height: 1.9; }
 
     @media (max-width: 768px) {
-      .header { flex-direction: column; text-align: center; padding: 25px; }
-      .glass { width: 100%; max-width: 380px; }
-      .welcome-card { padding: 40px 30px; }
-      .welcome-title { font-size: 3rem; }
-      .enter-btn { font-size: 1.5rem; padding: 15px 40px; }
-      .watermark-text { font-size: 2.5rem; }
+      .header { flex-direction: column; text-align: center; padding: 28px; }
+      .glass { width: 100%; max-width: 400px; }
+      .welcome-card { padding: 50px 40px; }
+      .welcome-title { font-size: 3.5rem; }
+      .enter-btn { font-size: 1.6rem; padding: 18px 50px; }
+      .watermark-text { font-size: 3rem; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -403,9 +425,9 @@
       <div class="test-tube-panel" id="progressPanel">
         <div class="tube">
           <div class="liquid" id="liquidFill">
-            <div class="bubble" style="left:12px; width:10px; height:10px; animation-duration:1.2s;"></div>
-            <div class="bubble" style="left:30px; width:7px; height:7px; animation-duration:1.5s; animation-delay:0.4s;"></div>
-            <div class="bubble" style="left:45px; width:12px; height:12px; animation-duration:1.8s; animation-delay:0.7s;"></div>
+            <div class="bubble" style="left:15px; width:12px; height:12px; animation-duration:1.3s;"></div>
+            <div class="bubble" style="left:35px; width:9px; height:9px; animation-duration:1.7s; animation-delay:0.5s;"></div>
+            <div class="bubble" style="left:52px; width:14px; height:14px; animation-duration:2s; animation-delay:0.8s;"></div>
           </div>
         </div>
         <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
@@ -439,14 +461,14 @@
         <div class="greeting" id="greeting">Good Evening, nyx</div>
         <div class="live-clock" id="liveClock">00:00:00</div>
         <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-          <svg id="musicIconOff" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="musicIconOff" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="1" y1="1" x2="23" y2="23"></line>
             <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
             <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
             <line x1="12" y1="19" x2="12" y2="23"></line>
             <line x1="8" y1="23" x2="16" y2="23"></line>
           </svg>
-          <svg id="musicIconOn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <svg id="musicIconOn" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
           </svg>
@@ -507,7 +529,7 @@
               <button class="pomo-btn active" id="pomoStart">Start</button>
               <button class="pomo-btn" id="pomoReset">Reset</button>
             </div>
-            <p style="margin-top: 12px; color: #ffaaaa; font-size: 0.9rem;" id="pomoStatus">Work session</p>
+            <p style="margin-top: 14px; color: #ffaaaa; font-size: 0.95rem;" id="pomoStatus">Work session</p>
           </div>
         </div>
 
@@ -516,7 +538,7 @@
           <div class="card-content">
             <div class="section-title">₿ Bitcoin</div>
             <div class="crypto-price" id="btcPrice">...</div>
-            <p style="color: #ffaaaa; font-size: 0.85rem; margin-top: 6px;" id="btcChange">–</p>
+            <p style="color: #ffaaaa; font-size: 0.9rem; margin-top: 8px;" id="btcChange">–</p>
           </div>
         </div>
 
@@ -525,7 +547,7 @@
           <div class="card-content">
             <div class="section-title">Quick Links</div>
             <a class="discord-link" href="https://discord.gg/eternalcrimson" target="_blank">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg>
               Discord
             </a>
           </div>
@@ -572,14 +594,14 @@
       update() { this.x += this.speedX; this.y += this.speedY; if(this.x<0||this.x>pw)this.speedX*=-1; if(this.y<0||this.y>ph)this.speedY*=-1; }
       draw() { pCtx.beginPath(); pCtx.arc(this.x,this.y,this.size,0,Math.PI*2); pCtx.fillStyle=`rgba(255,80,80,${this.opacity})`; pCtx.fill(); }
     }
-    for(let i=0;i<60;i++) particles.push(new Particle());
+    for(let i=0;i<70;i++) particles.push(new Particle());
     function animateParticles() { pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw()}); requestAnimationFrame(animateParticles); }
     animateParticles();
 
     // ---------- Matrix Rain ----------
     const mCanvas = document.getElementById('matrixCanvas');
     const mCtx = mCanvas.getContext('2d');
-    let mw,mh,columns,drops,fontSize=20,chars="01";
+    let mw,mh,columns,drops,fontSize=22,chars="01";
     function setupMatrix() {
       mw=mCanvas.width=window.innerWidth; mh=mCanvas.height=window.innerHeight;
       columns=Math.floor(mw/fontSize)+1; drops=Array(columns).fill(1);
@@ -591,7 +613,7 @@
       for(let i=0;i<drops.length;i++) {
         const text=chars[Math.floor(Math.random()*chars.length)];
         const x=i*fontSize+fontSize/2, y=drops[i]*fontSize;
-        mCtx.fillStyle='#ff3333'; mCtx.shadowColor='#ff0000'; mCtx.shadowBlur=8;
+        mCtx.fillStyle='#ff3333'; mCtx.shadowColor='#ff0000'; mCtx.shadowBlur=10;
         mCtx.fillText(text,x,y); mCtx.shadowBlur=0;
         if(y>mh&&Math.random()>0.975)drops[i]=0;
         drops[i]++;
@@ -608,17 +630,17 @@
     const welcomeOverlay = document.getElementById('welcomeOverlay');
 
     let progress = 0;
-    const totalDuration = 6000;
+    const totalDuration = 6000; // 6 seconds to fill test tube
     const updateInterval = 50;
     const steps = totalDuration / updateInterval;
     let currentStep = 0;
 
     const sequence = [
       { time: 0.0, action: () => { progressPanel.style.display='flex'; errorBox.style.display='none'; loadingLabel.textContent='NYX.exe loading...'; } },
-      { time: 1.8, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
+      { time: 1.5, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
       { time: 2.5, action: () => { errorBox.style.display='none'; loadingLabel.textContent='Retrying...'; } },
-      { time: 3.0, action: () => { progressPanel.style.display='none'; } }, // remove test tube and show welcome directly? Actually we'll go straight to welcome after a short pause
-      { time: 4.0, action: () => {
+      { time: 4.0, action: () => { progressPanel.style.display='none'; } }, // test tube gone
+      { time: 5.0, action: () => {
         loadingOverlay.classList.add('fade-out');
         welcomeOverlay.classList.add('active');
       }}
@@ -802,7 +824,7 @@
       if(charIndex<fullText.length){ watermarkEl.textContent+=fullText.charAt(charIndex); charIndex++; setTimeout(typeWriter,150); }
       else{ setTimeout(()=>{watermarkEl.textContent=''; charIndex=0; typeWriter();},2000); }
     }
-    setTimeout(typeWriter, 2500);
+    setTimeout(typeWriter, 2800);
 
     // ---------- Side Panel for Skills ----------
     const sidePanel = document.getElementById('sidePanel');
