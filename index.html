@@ -8,7 +8,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
-      background: #050000;
+      background: radial-gradient(ellipse at 30% 10%, #1a0000 0%, #0a0000 50%, #020000 100%);
       min-height: 100vh;
       color: #fff;
       overflow-x: hidden;
@@ -20,24 +20,23 @@
     }
 
     .orb {
-      position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.12;
+      position: fixed; border-radius: 50%; filter: blur(80px); opacity: 0.15;
       z-index: 0; pointer-events: none;
       animation: orbFade 6s ease-in-out infinite alternate;
     }
-    .orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, #ff3333, transparent); top: -200px; left: -200px; }
-    .orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #cc0000, transparent); bottom: -200px; right: -200px; animation-delay: -3s; }
-    .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, #ff5555, transparent); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -5s; }
-    @keyframes orbFade { 0% { opacity: 0.08; } 100% { opacity: 0.18; } }
+    .orb-1 { width: 700px; height: 700px; background: radial-gradient(circle, #ff3333, transparent); top: -250px; left: -250px; }
+    .orb-2 { width: 600px; height: 600px; background: radial-gradient(circle, #cc0000, transparent); bottom: -250px; right: -250px; animation-delay: -3s; }
+    .orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, #ff5555, transparent); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -5s; }
+    @keyframes orbFade { 0% { opacity: 0.1; } 100% { opacity: 0.25; } }
 
     canvas#particles {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.5;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.6;
     }
 
     #matrixCanvas {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: 0.35;
     }
 
-    /* scanlines overlay */
     .scanlines {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
@@ -48,7 +47,7 @@
     #loadingOverlay {
       position: fixed; inset: 0; z-index: 999;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.5);
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
     #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
@@ -58,33 +57,32 @@
       display: flex; flex-direction: column; align-items: center; gap: 30px;
     }
     .test-tube-panel {
-      background: rgba(10,0,0,0.7); backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,60,60,0.4);
-      border-radius: 28px;
-      padding: 30px 35px;
-      box-shadow: 0 0 80px rgba(255,0,0,0.6);
-      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      background: rgba(10,0,0,0.8); backdrop-filter: blur(20px);
+      border: 2px solid rgba(255,60,60,0.5);
+      border-radius: 32px;
+      padding: 35px 40px;
+      box-shadow: 0 0 100px rgba(255,0,0,0.7);
+      display: flex; flex-direction: column; align-items: center; gap: 25px;
       animation: panelPulse 2s infinite alternate;
     }
     @keyframes panelPulse {
-      from { box-shadow: 0 0 60px rgba(255,0,0,0.4); }
-      to { box-shadow: 0 0 100px rgba(255,0,0,0.8); }
+      from { box-shadow: 0 0 80px rgba(255,0,0,0.5); }
+      to { box-shadow: 0 0 130px rgba(255,0,0,0.9); }
     }
     .tube {
-      width: 60px; height: 200px;
+      width: 70px; height: 220px;
       background: rgba(255,255,255,0.03);
-      border: 2px solid rgba(255,255,255,0.5);
-      border-radius: 0 0 30px 30px;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 0 0 35px 35px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 35px rgba(255,0,0,0.5), inset 0 0 15px rgba(0,0,0,0.6);
-      backdrop-filter: blur(2px);
+      box-shadow: 0 0 40px rgba(255,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.7);
     }
     .tube::before {
       content: "";
       position: absolute;
       top: -2px; left: -10%; width: 120%; height: 10px;
-      background: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.7);
       border-radius: 50%;
       z-index: 3;
     }
@@ -95,7 +93,7 @@
       background: linear-gradient(to top, #cc0000, #ff3333, #ff4d4d);
       box-shadow: 0 0 30px #ff0000;
       transition: height 0.1s ease;
-      border-radius: 0 0 28px 28px;
+      border-radius: 0 0 33px 33px;
       overflow: hidden;
     }
     .bubble {
@@ -108,120 +106,79 @@
     }
     @keyframes rise {
       0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-160px) scale(0.6); opacity: 0; }
+      100% { transform: translateY(-180px) scale(0.6); opacity: 0; }
     }
     .loading-text {
-      font-size: 1.8rem; font-weight: 700;
+      font-size: 2rem; font-weight: 700;
       color: #ff5555;
-      text-shadow: 0 0 20px #ff0000;
-      letter-spacing: 3px;
+      text-shadow: 0 0 25px #ff0000;
+      letter-spacing: 4px;
       animation: textGlitch 2s infinite;
     }
     @keyframes textGlitch {
-      0%, 100% { text-shadow: 0 0 20px #ff0000; }
-      92% { text-shadow: 2px 0 #ff0000, -2px 0 #ff5555; }
-      94% { text-shadow: -2px 0 #ff0000, 2px 0 #ff5555; }
-      96% { text-shadow: 0 0 20px #ff0000; }
+      0%, 100% { text-shadow: 0 0 25px #ff0000; }
+      92% { text-shadow: 3px 0 #ff0000, -3px 0 #ff5555; }
+      94% { text-shadow: -3px 0 #ff0000, 3px 0 #ff5555; }
+      96% { text-shadow: 0 0 25px #ff0000; }
     }
 
     .error-panel {
       background: rgba(255,0,0,0.1); border: 1px solid #ff0000;
-      border-radius: 12px; padding: 15px 25px; display: none;
+      border-radius: 16px; padding: 20px 30px; display: none;
       animation: errorFlash 0.3s ease;
     }
     @keyframes errorFlash { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-    .error-title { font-size: 1.6rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 20px #ff0000; }
+    .error-title { font-size: 1.8rem; font-weight: 700; color: #ff4444; text-shadow: 0 0 20px #ff0000; }
     .error-sub { color: #ffaaaa; font-size: 1rem; }
-
-    .debug-title {
-      font-size: 3rem; font-weight: 700; color: #fff;
-      text-shadow: 0 0 40px #ff0000; letter-spacing: 6px; display: none;
-      animation: debugPulse 1s infinite alternate;
-    }
-    @keyframes debugPulse { from { opacity: 0.8; } to { opacity: 1; text-shadow: 0 0 60px #ff0000; } }
-
-    .terminals-container {
-      position: absolute; inset: 0; display: none; flex-wrap: wrap;
-      justify-content: center; align-items: center; gap: 20px; z-index: 5;
-      pointer-events: none;
-    }
-    .terminal {
-      background: rgba(0,0,0,0.8); border: 1px solid rgba(255,50,50,0.5);
-      border-radius: 12px; padding: 12px; font-family: 'Courier New', monospace;
-      font-size: 0.8rem; line-height: 1.3; color: #0f0; text-shadow: 0 0 4px #0f0;
-      backdrop-filter: blur(4px); overflow: hidden;
-      box-shadow: 0 0 30px rgba(255,0,0,0.3);
-      animation: terminalFlicker 2s infinite;
-      position: absolute;
-    }
-    @keyframes terminalFlicker { 0%,100%{opacity:1} 92%{opacity:0.9} 94%{opacity:0.8} 96%{opacity:1} }
-    .terminal::before {
-      content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
-      background: repeating-linear-gradient(0deg, rgba(0,255,0,0.04) 0px, rgba(0,255,0,0.04) 2px, transparent 2px, transparent 4px);
-      pointer-events: none;
-    }
-    .terminal-content { white-space: pre-wrap; height:100%; overflow:hidden; }
 
     /* ---------- Welcome Overlay ---------- */
     #welcomeOverlay {
       position: fixed; inset: 0; z-index: 998;
       display: none;
       align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(20px);
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(30px);
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
     #welcomeOverlay.active { display: flex; }
     #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
 
     .welcome-card {
-      background: rgba(20,0,0,0.6);
-      backdrop-filter: blur(30px);
-      border: 2px solid rgba(255,70,70,0.6);
-      border-radius: 48px;
-      padding: 50px 60px;
+      background: rgba(20,0,0,0.7);
+      backdrop-filter: blur(40px);
+      border: 2px solid rgba(255,70,70,0.8);
+      border-radius: 60px;
+      padding: 60px 80px;
       text-align: center;
-      box-shadow: 0 0 120px rgba(255,0,0,0.7), inset 0 0 50px rgba(255,0,0,0.2);
+      box-shadow: 0 0 150px rgba(255,0,0,0.8), inset 0 0 60px rgba(255,0,0,0.3);
       animation: welcomeCardPulse 2s ease-in-out infinite alternate;
     }
     @keyframes welcomeCardPulse {
-      from { box-shadow: 0 0 80px rgba(255,0,0,0.5); }
-      to { box-shadow: 0 0 140px rgba(255,0,0,1); }
+      from { box-shadow: 0 0 100px rgba(255,0,0,0.6); }
+      to { box-shadow: 0 0 180px rgba(255,0,0,1); }
     }
     .welcome-title {
-      font-size: 4rem;
+      font-size: 4.5rem;
       font-weight: 700;
       color: #fff;
-      text-shadow: 0 0 30px #ff0000, 0 0 60px rgba(255,0,0,0.8);
-      letter-spacing: 6px;
-      margin-bottom: 40px;
-      animation: textGlow 1.5s ease-in-out infinite alternate;
-      position: relative;
+      text-shadow: 0 0 40px #ff0000, 0 0 80px rgba(255,0,0,0.8);
+      letter-spacing: 8px;
+      margin-bottom: 50px;
+      animation: textGlowWelcome 2s ease-in-out infinite alternate;
     }
-    .welcome-title::after {
-      content: "Welcome, user";
-      position: absolute;
-      top: 2px; left: 2px;
-      color: #ff0000;
-      z-index: -1;
-      animation: glitchText 2s infinite;
-    }
-    @keyframes glitchText {
-      0%, 100% { transform: translate(0); }
-      20% { transform: translate(-3px, 2px); }
-      40% { transform: translate(3px, -2px); }
-      60% { transform: translate(-2px, -1px); }
-      80% { transform: translate(2px, 1px); }
+    @keyframes textGlowWelcome {
+      from { text-shadow: 0 0 30px #ff0000, 0 0 60px rgba(255,0,0,0.5); }
+      to { text-shadow: 0 0 60px #ff0000, 0 0 120px rgba(255,0,0,0.9); }
     }
     .enter-btn {
-      background: rgba(255,0,0,0.15);
+      background: rgba(255,0,0,0.2);
       border: 2px solid #ff5555;
       color: #fff;
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 700;
-      padding: 18px 50px;
-      border-radius: 60px;
+      padding: 20px 60px;
+      border-radius: 70px;
       cursor: pointer;
-      letter-spacing: 4px;
+      letter-spacing: 6px;
       transition: all 0.3s ease;
       text-transform: uppercase;
       animation: btnPulse 2s infinite;
@@ -233,18 +190,18 @@
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       transition: left 0.5s;
     }
     .enter-btn:hover::before { left: 100%; }
     @keyframes btnPulse {
-      0% { box-shadow: 0 0 20px #ff0000; }
-      50% { box-shadow: 0 0 60px #ff0000, 0 0 90px rgba(255,0,0,0.6); }
-      100% { box-shadow: 0 0 20px #ff0000; }
+      0% { box-shadow: 0 0 25px #ff0000; }
+      50% { box-shadow: 0 0 70px #ff0000, 0 0 100px rgba(255,0,0,0.6); }
+      100% { box-shadow: 0 0 25px #ff0000; }
     }
     .enter-btn:hover {
       background: #ff3333;
-      box-shadow: 0 0 80px #ff0000;
+      box-shadow: 0 0 100px #ff0000;
       transform: scale(1.05);
     }
 
@@ -273,119 +230,128 @@
       opacity: 0.25;
     }
 
-    .dashboard { position: relative; z-index: 1; width:100%; max-width:1400px; display:flex; flex-direction:column; align-items:center; gap:25px; }
+    .dashboard { position: relative; z-index: 1; width:100%; max-width:1500px; display:flex; flex-direction:column; align-items:center; gap:30px; }
     .header {
-      width:100%; max-width:1000px; background: rgba(10,0,0,0.5); backdrop-filter: blur(25px);
-      border:1px solid rgba(255,70,70,0.3); border-radius:44px; padding:22px 35px;
-      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;
-      box-shadow: 0 25px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+      width:100%; max-width:1100px; background: rgba(10,0,0,0.6); backdrop-filter: blur(30px);
+      border:1px solid rgba(255,70,70,0.4); border-radius:50px; padding:25px 40px;
+      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.1);
       animation: headerSlide 0.7s ease-out;
     }
-    @keyframes headerSlide { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-    .greeting { font-size:1.8rem; font-weight:600; letter-spacing:1px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5); }
-    .live-clock { font-size:1.8rem; font-weight:700; letter-spacing:2px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5); }
+    @keyframes headerSlide { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
+    .greeting { font-size:2rem; font-weight:600; letter-spacing:2px; color:#fff; text-shadow:0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.6); }
+    .live-clock { font-size:2rem; font-weight:700; letter-spacing:3px; color:#fff; text-shadow:0 0 20px #ff0000, 0 0 40px rgba(255,0,0,0.6); }
     .music-btn {
-      background: rgba(255,50,50,0.2); border:1px solid rgba(255,50,50,0.5);
-      color:#fff; padding:10px 20px; border-radius:30px;
-      cursor:pointer; font-weight:600; transition:0.3s; font-size:0.95rem;
-      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,50,50,0.3); border:1px solid rgba(255,50,50,0.7);
+      color:#fff; padding:12px 25px; border-radius:35px;
+      cursor:pointer; font-weight:600; transition:0.3s; font-size:1rem;
+      display: flex; align-items: center; gap: 10px;
       touch-action: manipulation;
     }
-    .music-btn svg { width: 20px; height: 20px; }
-    .music-btn:hover { background:rgba(255,50,50,0.5); box-shadow: 0 0 20px rgba(255,0,0,0.6); }
+    .music-btn svg { width: 22px; height: 22px; }
+    .music-btn:hover { background:rgba(255,50,50,0.6); box-shadow: 0 0 30px rgba(255,0,0,0.8); }
 
     .cards-grid {
       display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 22px; width: 100%;
+      gap: 25px; width: 100%;
     }
     .glass {
-      background: rgba(10,0,0,0.45); backdrop-filter: blur(16px); border:1px solid rgba(255,70,70,0.3);
-      border-radius:36px; padding:25px; box-shadow: 0 25px 70px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.04);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      width: 300px; max-width: 100%; flex-shrink: 0;
+      background: rgba(10,0,0,0.55); backdrop-filter: blur(20px); border:1px solid rgba(255,70,70,0.4);
+      border-radius:40px; padding:28px; box-shadow: 0 30px 80px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      width: 320px; max-width: 100%; flex-shrink: 0;
       position: relative; overflow: hidden;
       animation: cardPop 0.6s ease-out backwards;
       touch-action: manipulation;
     }
-    .glass:nth-child(1){animation-delay:0.1s} .glass:nth-child(2){animation-delay:0.2s} .glass:nth-child(3){animation-delay:0.3s}
-    .glass:nth-child(4){animation-delay:0.4s} .glass:nth-child(5){animation-delay:0.5s} .glass:nth-child(6){animation-delay:0.6s}
-    .glass:nth-child(7){animation-delay:0.7s}
-    @keyframes cardPop { from{opacity:0; transform: scale(0.9) translateY(20px); } to{opacity:1; transform: scale(1) translateY(0); } }
+    .glass::before {
+      content: "";
+      position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(255,0,0,0.4), transparent, rgba(255,0,0,0.4), transparent);
+      animation: rotateBorder 8s linear infinite;
+      z-index: 0;
+      opacity: 0.3;
+    }
+    @keyframes rotateBorder { 100% { transform: rotate(360deg); } }
     .glass::after {
       content:''; position:absolute; top:0; left:0; width:100%; height:100%;
       background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.03) 50%, transparent 55%);
-      background-size:200% 100%; animation: shine 4s ease-in-out infinite; z-index:0; pointer-events:none; border-radius:36px;
+      background-size:200% 100%; animation: shine 5s ease-in-out infinite; z-index:1; pointer-events:none; border-radius:40px;
     }
     @keyframes shine { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-    .glass:hover { transform: translateY(-6px) scale(1.02); box-shadow:0 40px 90px rgba(255,0,0,0.6); border-color:rgba(255,90,90,0.8); }
+    .glass:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow:0 45px 100px rgba(255,0,0,0.7);
+      border-color:rgba(255,90,90,0.9);
+    }
     .card-content { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; text-align:center; }
     .avatar {
-      width: 110px; height: 110px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,50,50,0.8);
-      box-shadow:0 0 40px rgba(255,0,0,0.6); transition: transform 0.3s; animation: ringPulse 2s infinite;
+      width: 120px; height: 120px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,50,50,0.9);
+      box-shadow:0 0 50px rgba(255,0,0,0.7); transition: transform 0.3s; animation: ringPulse 2s infinite;
     }
-    @keyframes ringPulse { 0%,100%{border-color:rgba(255,50,50,0.7);box-shadow:0 0 30px rgba(255,0,0,0.5)} 50%{border-color:rgba(255,90,90,0.9);box-shadow:0 0 60px rgba(255,0,0,0.9)} }
-    .avatar:hover { transform: scale(1.1) rotate(2deg); border-color:#ff4444; }
-    .username { font-size:1.7rem; font-weight:700; margin-top:15px; color:#fff; text-shadow:0 0 10px #ff0000, 0 0 20px rgba(255,0,0,0.6); }
-    .status-row { margin-top:10px; display:flex; align-items:center; gap:6px; color:#ffaaaa; font-size:0.95rem; }
-    .dot { width:10px; height:10px; border-radius:50%; animation: pulse 2s infinite; }
+    @keyframes ringPulse { 0%,100%{border-color:rgba(255,50,50,0.7);box-shadow:0 0 40px rgba(255,0,0,0.6)} 50%{border-color:rgba(255,90,90,0.9);box-shadow:0 0 80px rgba(255,0,0,0.9)} }
+    .avatar:hover { transform: scale(1.1) rotate(3deg); border-color:#ff4444; }
+    .username { font-size:1.9rem; font-weight:700; margin-top:18px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.7); }
+    .status-row { margin-top:12px; display:flex; align-items:center; gap:8px; color:#ffaaaa; font-size:1rem; }
+    .dot { width:12px; height:12px; border-radius:50%; animation: pulse 2s infinite; }
     .dot.online{background:#43b581} .dot.idle{background:#faa61a} .dot.dnd{background:#f04747} .dot.offline{background:#747f8d}
-    .custom-status { margin-top:8px; color:#ccc; font-style:italic; font-size:0.9rem; opacity:0.8; }
+    .custom-status { margin-top:8px; color:#ccc; font-style:italic; font-size:0.95rem; opacity:0.8; }
 
     .section-title {
-      font-size:1.2rem; font-weight:600; margin-bottom:12px;
-      display:flex; align-items:center; gap:8px; color:#ffbbbb;
-      text-shadow:0 0 10px rgba(255,80,80,0.6);
-      border-bottom:2px solid rgba(255,50,50,0.4); padding-bottom:8px; justify-content:center;
+      font-size:1.3rem; font-weight:600; margin-bottom:15px;
+      display:flex; align-items:center; gap:10px; color:#ffbbbb;
+      text-shadow:0 0 15px rgba(255,80,80,0.7);
+      border-bottom:2px solid rgba(255,50,50,0.5); padding-bottom:10px; justify-content:center;
     }
-    .section-title svg { width: 20px; height: 20px; }
+    .section-title svg { width: 22px; height: 22px; }
 
     .about-text {
-      font-size: 1rem; color: #ffbbbb; line-height: 1.6; margin-top: 10px;
-      text-shadow: 0 0 6px rgba(255,0,0,0.4);
+      font-size: 1.05rem; color: #ffbbbb; line-height: 1.7; margin-top: 12px;
+      text-shadow: 0 0 8px rgba(255,0,0,0.5);
     }
 
     .skills-tags {
-      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 15px;
+      display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 18px;
     }
     .skill-tag {
-      background: rgba(255,50,50,0.15); border: 1px solid rgba(255,50,50,0.4);
-      padding: 6px 16px; border-radius: 20px; font-size: 0.95rem;
-      font-weight: 500; color: #ffcccc; text-shadow: 0 0 6px rgba(255,0,0,0.5);
+      background: rgba(255,50,50,0.2); border: 1px solid rgba(255,50,50,0.6);
+      padding: 8px 20px; border-radius: 25px; font-size: 1rem;
+      font-weight: 500; color: #ffcccc; text-shadow: 0 0 8px rgba(255,0,0,0.6);
       cursor: pointer;
       transition: 0.3s;
       animation: tagFloat 3s ease-in-out infinite;
     }
-    .skill-tag:hover { background: rgba(255,50,50,0.35); transform: translateY(-2px); box-shadow: 0 0 15px rgba(255,0,0,0.5); }
+    .skill-tag:hover { background: rgba(255,50,50,0.5); transform: translateY(-4px); box-shadow: 0 0 20px rgba(255,0,0,0.7); }
     .skill-tag:nth-child(1) { animation-delay: 0s; }
     .skill-tag:nth-child(2) { animation-delay: 0.2s; }
     .skill-tag:nth-child(3) { animation-delay: 0.4s; }
     .skill-tag:nth-child(4) { animation-delay: 0.6s; }
     .skill-tag:nth-child(5) { animation-delay: 0.8s; }
-    @keyframes tagFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes tagFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-    .luau-tip { font-size:1rem; color:#ffbbbb; margin-top:10px; text-align:center; line-height:1.5; transition:opacity 0.3s; text-shadow:0 0 6px rgba(255,0,0,0.4); }
-    .timer-display { font-size:2.2rem; font-weight:700; letter-spacing:3px; margin:8px 0; text-shadow:0 0 15px #ff0000; }
-    .pomodoro-controls { display:flex; gap:10px; margin-top:15px; }
+    .luau-tip { font-size:1.05rem; color:#ffbbbb; margin-top:15px; text-align:center; line-height:1.6; transition:opacity 0.3s; text-shadow:0 0 8px rgba(255,0,0,0.5); }
+    .timer-display { font-size:2.5rem; font-weight:700; letter-spacing:4px; margin:10px 0; text-shadow:0 0 20px #ff0000; }
+    .pomodoro-controls { display:flex; gap:15px; margin-top:20px; }
     .pomo-btn {
-      background: rgba(255,50,50,0.2); border:1px solid rgba(255,50,50,0.4);
-      color:#fff; padding:10px 22px; border-radius:30px;
-      cursor:pointer; font-weight:600; transition:0.3s; font-size:0.9rem; letter-spacing:1px;
+      background: rgba(255,50,50,0.3); border:1px solid rgba(255,50,50,0.6);
+      color:#fff; padding:12px 25px; border-radius:35px;
+      cursor:pointer; font-weight:600; transition:0.3s; font-size:1rem; letter-spacing:1px;
       touch-action: manipulation;
     }
-    .pomo-btn:hover{background:rgba(255,50,50,0.4)} .pomo-btn.active{background:rgba(255,50,50,0.6);border-color:#ff5555}
-    .crypto-price { font-size:2.2rem; font-weight:700; text-shadow:0 0 12px #ff0000; animation:priceFade 0.5s ease; }
+    .pomo-btn:hover{background:rgba(255,50,50,0.5)} .pomo-btn.active{background:rgba(255,50,50,0.7);border-color:#ff5555;box-shadow: 0 0 20px rgba(255,0,0,0.7);}
+    .crypto-price { font-size:2.5rem; font-weight:700; text-shadow:0 0 15px #ff0000; animation:priceFade 0.5s ease; }
     @keyframes priceFade { from{opacity:0.5;transform:scale(0.9)} to{opacity:1;transform:scale(1)} }
     .discord-link {
-      display:inline-flex; align-items:center; gap:8px; margin-top:15px;
-      background:rgba(88,101,242,0.15); border:1px solid #5865F2;
-      color:#fff; padding:10px 24px; border-radius:30px;
-      text-decoration:none; font-weight:600; transition:0.3s;
+      display:inline-flex; align-items:center; gap:10px; margin-top:18px;
+      background:rgba(88,101,242,0.25); border:1px solid #5865F2;
+      color:#fff; padding:12px 30px; border-radius:35px;
+      text-decoration:none; font-weight:600; transition:0.3s; font-size:1rem;
     }
-    .discord-link:hover{background:#5865F2}
-    .watermark-cell { width:100%; display:flex; justify-content:center; padding:20px 0; }
+    .discord-link:hover{background:#5865F2; box-shadow: 0 0 25px rgba(88,101,242,0.7);}
+    .watermark-cell { width:100%; display:flex; justify-content:center; padding:25px 0; }
     .watermark-text {
-      font-family:'Courier New', monospace; font-size:3.5rem; font-weight:bold; color:#ff5555;
-      text-shadow:0 0 20px #ff0000, 0 0 40px #ff0000; letter-spacing:6px;
+      font-family:'Courier New', monospace; font-size:4rem; font-weight:bold; color:#ff5555;
+      text-shadow:0 0 30px #ff0000, 0 0 60px #ff0000; letter-spacing:8px;
       white-space:nowrap; overflow:hidden; border-right:4px solid #ff5555;
       animation: blinkCursor 0.8s infinite;
     }
@@ -393,31 +359,31 @@
 
     /* Side Panel */
     .side-panel {
-      position: fixed; top: 0; right: -400px; width: 340px; max-width: 90vw;
-      height: 100%; background: rgba(10,0,0,0.95); backdrop-filter: blur(30px);
-      border-left: 1px solid rgba(255,70,70,0.6);
-      box-shadow: -10px 0 40px rgba(0,0,0,0.9);
+      position: fixed; top: 0; right: -400px; width: 350px; max-width: 90vw;
+      height: 100%; background: rgba(10,0,0,0.95); backdrop-filter: blur(40px);
+      border-left: 1px solid rgba(255,70,70,0.8);
+      box-shadow: -15px 0 50px rgba(0,0,0,0.9);
       z-index: 1000;
       transition: right 0.4s ease;
-      padding: 30px 20px;
+      padding: 40px 25px;
       overflow-y: auto;
       display: flex; flex-direction: column;
     }
     .side-panel.open { right: 0; }
     .close-panel {
       align-self: flex-end;
-      background: none; border: none; color: #fff; font-size: 2rem;
+      background: none; border: none; color: #fff; font-size: 2.5rem;
       cursor: pointer; padding: 0 10px;
     }
-    .panel-title { font-size: 1.8rem; font-weight: 700; color: #fff; text-shadow: 0 0 20px #ff0000; margin-top: 20px; }
-    .panel-desc { font-size: 1rem; color: #ffbbbb; margin-top: 20px; line-height: 1.8; }
+    .panel-title { font-size: 2rem; font-weight: 700; color: #fff; text-shadow: 0 0 30px #ff0000; margin-top: 25px; }
+    .panel-desc { font-size: 1.1rem; color: #ffbbbb; margin-top: 25px; line-height: 1.8; }
 
     @media (max-width: 768px) {
-      .header { flex-direction: column; text-align: center; padding: 20px; }
-      .glass { width: 100%; max-width: 360px; }
-      .welcome-card { padding: 30px 20px; }
-      .welcome-title { font-size: 2.5rem; }
-      .enter-btn { font-size: 1.2rem; padding: 12px 30px; }
+      .header { flex-direction: column; text-align: center; padding: 25px; }
+      .glass { width: 100%; max-width: 380px; }
+      .welcome-card { padding: 40px 30px; }
+      .welcome-title { font-size: 3rem; }
+      .enter-btn { font-size: 1.5rem; padding: 15px 40px; }
       .watermark-text { font-size: 2.5rem; }
     }
   </style>
@@ -437,9 +403,9 @@
       <div class="test-tube-panel" id="progressPanel">
         <div class="tube">
           <div class="liquid" id="liquidFill">
-            <div class="bubble" style="left:10px; width:8px; height:8px; animation-duration:1.2s;"></div>
-            <div class="bubble" style="left:25px; width:6px; height:6px; animation-duration:1.5s; animation-delay:0.3s;"></div>
-            <div class="bubble" style="left:40px; width:10px; height:10px; animation-duration:1.8s; animation-delay:0.6s;"></div>
+            <div class="bubble" style="left:12px; width:10px; height:10px; animation-duration:1.2s;"></div>
+            <div class="bubble" style="left:30px; width:7px; height:7px; animation-duration:1.5s; animation-delay:0.4s;"></div>
+            <div class="bubble" style="left:45px; width:12px; height:12px; animation-duration:1.8s; animation-delay:0.7s;"></div>
           </div>
         </div>
         <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
@@ -448,8 +414,6 @@
         <div class="error-title">ERR_CONNECTION_REFUSED</div>
         <div class="error-sub">Retrying...</div>
       </div>
-      <div class="debug-title" id="debugTitle">DEBUGGING</div>
-      <div class="terminals-container" id="terminalsContainer"></div>
     </div>
   </div>
 
@@ -475,14 +439,14 @@
         <div class="greeting" id="greeting">Good Evening, nyx</div>
         <div class="live-clock" id="liveClock">00:00:00</div>
         <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-          <svg id="musicIconOff" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg id="musicIconOff" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="1" y1="1" x2="23" y2="23"></line>
             <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path>
             <path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path>
             <line x1="12" y1="19" x2="12" y2="23"></line>
             <line x1="8" y1="23" x2="16" y2="23"></line>
           </svg>
-          <svg id="musicIconOn" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <svg id="musicIconOn" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
             <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
           </svg>
@@ -543,7 +507,7 @@
               <button class="pomo-btn active" id="pomoStart">Start</button>
               <button class="pomo-btn" id="pomoReset">Reset</button>
             </div>
-            <p style="margin-top: 10px; color: #ffaaaa; font-size: 0.85rem;" id="pomoStatus">Work session</p>
+            <p style="margin-top: 12px; color: #ffaaaa; font-size: 0.9rem;" id="pomoStatus">Work session</p>
           </div>
         </div>
 
@@ -552,7 +516,7 @@
           <div class="card-content">
             <div class="section-title">₿ Bitcoin</div>
             <div class="crypto-price" id="btcPrice">...</div>
-            <p style="color: #ffaaaa; font-size: 0.8rem; margin-top: 4px;" id="btcChange">–</p>
+            <p style="color: #ffaaaa; font-size: 0.85rem; margin-top: 6px;" id="btcChange">–</p>
           </div>
         </div>
 
@@ -600,15 +564,15 @@
       reset() {
         this.x = Math.random() * pw;
         this.y = Math.random() * ph;
-        this.size = Math.random() * 1.5 + 0.3;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.3 + 0.05;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.4 + 0.1;
       }
       update() { this.x += this.speedX; this.y += this.speedY; if(this.x<0||this.x>pw)this.speedX*=-1; if(this.y<0||this.y>ph)this.speedY*=-1; }
       draw() { pCtx.beginPath(); pCtx.arc(this.x,this.y,this.size,0,Math.PI*2); pCtx.fillStyle=`rgba(255,80,80,${this.opacity})`; pCtx.fill(); }
     }
-    for(let i=0;i<40;i++) particles.push(new Particle());
+    for(let i=0;i<60;i++) particles.push(new Particle());
     function animateParticles() { pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw()}); requestAnimationFrame(animateParticles); }
     animateParticles();
 
@@ -627,7 +591,7 @@
       for(let i=0;i<drops.length;i++) {
         const text=chars[Math.floor(Math.random()*chars.length)];
         const x=i*fontSize+fontSize/2, y=drops[i]*fontSize;
-        mCtx.fillStyle='#ff3333'; mCtx.shadowColor='#ff0000'; mCtx.shadowBlur=6;
+        mCtx.fillStyle='#ff3333'; mCtx.shadowColor='#ff0000'; mCtx.shadowBlur=8;
         mCtx.fillText(text,x,y); mCtx.shadowBlur=0;
         if(y>mh&&Math.random()>0.975)drops[i]=0;
         drops[i]++;
@@ -640,66 +604,21 @@
     const liquidFill = document.getElementById('liquidFill');
     const progressPanel = document.getElementById('progressPanel');
     const errorBox = document.getElementById('errorBox');
-    const debugTitle = document.getElementById('debugTitle');
-    const terminalsContainer = document.getElementById('terminalsContainer');
     const loadingLabel = document.getElementById('loadingLabel');
     const welcomeOverlay = document.getElementById('welcomeOverlay');
 
     let progress = 0;
-    const totalDuration = 6500;
+    const totalDuration = 6000;
     const updateInterval = 50;
     const steps = totalDuration / updateInterval;
     let currentStep = 0;
 
-    function randomHex() { return Math.floor(Math.random()*16).toString(16).toUpperCase(); }
-    function randomAddr() { return '0x'+Array.from({length:8},()=>randomHex()).join(''); }
-
-    const NUM_TERMINALS = 14;
-    const terminalElements = [];
-    const terminalIntervals = [];
-
-    function createTerminals() {
-      const frag = document.createDocumentFragment();
-      for(let i=0;i<NUM_TERMINALS;i++) {
-        const div=document.createElement('div'); div.className='terminal';
-        const w=Math.floor(Math.random()*160)+140, h=Math.floor(Math.random()*100)+80;
-        div.style.width=w+'px'; div.style.height=h+'px'; div.style.position='absolute';
-        div.style.left=Math.floor(Math.random()*(window.innerWidth-w))+'px';
-        div.style.top=Math.floor(Math.random()*(window.innerHeight-h))+'px';
-        const contentDiv=document.createElement('div'); contentDiv.className='terminal-content';
-        div.appendChild(contentDiv); frag.appendChild(div);
-        terminalElements.push({div,contentDiv});
-      }
-      terminalsContainer.appendChild(frag);
-    }
-
-    function startTerminalUpdates() {
-      terminalElements.forEach(({contentDiv})=>{
-        const interval=setInterval(()=>{
-          const line=`[${new Date().toISOString().substr(11,8)}] ${randomAddr()} | PID:${Math.floor(Math.random()*9999)} | SEGFAULT`;
-          contentDiv.innerHTML+=line+'\n'; contentDiv.scrollTop=contentDiv.scrollHeight;
-        },200+Math.random()*150);
-        terminalIntervals.push(interval);
-      });
-    }
-
-    function stopTerminalUpdates() { terminalIntervals.forEach(clearInterval); }
-
     const sequence = [
-      { time: 0.0, action: () => {
-        progressPanel.style.display='flex'; errorBox.style.display='none';
-        debugTitle.style.display='none'; terminalsContainer.style.display='none';
-        loadingLabel.textContent='NYX.exe loading...';
-      }},
-      { time: 1.5, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
-      { time: 2.2, action: () => { errorBox.style.display='none'; loadingLabel.textContent='Retrying...'; } },
-      { time: 2.8, action: () => {
-        progressPanel.style.display='none'; debugTitle.style.display='block';
-        terminalsContainer.style.display='block';
-        if(terminalElements.length===0){ createTerminals(); startTerminalUpdates(); }
-      }},
-      { time: 6.5, action: () => {
-        stopTerminalUpdates();
+      { time: 0.0, action: () => { progressPanel.style.display='flex'; errorBox.style.display='none'; loadingLabel.textContent='NYX.exe loading...'; } },
+      { time: 1.8, action: () => { errorBox.style.display='block'; loadingLabel.textContent='Connection failed'; } },
+      { time: 2.5, action: () => { errorBox.style.display='none'; loadingLabel.textContent='Retrying...'; } },
+      { time: 3.0, action: () => { progressPanel.style.display='none'; } }, // remove test tube and show welcome directly? Actually we'll go straight to welcome after a short pause
+      { time: 4.0, action: () => {
         loadingOverlay.classList.add('fade-out');
         welcomeOverlay.classList.add('active');
       }}
@@ -883,7 +802,7 @@
       if(charIndex<fullText.length){ watermarkEl.textContent+=fullText.charAt(charIndex); charIndex++; setTimeout(typeWriter,150); }
       else{ setTimeout(()=>{watermarkEl.textContent=''; charIndex=0; typeWriter();},2000); }
     }
-    setTimeout(typeWriter, 2000);
+    setTimeout(typeWriter, 2500);
 
     // ---------- Side Panel for Skills ----------
     const sidePanel = document.getElementById('sidePanel');
