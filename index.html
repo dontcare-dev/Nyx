@@ -192,6 +192,12 @@
     @keyframes headerSlide { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
     .greeting { font-size:1.85rem; font-weight:600; letter-spacing:1px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5); }
     .live-clock { font-size:1.85rem; font-weight:700; letter-spacing:2px; color:#fff; text-shadow:0 0 15px #ff0000, 0 0 30px rgba(255,0,0,0.5); }
+    .music-btn {
+      background: rgba(255,50,50,0.2); border:1px solid rgba(255,50,50,0.4);
+      color:#fff; padding:8px 16px; border-radius:25px;
+      cursor:pointer; font-weight:600; transition:0.3s; font-size:0.9rem;
+    }
+    .music-btn:hover { background:rgba(255,50,50,0.5); }
     .cards-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:22px; width:100%; }
     .glass {
       background: rgba(20,0,0,0.22); backdrop-filter: blur(12px); border:1px solid rgba(255,70,70,0.18);
@@ -219,7 +225,6 @@
     .dot { width:10px; height:10px; border-radius:50%; animation: pulse 2s infinite; }
     .dot.online{background:#43b581} .dot.idle{background:#faa61a} .dot.dnd{background:#f04747} .dot.offline{background:#747f8d}
     .custom-status { margin-top:8px; color:#ccc; font-style:italic; font-size:0.9rem; opacity:0.8; }
-    .spotify-embed { width:100%; border-radius:18px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.6); }
     .luau-tip { font-size:1rem; color:#ffbbbb; margin-top:10px; text-align:center; line-height:1.5; transition:opacity 0.3s; text-shadow:0 0 6px rgba(255,0,0,0.4); }
     .timer-display { font-size:2.2rem; font-weight:700; letter-spacing:3px; margin:8px 0; text-shadow:0 0 15px #ff0000; }
     .pomodoro-controls { display:flex; gap:10px; margin-top:15px; }
@@ -277,10 +282,16 @@
 
   <div id="mainDashboard">
     <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="background" />
+
+    <!-- Hidden video for background music -->
+    <video id="bgMusic" loop autoplay playsinline muted width="0" height="0" preload="auto"
+           src="Screen_Recording_20260525_134650_Spotify.mp4"></video>
+
     <div class="dashboard">
       <div class="header">
         <div class="greeting" id="greeting">Good Evening, nyx</div>
         <div class="live-clock" id="liveClock">00:00:00</div>
+        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔇 Music Off</button>
       </div>
       <div class="cards-grid">
         <div class="glass">
@@ -292,19 +303,6 @@
               <span id="statusText">Loading...</span>
             </div>
             <div class="custom-status" id="customStatus"></div>
-          </div>
-        </div>
-        <div class="glass">
-          <div class="card-content">
-            <div class="section-title">
-              <svg viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.48.179-1.08-.061-1.261-.54-.18-.48.06-1.08.54-1.26 4.08-1.32 11.04-1.02 15.721 1.621.539.24.779.899.539 1.44-.24.54-.899.779-1.44.539z"/></svg>
-              Spotify
-            </div>
-            <div class="spotify-embed">
-              <iframe src="https://open.spotify.com/embed/playlist/3p7lx9U0uQnIPoo4XNajfX?utm_source=generator&theme=0" 
-                      width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                      loading="lazy" style="border-radius:12px;"></iframe>
-            </div>
           </div>
         </div>
         <div class="glass">
@@ -492,6 +490,20 @@
       }
       if(currentStep>=steps) clearInterval(loadInterval);
     },updateInterval);
+
+    // ---- Music Controls ----
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    function toggleMusic() {
+      if (bgMusic.muted) {
+        bgMusic.muted = false;
+        bgMusic.play();
+        musicBtn.textContent = '🔊 Music On';
+      } else {
+        bgMusic.muted = true;
+        musicBtn.textContent = '🔇 Music Off';
+      }
+    }
 
     // ---- Main functions ----
     function updateClockAndGreeting() {
