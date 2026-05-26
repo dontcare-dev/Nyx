@@ -409,6 +409,8 @@
       z-index: 3;
     }
     #mainDashboard.visible { opacity: 1; visibility: visible; }
+
+    /* LESS BLUR ON BACKGROUND IMAGE - NOW VISIBLE */
     #mainBgImage {
       position: absolute;
       top: 0;
@@ -417,9 +419,11 @@
       height: 100%;
       object-fit: cover;
       z-index: -1;
-      opacity: 0.18;
-      filter: blur(14px) brightness(0.55);
+      opacity: 0.3;
+      filter: blur(6px) brightness(0.55);
+      transform: scale(1.02);
     }
+
     .dashboard-container {
       position: relative;
       z-index: 4;
