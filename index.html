@@ -69,7 +69,7 @@
       z-index: 2;
     }
 
-    /* LOADING OVERLAY - test tube + hologram behind + matrix rain */
+    /* LOADING OVERLAY - test tube + hologram above */
     #loadingOverlay {
       position: fixed; inset: 0; z-index: 1000;
       display: flex;
@@ -93,16 +93,26 @@
       pointer-events: none;
     }
 
-    /* hologram behind test tube */
+    /* loading content centered */
+    .loading-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* hologram above test tube */
     .hologram-bg {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 480px;
-      height: 480px;
-      z-index: 1;
-      pointer-events: none;
+      width: 380px;
+      height: 380px;
+      margin: 0 auto;
       perspective: 1000px;
     }
     .death-ring {
@@ -118,7 +128,7 @@
     }
     .death-letter {
       position: absolute;
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 800;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #ff3366, #ff66cc, #ffccff);
@@ -131,17 +141,17 @@
       transform-style: preserve-3d;
       white-space: nowrap;
     }
-    .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(200px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(200px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(200px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(200px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(200px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(160px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(160px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(160px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(160px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(160px) translateX(-50%) translateY(-50%); }
     .death-core {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       font-weight: 800;
       background: radial-gradient(circle, #ff66aa, #ff3366);
       -webkit-background-clip: text;
@@ -156,30 +166,31 @@
       100% { opacity: 1; text-shadow: 0 0 50px #ff6699; }
     }
 
-    /* test tube panel (foreground) */
+    /* test tube panel */
     .test-tube-panel {
-      position: relative;
-      z-index: 2;
       background: rgba(8, 0, 0, 0.88);
       backdrop-filter: blur(48px);
       border: 1px solid rgba(255, 80, 80, 0.85);
       border-radius: 64px;
-      padding: 38px 50px;
+      padding: 30px 45px;
       box-shadow: 0 0 180px rgba(255, 30, 30, 0.7), inset 0 0 30px rgba(255, 60, 60, 0.25);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 32px;
+      gap: 28px;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
     }
     .tube {
-      width: 92px;
-      height: 280px;
+      width: 88px;
+      height: 260px;
       background: rgba(0, 0, 0, 0.65);
       border: 2px solid rgba(255, 110, 110, 0.95);
-      border-radius: 0 0 60px 60px;
+      border-radius: 0 0 56px 56px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 60px rgba(255, 0, 0, 0.7);
+      box-shadow: 0 0 55px rgba(255, 0, 0, 0.7);
     }
     .tube::before {
       content: "";
@@ -187,7 +198,7 @@
       top: -4px;
       left: -10%;
       width: 120%;
-      height: 18px;
+      height: 16px;
       background: rgba(255, 240, 240, 0.98);
       border-radius: 50%;
       filter: blur(2px);
@@ -199,9 +210,9 @@
       width: 100%;
       height: 0%;
       background: linear-gradient(145deg, #ff1a1a, #ff5555, #ffaaaa);
-      box-shadow: 0 0 50px #ff3a3a;
+      box-shadow: 0 0 45px #ff3a3a;
       transition: height 0.03s linear;
-      border-radius: 0 0 56px 56px;
+      border-radius: 0 0 52px 52px;
     }
     .bubble {
       position: absolute;
@@ -212,25 +223,25 @@
     }
     @keyframes bubbleRise {
       0% { transform: translateY(0) scale(0.6); opacity: 0.9; }
-      100% { transform: translateY(-260px) scale(0.2); opacity: 0; }
+      100% { transform: translateY(-240px) scale(0.2); opacity: 0; }
     }
     .loading-text {
-      font-size: 1.9rem;
+      font-size: 1.6rem;
       font-weight: 600;
-      letter-spacing: 6px;
+      letter-spacing: 5px;
       background: linear-gradient(125deg, #ffcccc, #ff4d4d);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 30px #ff2a2a;
+      text-shadow: 0 0 25px #ff2a2a;
       animation: textGlow 1.4s infinite alternate;
     }
     @keyframes textGlow {
       0% { opacity: 0.8; text-shadow: 0 0 12px #ff0000; }
-      100% { opacity: 1; text-shadow: 0 0 45px #ff8888; }
+      100% { opacity: 1; text-shadow: 0 0 40px #ff8888; }
     }
     .loading-percent {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 700;
       background: linear-gradient(125deg, #ffaaaa, #ff4d4d);
       -webkit-background-clip: text;
@@ -242,24 +253,26 @@
       backdrop-filter: blur(28px);
       border: 1px solid #ff3a3a;
       border-radius: 56px;
-      padding: 12px 28px;
+      padding: 10px 24px;
       display: none;
       text-align: center;
     }
-    .error-title { font-size: 1rem; font-weight: 700; color: #ff7a7a; }
-    .error-sub { color: #ffbbbb; font-size: 0.8rem; margin-top: 4px; }
-    @media (max-width: 650px) {
-      .test-tube-panel { padding: 28px 36px; }
-      .tube { width: 76px; height: 240px; }
-      .hologram-bg { width: 320px; height: 320px; }
-      .death-letter { font-size: 2.2rem; }
-      .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(140px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(140px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(140px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(140px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(140px) translateX(-50%) translateY(-50%); }
-      .death-core { font-size: 1.6rem; }
-      .loading-text { font-size: 1.4rem; }
+    .error-title { font-size: 0.9rem; font-weight: 700; color: #ff7a7a; }
+    .error-sub { color: #ffbbbb; font-size: 0.75rem; margin-top: 4px; }
+
+    @media (max-width: 600px) {
+      .loading-content { gap: 25px; }
+      .hologram-bg { width: 260px; height: 260px; }
+      .death-letter { font-size: 2rem; }
+      .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(110px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(110px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(110px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(110px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(110px) translateX(-50%) translateY(-50%); }
+      .death-core { font-size: 1.4rem; }
+      .test-tube-panel { padding: 24px 35px; max-width: 300px; }
+      .tube { width: 76px; height: 230px; }
+      .loading-text { font-size: 1.3rem; }
       .loading-percent { font-size: 1.2rem; }
     }
 
@@ -272,13 +285,8 @@
       background: #000;
       transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.2), visibility 0.8s;
     }
-    #welcomeOverlay.active {
-      display: block;
-    }
-    #welcomeOverlay.fade-out {
-      opacity: 0;
-      visibility: hidden;
-    }
+    #welcomeOverlay.active { display: block; }
+    #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
     #welcomeVideo {
       position: absolute;
       top: 0;
@@ -385,7 +393,7 @@
       box-shadow: 0 0 70px #ff4d4d;
     }
 
-    /* MAIN DASHBOARD - FULLY RESPONSIVE */
+    /* MAIN DASHBOARD */
     #mainDashboard {
       opacity: 0;
       visibility: hidden;
@@ -400,10 +408,7 @@
       padding: 16px 12px;
       z-index: 3;
     }
-    #mainDashboard.visible {
-      opacity: 1;
-      visibility: visible;
-    }
+    #mainDashboard.visible { opacity: 1; visibility: visible; }
     #mainBgImage {
       position: absolute;
       top: 0;
@@ -488,9 +493,7 @@
       max-width: 320px;
       animation: cardReveal 0.6s ease-out backwards;
     }
-    @media (max-width: 680px) {
-      .glass-card { max-width: 100%; }
-    }
+    @media (max-width: 680px) { .glass-card { max-width: 100%; } }
     @keyframes cardReveal {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -679,29 +682,33 @@
 
 <div id="loadingOverlay">
   <canvas id="loadingMatrixCanvas"></canvas>
-  <div class="hologram-bg">
-    <div class="death-ring">
-      <div class="death-letter">D</div>
-      <div class="death-letter">E</div>
-      <div class="death-letter">A</div>
-      <div class="death-letter">T</div>
-      <div class="death-letter">H</div>
-      <div class="death-core">DEATH</div>
-    </div>
-  </div>
-  <div class="test-tube-panel">
-    <div class="tube">
-      <div class="liquid" id="liquidFill">
-        <div class="bubble" style="left:12px; width:11px; height:11px; animation-duration:1.2s;"></div>
-        <div class="bubble" style="left:38px; width:9px; height:9px; animation-duration:1.6s; animation-delay:0.4s;"></div>
-        <div class="bubble" style="left:62px; width:13px; height:13px; animation-duration:1.9s; animation-delay:0.8s;"></div>
+  <div class="loading-content">
+    <!-- Hologram above test tube -->
+    <div class="hologram-bg">
+      <div class="death-ring">
+        <div class="death-letter">D</div>
+        <div class="death-letter">E</div>
+        <div class="death-letter">A</div>
+        <div class="death-letter">T</div>
+        <div class="death-letter">H</div>
+        <div class="death-core">DEATH</div>
       </div>
     </div>
-    <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
-    <div class="loading-percent" id="loadingPercent">0%</div>
-    <div class="error-panel" id="errorBox">
-      <div class="error-title">ERR_CONNECTION_REFUSED</div>
-      <div class="error-sub">re-establishing link...</div>
+    <!-- Test tube panel -->
+    <div class="test-tube-panel">
+      <div class="tube">
+        <div class="liquid" id="liquidFill">
+          <div class="bubble" style="left:12px; width:11px; height:11px; animation-duration:1.2s;"></div>
+          <div class="bubble" style="left:38px; width:9px; height:9px; animation-duration:1.6s; animation-delay:0.4s;"></div>
+          <div class="bubble" style="left:62px; width:13px; height:13px; animation-duration:1.9s; animation-delay:0.8s;"></div>
+        </div>
+      </div>
+      <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
+      <div class="loading-percent" id="loadingPercent">0%</div>
+      <div class="error-panel" id="errorBox">
+        <div class="error-title">ERR_CONNECTION_REFUSED</div>
+        <div class="error-sub">re-establishing link...</div>
+      </div>
     </div>
   </div>
 </div>
