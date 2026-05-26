@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>nyx · monochrome</title>
+  <title>nyx · void</title>
   <style>
     * {
       margin: 0;
@@ -13,697 +13,506 @@
     }
 
     body {
-      font-family: 'Poppins', 'Inter', system-ui, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
       background: #000;
-      min-height: 100vh;
       color: #fff;
       overflow-x: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
     }
 
-    /* black/white background layers */
-    .bg-gradient {
+    /* --- dynamic noise background --- */
+    .noise {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 25% 20%, #111 0%, #000 100%);
-      z-index: -3;
-    }
-
-    .glow-orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(140px);
-      opacity: 0.2;
-      z-index: -2;
       pointer-events: none;
-      animation: floatGlow 20s infinite alternate ease-in-out;
-    }
-    .orb1 { width: 800px; height: 800px; background: #333; top: -350px; left: -300px; }
-    .orb2 { width: 700px; height: 700px; background: #222; bottom: -300px; right: -300px; animation-delay: -6s; }
-    .orb3 { width: 500px; height: 500px; background: #444; top: 45%; left: 45%; animation-duration: 22s; opacity: 0.15; }
-    @keyframes floatGlow {
-      0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
-      100% { transform: translate(50px, -40px) scale(1.1); opacity: 0.3; }
+      z-index: -1;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
     }
 
-    canvas#particles {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.3;
-    }
-
-    #matrixCanvas {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.15;
-      color: #aaa;
-    }
-
-    .scanlines {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 6px);
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    /* LOADING OVERLAY - monochrome */
+    /* --- loading overlay (minimal test tube) --- */
     #loadingOverlay {
-      position: fixed; inset: 0; z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed;
+      inset: 0;
       background: #000;
-      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.2), visibility 0.8s;
-      overflow: hidden;
-    }
-    #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
-
-    #loadingMatrixCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      opacity: 0.3;
-      pointer-events: none;
-    }
-
-    .loading-content {
-      position: relative;
-      z-index: 2;
+      z-index: 1000;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 40px;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    #loadingOverlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
     }
 
-    /* rotating wireframe sphere (monochrome) */
-    .mono-sphere {
-      width: 180px;
-      height: 180px;
-      position: relative;
-      transform-style: preserve-3d;
-      animation: rotateSphere 8s infinite linear;
+    .loader {
+      text-align: center;
     }
-    @keyframes rotateSphere {
-      0% { transform: rotateX(0deg) rotateY(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg); }
-    }
-    .ring {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.3);
-      transform: translate(-50%, -50%);
-    }
-    .ring:nth-child(1) { transform: translate(-50%, -50%) rotateX(0deg); }
-    .ring:nth-child(2) { transform: translate(-50%, -50%) rotateX(60deg); }
-    .ring:nth-child(3) { transform: translate(-50%, -50%) rotateX(120deg); }
-    .ring::after {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: 50%;
-      width: 8px;
-      height: 8px;
-      background: #fff;
-      border-radius: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 10px #fff;
-    }
-
-    .test-tube-panel {
-      background: rgba(20,20,20,0.9);
-      backdrop-filter: blur(30px);
+    .test-tube {
+      width: 70px;
+      height: 200px;
+      margin: 0 auto 2rem;
       border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 48px;
-      padding: 30px 45px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 28px;
-      width: 100%;
-      max-width: 340px;
-    }
-    .tube {
-      width: 80px;
-      height: 240px;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid rgba(255,255,255,0.4);
-      border-radius: 0 0 48px 48px;
+      border-top: none;
+      border-radius: 0 0 35px 35px;
       position: relative;
       overflow: hidden;
+      background: rgba(255,255,255,0.02);
     }
-    .liquid {
+    .fill {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 0%;
-      background: linear-gradient(145deg, #ccc, #fff);
+      background: #fff;
       transition: height 0.03s linear;
-      border-radius: 0 0 44px 44px;
     }
     .bubble {
       position: absolute;
-      bottom: 8px;
-      background: rgba(255,255,255,0.5);
+      bottom: 5px;
+      background: rgba(255,255,255,0.6);
       border-radius: 50%;
-      animation: bubbleRise 2.2s infinite ease-out;
+      animation: rise 2s infinite ease-out;
     }
-    @keyframes bubbleRise {
-      0% { transform: translateY(0) scale(0.6); opacity: 0.6; }
-      100% { transform: translateY(-220px) scale(0.2); opacity: 0; }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(0.5); opacity: 0.7; }
+      100% { transform: translateY(-200px) scale(0.1); opacity: 0; }
     }
     .loading-text {
-      font-size: 1.4rem;
-      font-weight: 500;
-      letter-spacing: 4px;
-      color: #fff;
-      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      font-size: 1rem;
+      letter-spacing: 2px;
+      font-weight: 400;
+      color: #aaa;
+      margin-top: 1rem;
     }
     .loading-percent {
-      font-size: 1.2rem;
-      font-weight: 500;
-      color: #aaa;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 0.5rem;
     }
-    .error-panel {
-      background: rgba(30,30,30,0.95);
-      border: 1px solid #ff4444;
-      border-radius: 40px;
-      padding: 8px 20px;
+    .error-msg {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #ff8888;
       display: none;
-      text-align: center;
     }
-    .error-title { font-size: 0.85rem; font-weight: 600; color: #ff8888; }
-    .error-sub { color: #ffaaaa; font-size: 0.7rem; }
 
-    /* WELCOME OVERLAY - monochrome */
+    /* --- welcome overlay (fullscreen minimal) --- */
     #welcomeOverlay {
       position: fixed;
       inset: 0;
+      background: #000;
       z-index: 999;
       display: none;
-      background: #000;
-      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.2), visibility 0.8s;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s;
     }
-    #welcomeOverlay.active { display: block; }
-    #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
-
-    #welcomeVideo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 0;
-      filter: brightness(0.4) contrast(1.5) grayscale(1);
+    #welcomeOverlay.active {
+      display: flex;
     }
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(ellipse at center, rgba(0,0,0,0.6), #000);
-      z-index: 1;
+    #welcomeOverlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
     }
-    #welcomeMatrixCanvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .welcome-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 3;
-      width: 90%;
-      max-width: 480px;
+    .welcome-box {
       text-align: center;
+      animation: fadeUp 0.8s ease;
     }
-    .welcome-card {
-      background: rgba(10,10,10,0.7);
-      backdrop-filter: blur(40px);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 48px;
-      padding: 50px 30px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .welcome-title {
-      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-size: clamp(2rem, 10vw, 5rem);
       font-weight: 700;
-      letter-spacing: 4px;
+      letter-spacing: 8px;
       color: #fff;
-      text-shadow: 0 0 15px rgba(255,255,255,0.5);
     }
     .enter-btn {
-      background: #fff;
-      border: none;
-      color: #000;
-      font-size: clamp(1rem, 4vw, 1.3rem);
-      font-weight: 600;
+      background: none;
+      border: 1px solid #fff;
+      color: #fff;
       padding: 12px 36px;
-      border-radius: 60px;
+      font-size: 1rem;
+      margin-top: 2rem;
       cursor: pointer;
-      margin-top: 32px;
       transition: 0.2s;
       letter-spacing: 2px;
     }
     .enter-btn:hover {
-      background: #aaa;
-      transform: scale(1.02);
+      background: #fff;
+      color: #000;
     }
 
-    /* MAIN DASHBOARD - monochrome glass */
+    /* --- main dashboard (redesigned layout) --- */
     #mainDashboard {
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.9s;
-      position: relative;
-      width: 100%;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px 16px;
-      z-index: 3;
+      transition: opacity 0.8s ease, visibility 0.8s;
+      padding: 2rem 1.5rem;
+      max-width: 1400px;
+      margin: 0 auto;
     }
-    #mainDashboard.visible { opacity: 1; visibility: visible; }
-
-    /* background image - subtle grayscale */
-    #mainBgImage {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-      opacity: 0.15;
-      filter: grayscale(1) blur(8px) brightness(0.6);
-      transform: scale(1.02);
+    #mainDashboard.visible {
+      opacity: 1;
+      visibility: visible;
     }
 
-    .dashboard-container {
-      position: relative;
-      z-index: 4;
-      width: 100%;
-      max-width: 1300px;
+    /* header */
+    .top-bar {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 32px;
-    }
-
-    .header {
-      width: 100%;
-      background: rgba(10,10,10,0.6);
-      backdrop-filter: blur(30px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 80px;
-      padding: 14px 24px;
-      display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 2.5rem;
     }
     .greeting {
-      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-size: 1.4rem;
       font-weight: 500;
-      color: #eee;
     }
     .live-clock {
       font-family: monospace;
-      font-size: clamp(1rem, 4vw, 1.4rem);
-      background: rgba(0,0,0,0.6);
-      padding: 6px 18px;
-      border-radius: 50px;
-      letter-spacing: 2px;
-      color: #ddd;
+      font-size: 1.3rem;
+      background: rgba(255,255,255,0.05);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
     }
     .music-btn {
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 6px 20px;
-      border-radius: 50px;
+      background: rgba(255,255,255,0.05);
+      border: none;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
       cursor: pointer;
       font-size: 0.85rem;
+      color: #fff;
+      transition: 0.2s;
       display: flex;
       align-items: center;
       gap: 8px;
-      color: #fff;
     }
-    .music-btn:hover { background: #fff; color: #000; border-color: #fff; }
+    .music-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
 
+    /* cards grid - 3 columns, clean */
     .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .card {
+      background: rgba(20,20,20,0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      padding: 1.5rem;
+      transition: all 0.25s ease;
+    }
+    .card:hover {
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-4px);
+      background: rgba(25,25,25,0.8);
+    }
+    .card-header {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 24px;
-      width: 100%;
-    }
-
-    /* refined glass cards - monochrome */
-    .glass-card {
-      background: rgba(15,15,15,0.7);
-      backdrop-filter: blur(28px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 40px;
-      padding: 22px 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 0 0.5px rgba(255,255,255,0.05) inset;
-      transition: all 0.3s ease;
-      width: 100%;
-      max-width: 320px;
-    }
-    @media (max-width: 680px) { .glass-card { max-width: 100%; } }
-    .glass-card:hover {
-      transform: translateY(-5px);
-      border-color: rgba(255,255,255,0.3);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.2) inset;
-      background: rgba(20,20,20,0.8);
-    }
-
-    .card-inner {
-      display: flex;
-      flex-direction: column;
       align-items: center;
-      text-align: center;
+      gap: 8px;
     }
+    /* profile specific */
     .avatar {
-      width: 100px;
-      height: 100px;
+      width: 85px;
+      height: 85px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #fff;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
+      margin-bottom: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.3);
     }
     .username {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 600;
-      margin-top: 14px;
-      color: #fff;
+      margin: 0.5rem 0;
     }
-    .status-row {
-      margin-top: 8px;
-      display: flex;
+    .status-badge {
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.5);
-      padding: 4px 16px;
+      gap: 6px;
+      background: rgba(255,255,255,0.05);
+      padding: 0.2rem 0.8rem;
       border-radius: 40px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
     .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
     }
-    .dot.online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
-    .dot.idle { background: #facc15; box-shadow: 0 0 6px #facc15; }
-    .dot.dnd { background: #f87171; box-shadow: 0 0 6px #f87171; }
-    .dot.offline { background: #6b7280; }
-    .custom-status {
-      margin-top: 8px;
-      font-size: 0.75rem;
-      background: rgba(255,255,255,0.1);
-      padding: 4px 12px;
-      border-radius: 40px;
-      color: #ccc;
-    }
+    .online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+    .idle { background: #facc15; }
+    .dnd { background: #f87171; }
+    .offline { background: #6b7280; }
 
-    .section-title {
-      font-size: 1.2rem;
-      font-weight: 500;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #ddd;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-      padding-bottom: 8px;
-      justify-content: center;
-    }
-    .about-text {
-      font-size: 0.85rem;
-      line-height: 1.5;
-      color: #ccc;
-    }
-    .skills-tags {
+    .skill-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 12px;
+      gap: 0.6rem;
+      margin: 1rem 0 0;
     }
     .skill-tag {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 5px 14px;
+      background: rgba(255,255,255,0.08);
+      padding: 0.3rem 1rem;
       border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 500;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: 0.2s;
-      color: #eee;
     }
     .skill-tag:hover {
       background: #fff;
       color: #000;
-      border-color: #fff;
-      transform: translateY(-2px);
     }
-
-    .luau-tip {
-      font-size: 0.8rem;
-      background: rgba(0,0,0,0.5);
-      padding: 14px;
-      border-radius: 28px;
-      margin-top: 12px;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      text-align: left;
+    .luau-tip-text {
+      font-size: 0.85rem;
+      line-height: 1.5;
       color: #ccc;
     }
     .timer-display {
-      font-size: 2rem;
+      font-size: 2.8rem;
       font-family: monospace;
       font-weight: 600;
-      margin: 12px 0;
-      color: #fff;
+      text-align: center;
+      margin: 0.8rem 0;
     }
-    .timer-controls { display: flex; gap: 12px; justify-content: center; }
+    .timer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
     .timer-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.3);
-      padding: 5px 20px;
-      border-radius: 50px;
-      font-size: 0.75rem;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
       cursor: pointer;
+      font-size: 0.8rem;
       color: #fff;
     }
-    .timer-btn:hover { background: #fff; color: #000; }
-    .crypto-price { font-size: 1.6rem; font-weight: 600; margin: 8px 0; color: #fff; }
+    .timer-btn.active {
+      background: #fff;
+      color: #000;
+    }
+    .btc-price {
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-align: center;
+      margin: 0.5rem 0;
+    }
     .quick-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 16px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      padding: 6px 24px;
-      border-radius: 50px;
+      display: inline-block;
+      background: rgba(255,255,255,0.08);
+      padding: 0.5rem 1.5rem;
+      border-radius: 40px;
       text-decoration: none;
       color: #fff;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      margin-top: 0.8rem;
+      transition: 0.2s;
     }
-    .quick-link:hover { background: #fff; color: #000; }
-    .watermark-text {
+    .quick-link:hover {
+      background: #fff;
+      color: #000;
+    }
+    .watermark {
+      text-align: center;
       font-family: monospace;
-      font-size: 2rem;
-      font-weight: 500;
-      color: #fff;
-      letter-spacing: 4px;
-      opacity: 0.6;
+      font-size: 1.8rem;
+      letter-spacing: 6px;
+      opacity: 0.3;
+      margin-top: 2rem;
     }
-    @media (max-width: 550px) { .watermark-text { font-size: 1.4rem; letter-spacing: 3px; } }
 
+    /* side panel */
     .side-panel {
       position: fixed;
       top: 0;
       right: -100%;
-      width: 80%;
-      max-width: 360px;
+      width: 320px;
+      max-width: 85vw;
       height: 100%;
-      background: rgba(0,0,0,0.95);
-      backdrop-filter: blur(40px);
-      border-left: 1px solid rgba(255,255,255,0.2);
+      background: #0a0a0a;
+      backdrop-filter: blur(20px);
       z-index: 1100;
-      transition: right 0.4s ease;
-      padding: 70px 24px;
-      overflow-y: auto;
+      transition: right 0.3s ease;
+      padding: 2rem;
+      border-left: 1px solid rgba(255,255,255,0.1);
     }
-    .side-panel.open { right: 0; }
+    .side-panel.open {
+      right: 0;
+    }
     .close-panel {
       background: none;
       border: none;
       color: #fff;
-      font-size: 2rem;
-      position: absolute;
-      top: 20px;
-      right: 24px;
+      font-size: 1.8rem;
       cursor: pointer;
+      float: right;
     }
-    .panel-title { font-size: 1.8rem; font-weight: 600; margin-bottom: 20px; color: #fff; }
-    .panel-desc { font-size: 1rem; line-height: 1.6; color: #ccc; }
+    .panel-title {
+      font-size: 1.6rem;
+      font-weight: 500;
+      margin: 2rem 0 1rem;
+    }
+    .panel-desc {
+      color: #aaa;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 700px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .top-bar {
+        flex-direction: column;
+        text-align: center;
+      }
+      .greeting {
+        font-size: 1.2rem;
+      }
+    }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="bg-gradient"></div>
-<div class="glow-orb orb1"></div>
-<div class="glow-orb orb2"></div>
-<div class="glow-orb orb3"></div>
-<canvas id="particles"></canvas>
-<canvas id="matrixCanvas"></canvas>
-<div class="scanlines"></div>
+<div class="noise"></div>
 
+<!-- LOADING OVERLAY -->
 <div id="loadingOverlay">
-  <canvas id="loadingMatrixCanvas"></canvas>
-  <div class="loading-content">
-    <div class="mono-sphere">
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-    </div>
-    <div class="test-tube-panel">
-      <div class="tube">
-        <div class="liquid" id="liquidFill">
-          <div class="bubble" style="left:12px; width:10px; height:10px; animation-duration:1.2s;"></div>
-          <div class="bubble" style="left:38px; width:8px; height:8px; animation-duration:1.6s; animation-delay:0.4s;"></div>
-          <div class="bubble" style="left:58px; width:12px; height:12px; animation-duration:1.9s; animation-delay:0.8s;"></div>
-        </div>
-      </div>
-      <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
-      <div class="loading-percent" id="loadingPercent">0%</div>
-      <div class="error-panel" id="errorBox">
-        <div class="error-title">ERR_CONNECTION_REFUSED</div>
-        <div class="error-sub">re-establishing link...</div>
+  <div class="loader">
+    <div class="test-tube">
+      <div class="fill" id="liquidFill">
+        <div class="bubble" style="left:15px; width:8px; height:8px; animation-duration:1.3s;"></div>
+        <div class="bubble" style="left:35px; width:6px; height:6px; animation-duration:1.8s; animation-delay:0.4s;"></div>
+        <div class="bubble" style="left:50px; width:10px; height:10px; animation-duration:2.1s; animation-delay:0.7s;"></div>
       </div>
     </div>
+    <div class="loading-text" id="loadingLabel">initializing</div>
+    <div class="loading-percent" id="loadingPercent">0%</div>
+    <div class="error-msg" id="errorBox">connection refused · retrying</div>
   </div>
 </div>
 
+<!-- WELCOME OVERLAY -->
 <div id="welcomeOverlay">
-  <video id="welcomeVideo" autoplay muted loop playsinline>
-    <source src="Screen_Recording_20260525_212935_Pinterest.mp4" type="video/mp4">
-  </video>
-  <div class="video-overlay"></div>
-  <canvas id="welcomeMatrixCanvas"></canvas>
-  <div class="welcome-content">
-    <div class="welcome-card">
-      <div class="welcome-title">WELCOME, NYX</div>
-      <button class="enter-btn" id="enterBtn">ENTER</button>
-    </div>
+  <div class="welcome-box">
+    <div class="welcome-title">NYX</div>
+    <button class="enter-btn" id="enterBtn">ACCESS</button>
   </div>
 </div>
 
+<!-- MAIN DASHBOARD -->
 <div id="mainDashboard">
-  <img id="mainBgImage" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=1024" alt="bg">
-  <iframe id="ytPlayer" style="display:none;" src="https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig" allow="autoplay"></iframe>
-
-  <div class="dashboard-container">
-    <div class="header">
-      <div class="greeting" id="greeting">Good Evening, nyx</div>
-      <div class="live-clock" id="liveClock">00:00:00</div>
-      <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-        <svg id="musicIconOff" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"></path><path d="M17 16.95A7 7 0 0 1 5 12v-2m14 0v2a7 7 0 0 1-.11 1.23"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-        <svg id="musicIconOn" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-        <span id="musicLabel">Music Off</span>
-      </button>
-    </div>
-
-    <div class="cards-grid">
-      <div class="glass-card"><div class="card-inner"><img class="avatar" id="avatar" src=""><div class="username" id="username">nyx._.dev</div><div class="status-row"><span class="dot" id="statusDot"></span><span id="statusText">Loading...</span></div><div class="custom-status" id="customStatus"></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title">About</div><p class="about-text">14‑year‑old developer building sleek tools and immersive experiences.</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title">Skills</div><div class="skills-tags" id="skillsContainer"><span class="skill-tag" data-lang="javascript">JavaScript</span><span class="skill-tag" data-lang="html">HTML</span><span class="skill-tag" data-lang="luau">Luau</span><span class="skill-tag" data-lang="css">CSS</span><span class="skill-tag" data-lang="python">Python</span></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title">Luau Tip</div><div class="luau-tip"><span id="luauTip">"Use task.wait() instead of wait() for better performance."</span></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title">Timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="timer-controls"><button class="timer-btn active" id="timerStart">Start</button><button class="timer-btn" id="timerReset">Reset</button></div><p style="margin-top:8px; color:#ccc; font-size:0.7rem;" id="timerStatus">Focus session</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title">Bitcoin</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.7rem;" id="btcChange">–</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title">Links</div><a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
-    </div>
-    <div class="watermark-cell"><div class="watermark-text" id="watermark"></div></div>
+  <div class="top-bar">
+    <div class="greeting" id="greeting">Good Evening</div>
+    <div class="live-clock" id="liveClock">--:--:--</div>
+    <button class="music-btn" id="musicBtn">
+      <span>♫</span> <span id="musicLabel">Music Off</span>
+    </button>
   </div>
+
+  <div class="cards-grid">
+    <!-- profile card -->
+    <div class="card">
+      <div style="text-align: center;">
+        <img class="avatar" id="avatar" src="">
+        <div class="username" id="username">nyx._.dev</div>
+        <div class="status-badge">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">offline</span>
+        </div>
+        <div class="custom-status" id="customStatus" style="font-size:0.75rem; margin-top:0.5rem; opacity:0.7;"></div>
+      </div>
+    </div>
+
+    <!-- about -->
+    <div class="card">
+      <div class="card-header">⌘ about</div>
+      <p style="font-size:0.9rem; line-height:1.5; color:#ccc;">14‑year‑old developer building sleek tools and immersive experiences. Minimalist by nature.</p>
+    </div>
+
+    <!-- skills -->
+    <div class="card">
+      <div class="card-header">◉ skills</div>
+      <div class="skill-tags" id="skillsContainer">
+        <span class="skill-tag" data-lang="javascript">JavaScript</span>
+        <span class="skill-tag" data-lang="html">HTML</span>
+        <span class="skill-tag" data-lang="luau">Luau</span>
+        <span class="skill-tag" data-lang="css">CSS</span>
+        <span class="skill-tag" data-lang="python">Python</span>
+      </div>
+    </div>
+
+    <!-- luau tip -->
+    <div class="card">
+      <div class="card-header">⚡ luau tip</div>
+      <div class="luau-tip-text" id="luauTip">"Use task.wait() instead of wait() for precision."</div>
+    </div>
+
+    <!-- timer -->
+    <div class="card">
+      <div class="card-header">⏱ timer</div>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="timer-buttons">
+        <button class="timer-btn active" id="timerStart">start</button>
+        <button class="timer-btn" id="timerReset">reset</button>
+      </div>
+      <p style="text-align:center; font-size:0.7rem; margin-top:0.8rem;" id="timerStatus">focus session</p>
+    </div>
+
+    <!-- bitcoin -->
+    <div class="card">
+      <div class="card-header">₿ bitcoin</div>
+      <div class="btc-price" id="btcPrice">...</div>
+      <p style="text-align:center; font-size:0.7rem;" id="btcChange">—</p>
+    </div>
+
+    <!-- link -->
+    <div class="card">
+      <div class="card-header">🔗 link</div>
+      <a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank">discord</a>
+    </div>
+  </div>
+
+  <div class="watermark" id="watermark"></div>
 </div>
 
-<div class="side-panel" id="sidePanel"><button class="close-panel" id="closePanel">✕</button><div class="panel-title" id="panelTitle"></div><div class="panel-desc" id="panelDesc"></div></div>
+<div class="side-panel" id="sidePanel">
+  <button class="close-panel" id="closePanel">✕</button>
+  <div class="panel-title" id="panelTitle"></div>
+  <div class="panel-desc" id="panelDesc"></div>
+</div>
+
+<iframe id="ytPlayer" style="display:none;" src="https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig" allow="autoplay"></iframe>
 
 <script>
   (function(){
-    // particles
-    const pCanvas = document.getElementById('particles'), pCtx = pCanvas.getContext('2d');
-    let particles = [], pw, ph;
-    function resizeParticles(){ pw = pCanvas.width = window.innerWidth; ph = pCanvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeParticles); resizeParticles();
-    class Particle { constructor(){ this.reset(); } reset(){ this.x = Math.random() * pw; this.y = Math.random() * ph; this.size = Math.random() * 2 + 0.5; this.speedX = (Math.random() - 0.5) * 0.2; this.speedY = (Math.random() - 0.5) * 0.2; this.opacity = Math.random() * 0.3 + 0.1; } update(){ this.x += this.speedX; this.y += this.speedY; if(this.x < 0 || this.x > pw) this.speedX *= -1; if(this.y < 0 || this.y > ph) this.speedY *= -1; } draw(){ pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI*2); pCtx.fillStyle = `rgba(255,255,255,${this.opacity})`; pCtx.fill(); } }
-    for(let i=0;i<80;i++) particles.push(new Particle());
-    function animateParticles(){ pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animateParticles); }
-    animateParticles();
-
-    // main matrix
-    const mCanvas = document.getElementById('matrixCanvas'), mCtx = mCanvas.getContext('2d');
-    let mw, mh, columns, drops, fontSize = 22;
-    function setupMatrix(){ mw = mCanvas.width = window.innerWidth; mh = mCanvas.height = window.innerHeight; columns = Math.floor(mw/fontSize)+1; drops = Array(columns).fill(1); }
-    window.addEventListener('resize', setupMatrix); setupMatrix();
-    function drawMatrix(){ mCtx.fillStyle = 'rgba(0,0,0,0.05)'; mCtx.fillRect(0,0,mw,mh); mCtx.font = `${fontSize}px monospace`; mCtx.textAlign = 'center'; for(let i=0;i<drops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*fontSize+fontSize/2, y = drops[i]*fontSize; mCtx.fillStyle = '#aaa'; mCtx.fillText(text,x,y); if(y>mh && Math.random()>0.975) drops[i]=0; drops[i]++; } }
-    setInterval(drawMatrix, 70);
-
-    // loading matrix rain
-    const loadMatrixCanvas = document.getElementById('loadingMatrixCanvas'), loadCtx = loadMatrixCanvas.getContext('2d');
-    let lw, lh, lColumns, lDrops, lFontSize = 20;
-    function resizeLoadMatrix(){ lw = loadMatrixCanvas.width = window.innerWidth; lh = loadMatrixCanvas.height = window.innerHeight; lColumns = Math.floor(lw / lFontSize) + 1; lDrops = Array(lColumns).fill(1); }
-    window.addEventListener('resize', resizeLoadMatrix); resizeLoadMatrix();
-    function drawLoadMatrix(){ loadCtx.fillStyle = 'rgba(0,0,0,0.05)'; loadCtx.fillRect(0,0,lw,lh); loadCtx.font = `${lFontSize}px monospace`; loadCtx.textAlign = 'center'; for(let i=0;i<lDrops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*lFontSize + lFontSize/2, y = lDrops[i]*lFontSize; loadCtx.fillStyle = '#aaa'; loadCtx.fillText(text, x, y); if(y > lh && Math.random() > 0.975) lDrops[i] = 0; lDrops[i]++; } }
-    setInterval(drawLoadMatrix, 60);
-
-    // welcome matrix
-    const wCanvas = document.getElementById('welcomeMatrixCanvas'), wCtx = wCanvas.getContext('2d');
-    let welcomeDrops = [], welcomeColumns, welcomeActive = false, wFontSize = 20;
-    function resizeWelcomeMatrix(){ wCanvas.width = window.innerWidth; wCanvas.height = window.innerHeight; welcomeColumns = Math.floor(wCanvas.width / wFontSize) + 1; welcomeDrops = Array(welcomeColumns).fill(1); }
-    window.addEventListener('resize', () => { if(welcomeActive) resizeWelcomeMatrix(); });
-    function startWelcomeMatrix(){ resizeWelcomeMatrix(); welcomeActive = true; }
-    function drawWelcomeMatrix(){ if(!welcomeActive) return; wCtx.fillStyle = 'rgba(0,0,0,0.05)'; wCtx.fillRect(0,0,wCanvas.width,wCanvas.height); wCtx.font = `${wFontSize}px monospace`; wCtx.textAlign = 'center'; for(let i=0;i<welcomeDrops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*wFontSize + wFontSize/2, y = welcomeDrops[i]*wFontSize; wCtx.fillStyle = '#aaa'; wCtx.fillText(text,x,y); if(y > wCanvas.height && Math.random() > 0.975) welcomeDrops[i]=0; welcomeDrops[i]++; } }
-    setInterval(drawWelcomeMatrix, 55);
-
-    // loading sequence
+    // ---------- loading sequence (test tube) ----------
     const liquidFill = document.getElementById('liquidFill');
-    const loadingPercentSpan = document.getElementById('loadingPercent');
-    const loadingLabelSpan = document.getElementById('loadingLabel');
+    const loadingPercent = document.getElementById('loadingPercent');
+    const loadingLabel = document.getElementById('loadingLabel');
     const errorBox = document.getElementById('errorBox');
     const loadingOverlay = document.getElementById('loadingOverlay');
     const welcomeOverlay = document.getElementById('welcomeOverlay');
@@ -713,68 +522,251 @@
       step++;
       const prog = Math.min(100, Math.floor((step / totalSteps) * 100));
       liquidFill.style.height = prog + '%';
-      loadingPercentSpan.textContent = prog + '%';
-      if (step === 18) { errorBox.style.display = 'block'; loadingLabelSpan.textContent = 'Connection failed'; }
-      if (step === 28) { errorBox.style.display = 'none'; loadingLabelSpan.textContent = 'Retrying...'; }
-      if (step === 40) { loadingLabelSpan.textContent = 'Almost there'; }
+      loadingPercent.textContent = prog + '%';
+      if (step === 18) { errorBox.style.display = 'block'; loadingLabel.textContent = 'connection lost'; }
+      if (step === 28) { errorBox.style.display = 'none'; loadingLabel.textContent = 'retrying...'; }
+      if (step === 40) { loadingLabel.textContent = 'almost there'; }
       if (step >= totalSteps) {
         clearInterval(interval);
         loadingOverlay.classList.add('fade-out');
         welcomeOverlay.classList.add('active');
-        startWelcomeMatrix();
+        // start welcome matrix (optional but we keep simple)
       }
     }, 50);
 
-    // youtube music
-    let player, musicPlaying = false;
-    const musicIconOff = document.getElementById('musicIconOff'), musicIconOn = document.getElementById('musicIconOn'), musicLabelSpan = document.getElementById('musicLabel');
-    function setMusicUI(state){ if(state === 'on'){ musicIconOff.style.display = 'none'; musicIconOn.style.display = 'inline'; musicLabelSpan.textContent = 'Music On'; musicPlaying = true; }else{ musicIconOn.style.display = 'none'; musicIconOff.style.display = 'inline'; musicLabelSpan.textContent = 'Music Off'; musicPlaying = false; } }
-    window.onYouTubeIframeAPIReady = function(){ player = new YT.Player('ytPlayer', { events: { 'onReady': () => {}, 'onStateChange': (e) => { if(e.data === YT.PlayerState.ENDED) player.playVideo(); } } }); };
-    const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
-    window.startMusic = function(){ if(player && player.playVideo){ player.playVideo(); setMusicUI('on'); } };
-    window.toggleMusic = function(){ if(!player) return; if(musicPlaying){ player.pauseVideo(); setMusicUI('off'); }else{ player.playVideo(); setMusicUI('on'); } };
-
+    // ---------- welcome enter ----------
     const mainDashboard = document.getElementById('mainDashboard');
-    document.getElementById('enterBtn').addEventListener('click', () => { welcomeOverlay.classList.remove('active'); welcomeOverlay.classList.add('fade-out'); mainDashboard.classList.add('visible'); if(window.startMusic) window.startMusic(); });
+    const enterBtn = document.getElementById('enterBtn');
+    enterBtn.addEventListener('click', () => {
+      welcomeOverlay.classList.remove('active');
+      welcomeOverlay.classList.add('fade-out');
+      mainDashboard.classList.add('visible');
+      startMusic();
+    });
 
-    function updateClockGreeting(){ let now = new Date(); document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false }); let h = now.getHours(); let g = h < 5 ? "Good Midnight, nyx" : h < 12 ? "Good Morning, nyx" : h < 17 ? "Good Afternoon, nyx" : "Good Evening, nyx"; document.getElementById('greeting').textContent = g; }
-    updateClockGreeting(); setInterval(updateClockGreeting, 1000);
+    // ---------- youtube music ----------
+    let player, musicPlaying = false;
+    const musicBtn = document.getElementById('musicBtn');
+    const musicLabelSpan = document.getElementById('musicLabel');
+    function setMusicUI(state) {
+      if(state === 'on') {
+        musicLabelSpan.textContent = 'Music On';
+        musicPlaying = true;
+      } else {
+        musicLabelSpan.textContent = 'Music Off';
+        musicPlaying = false;
+      }
+    }
+    function startMusic() {
+      if(player && player.playVideo) {
+        player.playVideo();
+        setMusicUI('on');
+      }
+    }
+    function toggleMusic() {
+      if(!player) return;
+      if(musicPlaying) {
+        player.pauseVideo();
+        setMusicUI('off');
+      } else {
+        player.playVideo();
+        setMusicUI('on');
+      }
+    }
+    musicBtn.addEventListener('click', toggleMusic);
+    window.onYouTubeIframeAPIReady = function() {
+      player = new YT.Player('ytPlayer', {
+        events: {
+          'onReady': () => {},
+          'onStateChange': (e) => { if(e.data === YT.PlayerState.ENDED) player.playVideo(); }
+        }
+      });
+    };
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
 
+    // ---------- clock & greeting ----------
+    function updateClockGreeting() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
+      const hour = now.getHours();
+      let greet = hour < 5 ? "Good Midnight" : hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+      document.getElementById('greeting').textContent = `${greet}, nyx`;
+    }
+    updateClockGreeting();
+    setInterval(updateClockGreeting, 1000);
+
+    // ---------- luau tips ----------
     const tips = [
-      "Use task.wait() instead of wait() — it's more accurate and doesn't yield on the same frame.",
-      "Local variables are faster than globals. Always use 'local' inside functions.",
-      "Use :Connect() instead of :connect() (new Luau syntax).",
-      "Avoid while true do without a task.wait() — it will freeze.",
-      "Leverage type checking in Luau using '::' annotations.",
-      "Use table.create(size, initial) for pre-allocated arrays.",
-      "debug.traceback() helps trace errors. Wrap risky calls in pcall()."
+      "Use task.wait() instead of wait() — more accurate and prevents infinite loops.",
+      "Local variables are faster than globals. Always declare with 'local'.",
+      "Use :Connect() (new syntax) instead of :connect().",
+      "Avoid while true do without task.wait() — it freezes.",
+      "Use type checking with '::' to catch bugs early.",
+      "table.create() pre-allocates arrays for better performance.",
+      "debug.traceback() helps trace errors. Wrap pcall() for safety."
     ];
-    let tIndex=0, tipEl=document.getElementById('luauTip'); setInterval(()=>{ tIndex=(tIndex+1)%tips.length; tipEl.style.opacity='0'; setTimeout(()=>{ tipEl.textContent = `"${tips[tIndex]}"`; tipEl.style.opacity='1'; },300); }, 10000);
+    let tipIdx = 0;
+    const tipEl = document.getElementById('luauTip');
+    setInterval(() => {
+      tipIdx = (tipIdx + 1) % tips.length;
+      tipEl.style.opacity = '0';
+      setTimeout(() => {
+        tipEl.textContent = `"${tips[tipIdx]}"`;
+        tipEl.style.opacity = '1';
+      }, 200);
+    }, 9000);
 
+    // ---------- discord profile ----------
     const USER_ID = "1418597263479144471";
-    async function loadDiscord(){ try{ let res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`); let json = await res.json(); if(json.success){ let d = json.data; document.getElementById('username').textContent = d.discord_user.global_name || d.discord_user.username; let av = d.discord_user.avatar; if(av) document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${USER_ID}/${av}.${av.startsWith('a_')?'gif':'png'}?size=512`; let s = d.discord_status || "offline"; let dot = document.getElementById('statusDot'); dot.className = "dot "+s; document.getElementById('statusText').textContent = s.charAt(0).toUpperCase()+s.slice(1); let custom = d.activities?.find(a=>a.type===4); document.getElementById('customStatus').textContent = custom?.state||""; } }catch(e){} }
-    loadDiscord(); setInterval(loadDiscord, 30000);
+    async function loadDiscord() {
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+        const json = await res.json();
+        if(json.success) {
+          const d = json.data;
+          document.getElementById('username').textContent = d.discord_user.global_name || d.discord_user.username;
+          const av = d.discord_user.avatar;
+          if(av) document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${USER_ID}/${av}.${av.startsWith('a_')?'gif':'png'}?size=512`;
+          const status = d.discord_status || "offline";
+          const dot = document.getElementById('statusDot');
+          dot.className = `dot ${status}`;
+          document.getElementById('statusText').textContent = status.charAt(0).toUpperCase() + status.slice(1);
+          const custom = d.activities?.find(a => a.type === 4);
+          document.getElementById('customStatus').textContent = custom?.state || "";
+        }
+      } catch(e) {}
+    }
+    loadDiscord();
+    setInterval(loadDiscord, 30000);
 
-    async function fetchBTC(){ try{ let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true'); let d=await r.json(); let p=d.bitcoin.usd; let ch=d.bitcoin.usd_24h_change?.toFixed(2)||0; document.getElementById('btcPrice').innerHTML=`$${p.toLocaleString()}`; let chEl=document.getElementById('btcChange'); chEl.innerHTML=`${ch>0?'▲':'▼'} ${Math.abs(ch)}%`; chEl.style.color=ch>=0?'#6fcf97':'#ff7b72'; }catch(e){ document.getElementById('btcPrice').innerHTML='—'; } }
-    fetchBTC(); setInterval(fetchBTC, 60000);
+    // ---------- bitcoin price ----------
+    async function fetchBTC() {
+      try {
+        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true');
+        const d = await r.json();
+        const price = d.bitcoin.usd;
+        const change = d.bitcoin.usd_24h_change?.toFixed(2) || 0;
+        document.getElementById('btcPrice').innerHTML = `$${price.toLocaleString()}`;
+        const chEl = document.getElementById('btcChange');
+        chEl.innerHTML = `${change > 0 ? '▲' : '▼'} ${Math.abs(change)}%`;
+        chEl.style.color = change >= 0 ? '#6fcf97' : '#ff7b72';
+      } catch(e) {
+        document.getElementById('btcPrice').innerHTML = '—';
+      }
+    }
+    fetchBTC();
+    setInterval(fetchBTC, 60000);
 
-    let timerDisplay = document.getElementById('timerDisplay'), timerStatus = document.getElementById('timerStatus'), startBtn = document.getElementById('timerStart'), resetBtn = document.getElementById('timerReset');
-    let WORK=25*60, BREAK=5*60, timeLeft=WORK, isWorking=true, isRunning=false, timerInt=null;
-    function updateTimerDisplayUI(){ let m=Math.floor(timeLeft/60), s=timeLeft%60; timerDisplay.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
-    function stopTimerInt(){ if(timerInt){ clearInterval(timerInt); timerInt=null; } isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); }
-    function resetTimerFunc(){ stopTimerInt(); timeLeft=isWorking?WORK:BREAK; updateTimerDisplayUI(); }
-    function startTimerFunc(){ if(isRunning){ stopTimerInt(); return; } isRunning=true; startBtn.textContent='Pause'; startBtn.classList.add('active'); timerInt=setInterval(()=>{ if(timeLeft<=0){ clearInterval(timerInt); timerInt=null; isRunning=false; startBtn.textContent='Start'; startBtn.classList.remove('active'); if(isWorking){ isWorking=false; timerStatus.textContent='Break session'; timeLeft=BREAK; } else { isWorking=true; timerStatus.textContent='Focus session'; timeLeft=WORK; } updateTimerDisplayUI(); return; } timeLeft--; updateTimerDisplayUI(); },1000); }
-    startBtn.addEventListener('click', startTimerFunc); resetBtn.addEventListener('click', resetTimerFunc); updateTimerDisplayUI();
+    // ---------- pomodoro timer ----------
+    const timerDisplay = document.getElementById('timerDisplay');
+    const timerStatus = document.getElementById('timerStatus');
+    const startBtn = document.getElementById('timerStart');
+    const resetBtn = document.getElementById('timerReset');
+    let WORK = 25 * 60;
+    let BREAK = 5 * 60;
+    let timeLeft = WORK;
+    let isWorking = true;
+    let isRunning = false;
+    let timerInt = null;
 
-    const sidePanel = document.getElementById('sidePanel'), panelTitle = document.getElementById('panelTitle'), panelDesc = document.getElementById('panelDesc'), closePanelBtn = document.getElementById('closePanel');
-    const skillMap = { javascript:"JavaScript: Versatile language for web, both frontend and backend.", html:"HTML: HyperText Markup Language - structure of webpages.", luau:"Luau: Roblox scripting language with type checking.", css:"CSS: Cascading Style Sheets - styling and design.", python:"Python: High-level language for AI, automation, backend." };
-    document.getElementById('skillsContainer').addEventListener('click', (e) => { const tag = e.target.closest('.skill-tag'); if(tag){ let lang = tag.dataset.lang; panelTitle.textContent = tag.innerText.trim(); panelDesc.textContent = skillMap[lang] || "Mastery in progress."; sidePanel.classList.add('open'); } });
-    closePanelBtn.addEventListener('click', () => sidePanel.classList.remove('open'));
-    document.addEventListener('click', (e) => { if(!sidePanel.contains(e.target) && !e.target.closest('.skill-tag')) sidePanel.classList.remove('open'); });
+    function updateTimerUI() {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      timerDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+    }
+    function stopTimer() {
+      if(timerInt) clearInterval(timerInt);
+      timerInt = null;
+      isRunning = false;
+      startBtn.textContent = 'start';
+      startBtn.classList.remove('active');
+    }
+    function resetTimer() {
+      stopTimer();
+      timeLeft = isWorking ? WORK : BREAK;
+      updateTimerUI();
+    }
+    function startTimer() {
+      if(isRunning) {
+        stopTimer();
+        return;
+      }
+      isRunning = true;
+      startBtn.textContent = 'pause';
+      startBtn.classList.add('active');
+      timerInt = setInterval(() => {
+        if(timeLeft <= 0) {
+          clearInterval(timerInt);
+          timerInt = null;
+          isRunning = false;
+          startBtn.textContent = 'start';
+          startBtn.classList.remove('active');
+          if(isWorking) {
+            isWorking = false;
+            timerStatus.textContent = 'break session';
+            timeLeft = BREAK;
+          } else {
+            isWorking = true;
+            timerStatus.textContent = 'focus session';
+            timeLeft = WORK;
+          }
+          updateTimerUI();
+          return;
+        }
+        timeLeft--;
+        updateTimerUI();
+      }, 1000);
+    }
+    startBtn.addEventListener('click', startTimer);
+    resetBtn.addEventListener('click', resetTimer);
+    updateTimerUI();
 
-    const watermarkEl = document.getElementById('watermark'); const fullText = "nyx.tuff"; let charIdx=0;
-    function typeWriter(){ if(charIdx<fullText.length){ watermarkEl.textContent+=fullText.charAt(charIdx); charIdx++; setTimeout(typeWriter,140); } else { setTimeout(()=>{ watermarkEl.textContent=''; charIdx=0; typeWriter(); },2000); } }
-    setTimeout(typeWriter, 2800);
+    // ---------- side panel for skills ----------
+    const sidePanel = document.getElementById('sidePanel');
+    const panelTitle = document.getElementById('panelTitle');
+    const panelDesc = document.getElementById('panelDesc');
+    const closePanel = document.getElementById('closePanel');
+    const skillDescriptions = {
+      javascript: "JavaScript is a versatile language for web development, both client‑side and server‑side. Powers interactive experiences.",
+      html: "HTML (HyperText Markup Language) structures web content. The foundation of every webpage.",
+      luau: "Luau is a scripting language for Roblox, derived from Lua. Adds type checking and performance.",
+      css: "CSS (Cascading Style Sheets) styles web pages: layout, colors, fonts, animations.",
+      python: "Python is a high‑level language used for web, data science, automation, and AI."
+    };
+    document.getElementById('skillsContainer').addEventListener('click', (e) => {
+      const tag = e.target.closest('.skill-tag');
+      if(tag) {
+        const lang = tag.dataset.lang;
+        panelTitle.textContent = tag.textContent;
+        panelDesc.textContent = skillDescriptions[lang] || "A useful programming language.";
+        sidePanel.classList.add('open');
+      }
+    });
+    closePanel.addEventListener('click', () => sidePanel.classList.remove('open'));
+    document.addEventListener('click', (e) => {
+      if(!sidePanel.contains(e.target) && !e.target.closest('.skill-tag')) sidePanel.classList.remove('open');
+    });
+
+    // ---------- watermark typewriter ----------
+    const watermarkEl = document.getElementById('watermark');
+    const fullText = "nyx.tuff";
+    let idx = 0;
+    function typeWriter() {
+      if(idx < fullText.length) {
+        watermarkEl.textContent += fullText.charAt(idx);
+        idx++;
+        setTimeout(typeWriter, 140);
+      } else {
+        setTimeout(() => {
+          watermarkEl.textContent = '';
+          idx = 0;
+          typeWriter();
+        }, 2000);
+      }
+    }
+    setTimeout(typeWriter, 2000);
   })();
 </script>
 </body>
