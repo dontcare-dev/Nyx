@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>nyx · eclipse</title>
+  <title>nyx · death</title>
   <style>
     * {
       margin: 0;
@@ -76,9 +76,11 @@
       align-items: center;
       justify-content: center;
       background: #000;
-      transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1), visibility 0.6s;
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.2), visibility 0.8s;
       overflow: hidden;
     }
+    #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
+
     /* background matrix rain canvas for loading */
     #loadingMatrixCanvas {
       position: absolute;
@@ -87,20 +89,21 @@
       width: 100%;
       height: 100%;
       z-index: 0;
-      opacity: 0.35;
+      opacity: 0.4;
       pointer-events: none;
     }
+
     /* hologram behind test tube */
     .hologram-bg {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 400px;
-      height: 400px;
+      width: 480px;
+      height: 480px;
       z-index: 1;
       pointer-events: none;
-      filter: blur(2px);
+      perspective: 1000px;
     }
     .death-ring {
       position: relative;
@@ -115,68 +118,68 @@
     }
     .death-letter {
       position: absolute;
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: 800;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #ff3366, #ff66cc, #ffccff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 20px rgba(255,51,102,0.6);
+      text-shadow: 0 0 25px rgba(255,51,102,0.9);
       left: 50%;
       top: 50%;
       transform-style: preserve-3d;
       white-space: nowrap;
     }
-    .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(180px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(180px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(180px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(180px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(180px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(200px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(200px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(200px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(200px) translateX(-50%) translateY(-50%); }
+    .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(200px) translateX(-50%) translateY(-50%); }
     .death-core {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 2.2rem;
+      font-size: 2.5rem;
       font-weight: 800;
       background: radial-gradient(circle, #ff66aa, #ff3366);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 30px #ff3366;
+      text-shadow: 0 0 35px #ff3366;
       animation: pulseCore 1.5s infinite alternate;
       white-space: nowrap;
     }
     @keyframes pulseCore {
-      0% { opacity: 0.5; text-shadow: 0 0 10px #ff3366; }
-      100% { opacity: 1; text-shadow: 0 0 40px #ff6699; }
+      0% { opacity: 0.6; text-shadow: 0 0 15px #ff3366; }
+      100% { opacity: 1; text-shadow: 0 0 50px #ff6699; }
     }
 
     /* test tube panel (foreground) */
     .test-tube-panel {
       position: relative;
       z-index: 2;
-      background: rgba(8, 0, 0, 0.85);
-      backdrop-filter: blur(40px);
-      border: 1px solid rgba(255, 80, 80, 0.8);
-      border-radius: 56px;
-      padding: 40px 52px;
-      box-shadow: 0 0 150px rgba(255, 30, 30, 0.6), inset 0 0 25px rgba(255, 60, 60, 0.2);
+      background: rgba(8, 0, 0, 0.88);
+      backdrop-filter: blur(48px);
+      border: 1px solid rgba(255, 80, 80, 0.85);
+      border-radius: 64px;
+      padding: 38px 50px;
+      box-shadow: 0 0 180px rgba(255, 30, 30, 0.7), inset 0 0 30px rgba(255, 60, 60, 0.25);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 35px;
+      gap: 32px;
     }
     .tube {
-      width: 88px;
-      height: 270px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 2px solid rgba(255, 110, 110, 0.9);
-      border-radius: 0 0 56px 56px;
+      width: 92px;
+      height: 280px;
+      background: rgba(0, 0, 0, 0.65);
+      border: 2px solid rgba(255, 110, 110, 0.95);
+      border-radius: 0 0 60px 60px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 50px rgba(255, 0, 0, 0.6);
+      box-shadow: 0 0 60px rgba(255, 0, 0, 0.7);
     }
     .tube::before {
       content: "";
@@ -184,8 +187,8 @@
       top: -4px;
       left: -10%;
       width: 120%;
-      height: 16px;
-      background: rgba(255, 240, 240, 0.95);
+      height: 18px;
+      background: rgba(255, 240, 240, 0.98);
       border-radius: 50%;
       filter: blur(2px);
     }
@@ -196,51 +199,39 @@
       width: 100%;
       height: 0%;
       background: linear-gradient(145deg, #ff1a1a, #ff5555, #ffaaaa);
-      box-shadow: 0 0 45px #ff3a3a;
+      box-shadow: 0 0 50px #ff3a3a;
       transition: height 0.03s linear;
-      border-radius: 0 0 52px 52px;
+      border-radius: 0 0 56px 56px;
     }
     .bubble {
       position: absolute;
       bottom: 8px;
-      background: radial-gradient(circle, rgba(255, 255, 250, 0.95), rgba(255, 120, 120, 0.6));
+      background: radial-gradient(circle, rgba(255, 255, 250, 0.95), rgba(255, 120, 120, 0.7));
       border-radius: 50%;
       animation: bubbleRise 2.2s infinite ease-out;
     }
     @keyframes bubbleRise {
-      0% {
-        transform: translateY(0) scale(0.6);
-        opacity: 0.9;
-      }
-      100% {
-        transform: translateY(-250px) scale(0.2);
-        opacity: 0;
-      }
+      0% { transform: translateY(0) scale(0.6); opacity: 0.9; }
+      100% { transform: translateY(-260px) scale(0.2); opacity: 0; }
     }
     .loading-text {
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       font-weight: 600;
-      letter-spacing: 5px;
+      letter-spacing: 6px;
       background: linear-gradient(125deg, #ffcccc, #ff4d4d);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 25px #ff2a2a;
+      text-shadow: 0 0 30px #ff2a2a;
       animation: textGlow 1.4s infinite alternate;
     }
     @keyframes textGlow {
-      0% {
-        opacity: 0.8;
-        text-shadow: 0 0 12px #ff0000;
-      }
-      100% {
-        opacity: 1;
-        text-shadow: 0 0 40px #ff8888;
-      }
+      0% { opacity: 0.8; text-shadow: 0 0 12px #ff0000; }
+      100% { opacity: 1; text-shadow: 0 0 45px #ff8888; }
     }
     .loading-percent {
-      font-size: 1.4rem;
-      font-weight: 600;
+      font-size: 1.6rem;
+      font-weight: 700;
       background: linear-gradient(125deg, #ffaaaa, #ff4d4d);
       -webkit-background-clip: text;
       background-clip: text;
@@ -251,30 +242,25 @@
       backdrop-filter: blur(28px);
       border: 1px solid #ff3a3a;
       border-radius: 56px;
-      padding: 12px 24px;
+      padding: 12px 28px;
       display: none;
       text-align: center;
     }
-    .error-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #ff7a7a;
-    }
-    .error-sub {
-      color: #ffbbbb;
-      font-size: 0.8rem;
-      margin-top: 4px;
-    }
-    @media (max-width: 600px) {
-      .test-tube-panel { padding: 30px 36px; }
-      .death-letter { font-size: 2rem; }
-      .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(120px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(120px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(120px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(120px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(120px) translateX(-50%) translateY(-50%); }
-      .death-core { font-size: 1.4rem; }
-      .hologram-bg { width: 280px; height: 280px; }
+    .error-title { font-size: 1rem; font-weight: 700; color: #ff7a7a; }
+    .error-sub { color: #ffbbbb; font-size: 0.8rem; margin-top: 4px; }
+    @media (max-width: 650px) {
+      .test-tube-panel { padding: 28px 36px; }
+      .tube { width: 76px; height: 240px; }
+      .hologram-bg { width: 320px; height: 320px; }
+      .death-letter { font-size: 2.2rem; }
+      .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(140px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(140px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(140px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(140px) translateX(-50%) translateY(-50%); }
+      .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(140px) translateX(-50%) translateY(-50%); }
+      .death-core { font-size: 1.6rem; }
+      .loading-text { font-size: 1.4rem; }
+      .loading-percent { font-size: 1.2rem; }
     }
 
     /* WELCOME OVERLAY */
@@ -347,14 +333,8 @@
       animation: pulseBorder 3s infinite alternate;
     }
     @keyframes pulseBorder {
-      0% {
-        box-shadow: 0 0 120px rgba(255, 40, 40, 0.5), inset 0 0 45px rgba(255, 40, 40, 0.15);
-        border-color: rgba(255, 80, 80, 0.7);
-      }
-      100% {
-        box-shadow: 0 0 260px rgba(255, 80, 80, 1), inset 0 0 100px rgba(255, 80, 80, 0.45);
-        border-color: rgba(255, 150, 150, 1);
-      }
+      0% { box-shadow: 0 0 120px rgba(255, 40, 40, 0.5), inset 0 0 45px rgba(255, 40, 40, 0.15); border-color: rgba(255, 80, 80, 0.7); }
+      100% { box-shadow: 0 0 260px rgba(255, 80, 80, 1), inset 0 0 100px rgba(255, 80, 80, 0.45); border-color: rgba(255, 150, 150, 1); }
     }
     .welcome-ring {
       position: absolute;
@@ -370,12 +350,8 @@
       filter: drop-shadow(0 0 18px #ff0000);
     }
     @keyframes spinRing {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     .welcome-title {
       font-size: clamp(1.8rem, 7vw, 3.8rem);
@@ -409,7 +385,7 @@
       box-shadow: 0 0 70px #ff4d4d;
     }
 
-    /* MAIN DASHBOARD */
+    /* MAIN DASHBOARD - FULLY RESPONSIVE */
     #mainDashboard {
       opacity: 0;
       visibility: hidden;
@@ -513,19 +489,11 @@
       animation: cardReveal 0.6s ease-out backwards;
     }
     @media (max-width: 680px) {
-      .glass-card {
-        max-width: 100%;
-      }
+      .glass-card { max-width: 100%; }
     }
     @keyframes cardReveal {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .glass-card:hover {
       transform: translateY(-6px);
@@ -594,7 +562,6 @@
       line-height: 1.5;
       color: #ffe6e6;
     }
-    /* skill tags with SVG icons */
     .skills-tags {
       display: flex;
       flex-wrap: wrap;
@@ -615,14 +582,8 @@
       cursor: pointer;
       transition: 0.2s;
     }
-    .skill-tag svg {
-      width: 18px;
-      height: 18px;
-    }
-    .skill-tag:hover {
-      background: #ff4a4a;
-      transform: translateY(-2px);
-    }
+    .skill-tag svg { width: 18px; height: 18px; }
+    .skill-tag:hover { background: #ff4a4a; transform: translateY(-2px); }
     .luau-tip {
       font-size: 0.8rem;
       background: rgba(0, 0, 0, 0.5);
@@ -634,15 +595,7 @@
       gap: 10px;
       text-align: left;
     }
-    .luau-tip svg {
-      width: 20px;
-      height: 20px;
-      stroke: #ffaaaa;
-      fill: none;
-      stroke-width: 1.8;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
+    .luau-tip svg { width: 20px; height: 20px; stroke: #ffaaaa; fill: none; stroke-width: 1.8; flex-shrink: 0; margin-top: 2px; }
     .timer-display {
       font-size: 2rem;
       font-family: monospace;
@@ -650,11 +603,7 @@
       margin: 12px 0;
       text-shadow: 0 0 20px #ff2a2a;
     }
-    .timer-controls {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-    }
+    .timer-controls { display: flex; gap: 12px; justify-content: center; }
     .timer-btn {
       background: rgba(30, 0, 0, 0.8);
       border: 1px solid #ff6a6a;
@@ -663,11 +612,7 @@
       font-size: 0.75rem;
       cursor: pointer;
     }
-    .crypto-price {
-      font-size: 1.6rem;
-      font-weight: 800;
-      margin: 8px 0;
-    }
+    .crypto-price { font-size: 1.6rem; font-weight: 800; margin: 8px 0; }
     .quick-link {
       display: inline-flex;
       align-items: center;
@@ -691,12 +636,7 @@
       color: transparent;
       letter-spacing: 6px;
     }
-    @media (max-width: 550px) {
-      .watermark-text {
-        font-size: 1.4rem;
-        letter-spacing: 4px;
-      }
-    }
+    @media (max-width: 550px) { .watermark-text { font-size: 1.4rem; letter-spacing: 4px; } }
     .side-panel {
       position: fixed;
       top: 0;
@@ -712,9 +652,7 @@
       padding: 60px 24px;
       overflow-y: auto;
     }
-    .side-panel.open {
-      right: 0;
-    }
+    .side-panel.open { right: 0; }
     .close-panel {
       background: none;
       border: none;
@@ -725,20 +663,8 @@
       right: 20px;
       cursor: pointer;
     }
-    .panel-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      background: linear-gradient(125deg, #ffc0c0, #fff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .panel-desc {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #ffe6e6;
-    }
+    .panel-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; background: linear-gradient(125deg,#ffc0c0,#fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .panel-desc { font-size: 1rem; line-height: 1.6; color: #ffe6e6; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -814,12 +740,12 @@
 
     <div class="cards-grid">
       <div class="glass-card"><div class="card-inner"><img class="avatar" id="avatar" src=""><div class="username" id="username">nyx._.dev</div><div class="status-row"><span class="dot" id="statusDot"></span><span id="statusText">Loading...</span></div><div class="custom-status" id="customStatus"></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> About</div><p class="about-text">14‑year‑old developer building sleek tools and immersive experiences. Passionate about design and code.</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Skills</div><div class="skills-tags" id="skillsContainer"><div class="skill-tag" data-lang="javascript"><svg viewBox="0 0 24 24" fill="#f7df1e"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#f7df1e"/></svg> JavaScript</div><div class="skill-tag" data-lang="html"><svg viewBox="0 0 24 24" fill="#e44d26"><path d="M12 2L4 4l1 14 7 4 7-4 1-14-8-2z" fill="#e44d26"/><path d="M12 18.5l-5.5-3.1-.5-8.2 6-1.2 6 1.2-.5 8.2-5.5 3.1z" fill="#fff"/><path d="M12 2v3.5l5 .5-.5 7-4.5 2.5V18l5.5-3 .5-8-6-1z" fill="#f06529"/></svg> HTML</div><div class="skill-tag" data-lang="luau"><svg viewBox="0 0 24 24" fill="#00a2ff"><circle cx="12" cy="12" r="10" fill="#00a2ff"/><path d="M12 6v6l4 2" stroke="#fff" fill="none" stroke-width="2"/></svg> Luau</div><div class="skill-tag" data-lang="css"><svg viewBox="0 0 24 24" fill="#2965f1"><path d="M12 2L4 4l1 14 7 4 7-4 1-14-8-2z" fill="#2965f1"/><path d="M12 18.5l-5.5-3.1-.5-8.2 6-1.2 6 1.2-.5 8.2-5.5 3.1z" fill="#fff"/><path d="M12 2v3.5l5 .5-.5 7-4.5 2.5V18l5.5-3 .5-8-6-1z" fill="#ebebeb"/></svg> CSS</div><div class="skill-tag" data-lang="python"><svg viewBox="0 0 24 24" fill="#3776ab"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="#ffd43b"/><path d="M12 2c-2.5 0-4 1.5-4 4h2c0-1.5.5-2 2-2s2 .5 2 2h2c0-2.5-1.5-4-4-4z" fill="#3776ab"/></svg> Python</div></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Luau Tip</div><div class="luau-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span id="luauTip">"Use task.wait() instead of wait() for better performance and accuracy."</span></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="timer-controls"><button class="timer-btn active" id="timerStart">Start</button><button class="timer-btn" id="timerReset">Reset</button></div><p style="margin-top:8px; color:#ffcaca; font-size:0.7rem;" id="timerStatus">Focus session</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg> Bitcoin</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.7rem;" id="btcChange">–</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</div><a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> About</div><p class="about-text">14‑year‑old developer building sleek tools and immersive experiences. Passionate about design and code.</p></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Skills</div><div class="skills-tags" id="skillsContainer"><div class="skill-tag" data-lang="javascript"><svg viewBox="0 0 24 24" fill="#f7df1e"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#f7df1e"/></svg> JavaScript</div><div class="skill-tag" data-lang="html"><svg viewBox="0 0 24 24" fill="#e44d26"><path d="M12 2L4 4l1 14 7 4 7-4 1-14-8-2z" fill="#e44d26"/><path d="M12 18.5l-5.5-3.1-.5-8.2 6-1.2 6 1.2-.5 8.2-5.5 3.1z" fill="#fff"/><path d="M12 2v3.5l5 .5-.5 7-4.5 2.5V18l5.5-3 .5-8-6-1z" fill="#f06529"/></svg> HTML</div><div class="skill-tag" data-lang="luau"><svg viewBox="0 0 24 24" fill="#00a2ff"><circle cx="12" cy="12" r="10" fill="#00a2ff"/><path d="M12 6v6l4 2" stroke="#fff" fill="none" stroke-width="2"/></svg> Luau</div><div class="skill-tag" data-lang="css"><svg viewBox="0 0 24 24" fill="#2965f1"><path d="M12 2L4 4l1 14 7 4 7-4 1-14-8-2z" fill="#2965f1"/><path d="M12 18.5l-5.5-3.1-.5-8.2 6-1.2 6 1.2-.5 8.2-5.5 3.1z" fill="#fff"/><path d="M12 2v3.5l5 .5-.5 7-4.5 2.5V18l5.5-3 .5-8-6-1z" fill="#ebebeb"/></svg> CSS</div><div class="skill-tag" data-lang="python"><svg viewBox="0 0 24 24" fill="#3776ab"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="#ffd43b"/><path d="M12 2c-2.5 0-4 1.5-4 4h2c0-1.5.5-2 2-2s2 .5 2 2h2c0-2.5-1.5-4-4-4z" fill="#3776ab"/></svg> Python</div></div></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Luau Tip</div><div class="luau-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span id="luauTip">"Use task.wait() instead of wait() for better performance and accuracy."</span></div></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="timer-controls"><button class="timer-btn active" id="timerStart">Start</button><button class="timer-btn" id="timerReset">Reset</button></div><p style="margin-top:8px; color:#ffcaca; font-size:0.7rem;" id="timerStatus">Focus session</p></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg> Bitcoin</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.7rem;" id="btcChange">–</p></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</div><a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
     </div>
     <div class="watermark-cell"><div class="watermark-text" id="watermark"></div></div>
   </div>
@@ -866,8 +792,8 @@
 
     // loading sequence
     const liquidFill = document.getElementById('liquidFill');
-    const loadingPercent = document.getElementById('loadingPercent');
-    const loadingLabel = document.getElementById('loadingLabel');
+    const loadingPercentSpan = document.getElementById('loadingPercent');
+    const loadingLabelSpan = document.getElementById('loadingLabel');
     const errorBox = document.getElementById('errorBox');
     const loadingOverlay = document.getElementById('loadingOverlay');
     const welcomeOverlay = document.getElementById('welcomeOverlay');
@@ -877,10 +803,10 @@
       step++;
       const prog = Math.min(100, Math.floor((step / totalSteps) * 100));
       liquidFill.style.height = prog + '%';
-      loadingPercent.textContent = prog + '%';
-      if (step === 18) { errorBox.style.display = 'block'; loadingLabel.textContent = 'Connection failed'; }
-      if (step === 28) { errorBox.style.display = 'none'; loadingLabel.textContent = 'Retrying...'; }
-      if (step === 40) { loadingLabel.textContent = 'Almost there'; }
+      loadingPercentSpan.textContent = prog + '%';
+      if (step === 18) { errorBox.style.display = 'block'; loadingLabelSpan.textContent = 'Connection failed'; }
+      if (step === 28) { errorBox.style.display = 'none'; loadingLabelSpan.textContent = 'Retrying...'; }
+      if (step === 40) { loadingLabelSpan.textContent = 'Almost there'; }
       if (step >= totalSteps) {
         clearInterval(interval);
         loadingOverlay.classList.add('fade-out');
@@ -904,7 +830,6 @@
     function updateClockGreeting(){ let now = new Date(); document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false }); let h = now.getHours(); let g = h < 5 ? "Good Midnight, nyx" : h < 12 ? "Good Morning, nyx" : h < 17 ? "Good Afternoon, nyx" : "Good Evening, nyx"; document.getElementById('greeting').textContent = g; }
     updateClockGreeting(); setInterval(updateClockGreeting, 1000);
 
-    // detailed luau tips
     const tips = [
       "Use task.wait() instead of wait() — it's more accurate and doesn't yield on the same frame, preventing infinite loops.",
       "Local variables are faster than global ones. Always declare variables with 'local' inside functions for better performance.",
