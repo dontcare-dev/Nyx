@@ -3,747 +3,423 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>nyx · infinite void</title>
+  <title>NYX · holographic access</title>
   <style>
-    /* ----- RESET & GLOBAL ----- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     body {
-      font-family: 'Inter', 'Poppins', system-ui, sans-serif;
       background: #000;
-      color: #fff;
-      overflow-x: hidden;
-      min-height: 100vh;
+      font-family: 'Courier New', 'Fira Code', monospace;
+      overflow: hidden;
+      height: 100vh;
       position: relative;
     }
 
-    /* ----- DEEP SPACE BACKGROUND (3D ROTATING STARS + NEBULA) ----- */
-    #spaceCanvas {
+    /* ---------- MATRIX RAIN CANVAS ---------- */
+    #matrixCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -3;
-      pointer-events: none;
-      background: radial-gradient(circle at 30% 40%, #050505, #000000);
-    }
-
-    /* rotating solar system canvas */
-    #solarCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      pointer-events: none;
-      opacity: 0.6;
-    }
-
-    /* floating glowing orbs (random faint glow) */
-    .glow-orb-bg {
-      position: fixed;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
-      filter: blur(60px);
-      pointer-events: none;
-      z-index: -1;
-      animation: floatGlow 25s infinite alternate ease-in-out;
-    }
-    @keyframes floatGlow {
-      0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-      100% { transform: translate(80px, -60px) scale(1.3); opacity: 0.6; }
-    }
-
-    /* scanlines effect (retro) */
-    .scanlines {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 6px);
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    /* ----- LOADING OVERLAY (TEST TUBE + ROTATING DEATH) ----- */
-    #loadingOverlay {
-      position: fixed;
-      inset: 0;
+      z-index: 0;
       background: #000;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.8s ease, visibility 0.8s;
+      opacity: 0.85;
     }
-    #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
 
-    .loader-wrapper {
-      text-align: center;
-      width: 300px;
-    }
-    .death-sphere {
-      width: 180px;
-      height: 180px;
-      margin: 0 auto 2rem;
-      position: relative;
-      transform-style: preserve-3d;
-      animation: spinSphere 8s infinite linear;
-    }
-    @keyframes spinSphere {
-      0% { transform: rotateX(0deg) rotateY(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg); }
-    }
-    .ring {
-      position: absolute;
+    /* ---------- HOLOGRAPHIC 3D NYX ---------- */
+    .hologram-container {
+      position: fixed;
       top: 50%;
       left: 50%;
-      width: 100%;
-      height: 100%;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
       transform: translate(-50%, -50%);
-    }
-    .ring:nth-child(1) { transform: translate(-50%, -50%) rotateX(0deg); }
-    .ring:nth-child(2) { transform: translate(-50%, -50%) rotateX(60deg); }
-    .ring:nth-child(3) { transform: translate(-50%, -50%) rotateX(120deg); }
-    .ring::after {
-      content: '';
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      width: 12px;
-      height: 12px;
-      background: #fff;
-      border-radius: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 15px #fff;
-    }
-    .test-tube {
-      width: 80px;
-      height: 220px;
-      margin: 2rem auto 1rem;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-top: none;
-      border-radius: 0 0 40px 40px;
-      position: relative;
-      overflow: hidden;
-    }
-    .fill-liquid {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 0%;
-      background: #fff;
-      transition: height 0.03s linear;
-      box-shadow: 0 0 20px #fff;
-    }
-    .bubble {
-      position: absolute;
-      bottom: 5px;
-      background: rgba(255,255,255,0.8);
-      border-radius: 50%;
-      animation: rise 2s infinite ease-out;
-    }
-    @keyframes rise {
-      0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
-      100% { transform: translateY(-210px) scale(0.1); opacity: 0; }
-    }
-    .loading-label {
-      font-size: 0.9rem;
-      letter-spacing: 3px;
-      color: #aaa;
-      margin-top: 1rem;
-    }
-    .loading-percent {
-      font-size: 2.2rem;
-      font-weight: 500;
-      color: #fff;
-      margin: 0.5rem 0;
-    }
-    .error-msg {
-      font-size: 0.75rem;
-      color: #ff8888;
-      display: none;
-      margin-top: 1rem;
+      z-index: 10;
+      text-align: center;
+      perspective: 800px;
     }
 
-    /* ----- WELCOME OVERLAY (CINEMATIC) ----- */
-    #welcomeOverlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.9s ease, visibility 0.9s;
-    }
-    #welcomeOverlay.active { display: flex; }
-    #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
-    .welcome-container {
-      text-align: center;
-      animation: fadeInUp 0.8s ease;
-    }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .welcome-title {
-      font-size: clamp(2.5rem, 10vw, 5rem);
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #aaa);
+    .nyx-3d {
+      font-size: clamp(3rem, 12vw, 7rem);
+      font-weight: 900;
+      font-family: 'Poppins', 'Inter', sans-serif;
+      letter-spacing: 0.2em;
+      background: linear-gradient(135deg, #fff, #aaa, #fff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      letter-spacing: 12px;
+      text-shadow: 0 0 20px rgba(255,255,255,0.8);
+      animation: rotateHolo 8s infinite linear, glowPulse 2s infinite alternate;
+      transform-style: preserve-3d;
+      display: inline-block;
+      white-space: nowrap;
     }
-    .enter-system {
-      background: none;
+
+    @keyframes rotateHolo {
+      0% { transform: rotateY(0deg) rotateX(0deg); text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+      25% { transform: rotateY(10deg) rotateX(5deg); text-shadow: 0 0 35px rgba(255,255,255,0.9); }
+      75% { transform: rotateY(-10deg) rotateX(-5deg); text-shadow: 0 0 35px rgba(255,255,255,0.9); }
+      100% { transform: rotateY(0deg) rotateX(0deg); text-shadow: 0 0 15px rgba(255,255,255,0.5); }
+    }
+
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 10px #fff, 0 0 20px #fff; opacity: 0.9; }
+      100% { text-shadow: 0 0 30px #fff, 0 0 50px #aaa; opacity: 1; }
+    }
+
+    /* terminal window - hacking spam */
+    .terminal {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      max-width: 500px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(0,255,0,0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: #0f0;
+      z-index: 20;
+      box-shadow: 0 0 20px rgba(0,255,0,0.2);
+      pointer-events: none;
+      overflow: hidden;
+      max-height: 180px;
+      display: flex;
+      flex-direction: column;
+    }
+    .terminal-header {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid #0f0;
+      padding-bottom: 4px;
+      color: #0f0;
+      font-size: 0.7rem;
+    }
+    .terminal-content {
+      overflow-y: auto;
+      height: 120px;
+      scroll-behavior: smooth;
+    }
+    .terminal-line {
+      margin: 2px 0;
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* button - click to enter */
+    .enter-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(0,0,0,0.7);
       border: 1px solid #fff;
       color: #fff;
-      padding: 12px 44px;
+      padding: 12px 32px;
       font-size: 1rem;
-      margin-top: 2rem;
+      font-weight: 600;
+      letter-spacing: 2px;
       cursor: pointer;
+      z-index: 20;
+      backdrop-filter: blur(12px);
       transition: 0.25s;
-      letter-spacing: 3px;
+      font-family: 'Poppins', sans-serif;
+      border-radius: 40px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
     }
-    .enter-system:hover {
+    .enter-btn:hover {
       background: #fff;
       color: #000;
       transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(255,255,255,0.5);
+      box-shadow: 0 0 30px #fff;
     }
 
-    /* ----- MAIN DASHBOARD (ULTRA REFINED) ----- */
+    /* main dashboard (hidden initially) */
     #mainDashboard {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 1s ease, visibility 1s ease;
+      transition: opacity 0.8s ease, visibility 0.8s;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+    #mainDashboard.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .dashboard-content {
       max-width: 1400px;
+      width: 100%;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
-      position: relative;
-      z-index: 5;
     }
-    #mainDashboard.visible { opacity: 1; visibility: visible; }
-
-    /* header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      margin-bottom: 2rem;
-    }
-    .greeting-text {
-      font-size: 1.4rem;
-      font-weight: 500;
-      background: linear-gradient(125deg, #fff, #ccc);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .live-time {
-      font-family: monospace;
-      font-size: 1.3rem;
-      background: rgba(255,255,255,0.05);
-      padding: 0.3rem 1.2rem;
-      border-radius: 40px;
-      backdrop-filter: blur(8px);
-    }
-    .music-control {
-      background: rgba(255,255,255,0.1);
-      border: none;
-      padding: 0.4rem 1.2rem;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-      transition: 0.2s;
-    }
-    .music-control:hover {
-      background: rgba(255,255,255,0.3);
-    }
-
-    /* cards grid - premium glass */
+    /* reuse glass cards from previous design */
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1.8rem;
-      margin-bottom: 3rem;
+      margin-top: 2rem;
     }
     .card {
-      background: rgba(12,12,12,0.65);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 32px;
+      background: rgba(12,12,12,0.8);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 28px;
       padding: 1.5rem;
-      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(255,255,255,0.05) inset;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.08), transparent 70%);
-      pointer-events: none;
+      transition: 0.25s;
     }
     .card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(255,255,255,0.3);
-      box-shadow: 0 20px 35px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.2) inset;
-      background: rgba(20,20,20,0.8);
+      transform: translateY(-5px);
+      border-color: #fff;
+      box-shadow: 0 10px 25px rgba(255,255,255,0.1);
     }
     .card-header {
       font-size: 1.2rem;
-      font-weight: 500;
       margin-bottom: 1rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     .avatar {
       width: 85px;
       height: 85px;
       border-radius: 50%;
-      object-fit: cover;
       margin: 0 auto 0.8rem;
-      border: 2px solid #fff;
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
       display: block;
+      border: 2px solid #fff;
     }
-    .display-name {
+    .username {
       text-align: center;
       font-size: 1.4rem;
       font-weight: 600;
-      margin: 0.5rem 0;
-    }
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,0,0,0.5);
-      padding: 0.2rem 1rem;
-      border-radius: 40px;
-      font-size: 0.75rem;
     }
     .status-dot {
-      width: 8px;
-      height: 8px;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
+      margin-right: 6px;
     }
     .online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
-    .idle { background: #facc15; }
-    .dnd { background: #f87171; }
-    .offline { background: #6b7280; }
-    .custom-status {
-      text-align: center;
-      font-size: 0.7rem;
-      margin-top: 0.5rem;
-      opacity: 0.7;
-    }
-    .skill-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      margin-top: 0.8rem;
-      justify-content: center;
-    }
     .skill-pill {
       background: rgba(255,255,255,0.1);
-      padding: 0.3rem 1rem;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .skill-pill:hover {
-      background: #fff;
-      color: #000;
-      transform: translateY(-2px);
-    }
-    .tip-text {
-      font-size: 0.85rem;
-      line-height: 1.5;
-      color: #ccc;
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      margin: 0.2rem;
     }
     .timer-digits {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       font-family: monospace;
-      font-weight: 600;
       text-align: center;
-      margin: 0.8rem 0;
-      letter-spacing: 4px;
-    }
-    .timer-actions {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-    }
-    .timer-action {
-      background: rgba(255,255,255,0.1);
-      border: none;
-      padding: 0.4rem 1.4rem;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      color: #fff;
-    }
-    .timer-action.active {
-      background: #fff;
-      color: #000;
-    }
-    .crypto-price {
-      font-size: 1.6rem;
-      font-weight: 600;
-      text-align: center;
-      margin: 0.3rem 0;
-    }
-    .quick-link {
-      display: inline-block;
-      background: rgba(255,255,255,0.1);
-      padding: 0.5rem 1.6rem;
-      border-radius: 40px;
-      text-decoration: none;
-      color: #fff;
-      font-size: 0.85rem;
-      margin-top: 0.8rem;
-      transition: 0.2s;
-    }
-    .quick-link:hover {
-      background: #fff;
-      color: #000;
+      margin: 0.5rem 0;
     }
     .watermark {
       text-align: center;
-      font-family: monospace;
-      font-size: 1.8rem;
-      letter-spacing: 6px;
-      opacity: 0.3;
       margin-top: 2rem;
-    }
-
-    /* side panel */
-    .info-panel {
-      position: fixed;
-      top: 0;
-      right: -100%;
-      width: 340px;
-      max-width: 85vw;
-      height: 100%;
-      background: #0a0a0a;
-      backdrop-filter: blur(40px);
-      z-index: 1100;
-      transition: right 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
-      padding: 2rem;
-      border-left: 1px solid rgba(255,255,255,0.15);
-    }
-    .info-panel.open {
-      right: 0;
-    }
-    .panel-close {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.8rem;
-      cursor: pointer;
-      float: right;
-    }
-    .panel-title {
-      font-size: 1.6rem;
-      font-weight: 500;
-      margin: 2rem 0 1rem;
-    }
-    .panel-content {
-      color: #ccc;
-      line-height: 1.6;
+      opacity: 0.4;
+      font-family: monospace;
+      font-size: 1.2rem;
     }
 
     @media (max-width: 700px) {
+      .nyx-3d { font-size: 3rem; letter-spacing: 0.1em; }
+      .terminal { left: 10px; right: 10px; max-width: none; bottom: 10px; }
+      .enter-btn { bottom: 15px; right: 15px; padding: 8px 24px; font-size: 0.9rem; }
       .cards-grid { grid-template-columns: 1fr; }
-      .header { flex-direction: column; text-align: center; }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<!-- background space + solar system -->
-<canvas id="spaceCanvas"></canvas>
-<canvas id="solarCanvas"></canvas>
-<div class="glow-orb-bg" style="width: 400px; height: 400px; top: 10%; left: -10%; animation-duration: 20s;"></div>
-<div class="glow-orb-bg" style="width: 600px; height: 600px; bottom: 5%; right: -15%; animation-duration: 30s; animation-delay: -5s;"></div>
-<div class="glow-orb-bg" style="width: 300px; height: 300px; top: 60%; left: 70%; animation-duration: 25s; opacity: 0.4;"></div>
-<div class="scanlines"></div>
 
-<!-- LOADING -->
-<div id="loadingOverlay">
-  <div class="loader-wrapper">
-    <div class="death-sphere">
-      <div class="ring"></div>
-      <div class="ring"></div>
-      <div class="ring"></div>
-    </div>
-    <div class="test-tube">
-      <div class="fill-liquid" id="liquidFill">
-        <div class="bubble" style="left:10px; width:8px; height:8px; animation-duration:1.2s;"></div>
-        <div class="bubble" style="left:30px; width:6px; height:6px; animation-duration:1.6s; animation-delay:0.4s;"></div>
-        <div class="bubble" style="left:55px; width:10px; height:10px; animation-duration:1.9s; animation-delay:0.8s;"></div>
-      </div>
-    </div>
-    <div class="loading-label" id="loadingLabel">awakening</div>
-    <div class="loading-percent" id="loadingPercent">0%</div>
-    <div class="error-msg" id="errorBox">signal lost · reconnecting</div>
+<!-- Matrix Rain Canvas -->
+<canvas id="matrixCanvas"></canvas>
+
+<!-- 3D Holographic NYX -->
+<div class="hologram-container">
+  <div class="nyx-3d">NYX</div>
+</div>
+
+<!-- Hacking Terminal (spamming fake IPs) -->
+<div class="terminal">
+  <div class="terminal-header">
+    <span>●</span> <span>ROOT ACCESS</span> <span style="flex:1; text-align:right;">tty0</span>
+  </div>
+  <div class="terminal-content" id="terminalLog">
+    <div class="terminal-line">> initializing breach sequence...</div>
+    <div class="terminal-line">> scanning localhost...</div>
   </div>
 </div>
 
-<!-- WELCOME -->
-<div id="welcomeOverlay">
-  <div class="welcome-container">
-    <div class="welcome-title">NYX</div>
-    <button class="enter-system" id="enterBtn">ENTER VOID</button>
-  </div>
-</div>
+<!-- Click to Enter Button -->
+<button class="enter-btn" id="enterBtn">CLICK TO ENTER</button>
 
-<!-- MAIN DASHBOARD -->
+<!-- Main Dashboard (hidden) -->
 <div id="mainDashboard">
-  <div class="header">
-    <div class="greeting-text" id="greeting">Good Evening, nyx</div>
-    <div class="live-time" id="liveClock">--:--:--</div>
-    <button class="music-control" id="musicBtn">
-      <span>♪</span> <span id="musicLabel">Music Off</span>
-    </button>
-  </div>
-
-  <div class="cards-grid">
-    <!-- profile -->
-    <div class="card">
-      <div class="card-header">⌠ profile ⌡</div>
-      <img class="avatar" id="avatar" src="">
-      <div class="display-name" id="username">nyx._.dev</div>
-      <div style="text-align:center;"><span class="status-badge"><span class="status-dot" id="statusDot"></span> <span id="statusText">offline</span></span></div>
-      <div class="custom-status" id="customStatus"></div>
+  <div class="dashboard-content">
+    <div style="text-align: center; margin-bottom: 1rem;">
+      <div style="font-size: 2rem; font-weight: 700; letter-spacing: 4px;">NYX · INTERFACE</div>
+      <div style="opacity: 0.6;">access granted</div>
     </div>
-    <!-- about -->
-    <div class="card">
-      <div class="card-header">⌠ about ⌡</div>
-      <p style="font-size:0.9rem; line-height:1.5;">14‑year‑old architect of digital minimalism. Crafting tools, experiences, and voids.</p>
-    </div>
-    <!-- skills -->
-    <div class="card">
-      <div class="card-header">⌠ skills ⌡</div>
-      <div class="skill-pills" id="skillsContainer">
-        <span class="skill-pill" data-lang="javascript">JS</span>
-        <span class="skill-pill" data-lang="html">HTML</span>
-        <span class="skill-pill" data-lang="luau">Luau</span>
-        <span class="skill-pill" data-lang="css">CSS</span>
-        <span class="skill-pill" data-lang="python">Python</span>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-header">⌠ PROFILE ⌡</div>
+        <img class="avatar" id="avatar" src="https://cdn.discordapp.com/avatars/1418597263479144471/6117d9549f4433c3b118dd5099dd9de3.png?size=128" alt="avatar">
+        <div class="username" id="username">nyx._.dev</div>
+        <div style="text-align:center; margin-top:0.5rem;"><span class="status-dot online"></span> online</div>
+      </div>
+      <div class="card">
+        <div class="card-header">⌠ ABOUT ⌡</div>
+        <p>14‑year‑old developer building minimal digital tools and immersive experiences. Monochrome philosophy.</p>
+      </div>
+      <div class="card">
+        <div class="card-header">⌠ SKILLS ⌡</div>
+        <div>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">HTML/CSS</span>
+          <span class="skill-pill">Luau</span>
+          <span class="skill-pill">Python</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">⌠ LUAU TIP ⌡</div>
+        <p id="luauTip">"Use task.wait() instead of wait() for precision."</p>
+      </div>
+      <div class="card">
+        <div class="card-header">⌠ TIMER ⌡</div>
+        <div class="timer-digits" id="timerDisplay">25:00</div>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+          <button id="timerStart" style="background:rgba(255,255,255,0.1); border:none; padding:0.3rem 1rem; border-radius:40px; cursor:pointer;">start</button>
+          <button id="timerReset" style="background:rgba(255,255,255,0.1); border:none; padding:0.3rem 1rem; border-radius:40px; cursor:pointer;">reset</button>
+        </div>
+        <div style="text-align:center; font-size:0.7rem; margin-top:0.5rem;" id="timerStatus">focus session</div>
+      </div>
+      <div class="card">
+        <div class="card-header">⌠ BITCOIN ⌡</div>
+        <div style="font-size:1.8rem; font-weight:600;" id="btcPrice">...</div>
+        <div id="btcChange" style="font-size:0.7rem;">—</div>
       </div>
     </div>
-    <!-- luau tip -->
-    <div class="card">
-      <div class="card-header">⌠ luau tip ⌡</div>
-      <div class="tip-text" id="luauTip">"Use task.wait() instead of wait() for precision."</div>
-    </div>
-    <!-- timer -->
-    <div class="card">
-      <div class="card-header">⌠ timer ⌡</div>
-      <div class="timer-digits" id="timerDisplay">25:00</div>
-      <div class="timer-actions">
-        <button class="timer-action active" id="timerStart">start</button>
-        <button class="timer-action" id="timerReset">reset</button>
-      </div>
-      <div style="text-align:center; font-size:0.7rem; margin-top:0.5rem;" id="timerStatus">focus session</div>
-    </div>
-    <!-- crypto -->
-    <div class="card">
-      <div class="card-header">⌠ crypto ⌡</div>
-      <div class="crypto-price" id="btcPrice">...</div>
-      <div style="font-size:0.7rem; text-align:center;" id="btcChange">—</div>
-    </div>
-    <!-- link -->
-    <div class="card">
-      <div class="card-header">⌠ link ⌡</div>
-      <a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank">discord / eternal</a>
-    </div>
+    <div class="watermark">nyx.tuff</div>
   </div>
-  <div class="watermark" id="watermark"></div>
 </div>
-
-<div class="info-panel" id="infoPanel">
-  <button class="panel-close" id="closePanel">✕</button>
-  <div class="panel-title" id="panelTitle"></div>
-  <div class="panel-content" id="panelDesc"></div>
-</div>
-
-<iframe id="ytPlayer" style="display:none;" src="https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig" allow="autoplay"></iframe>
 
 <script>
   (function(){
-    // ---------- 3D SOLAR SYSTEM + STAR FIELD ----------
-    const spaceCanvas = document.getElementById('spaceCanvas');
-    const spaceCtx = spaceCanvas.getContext('2d');
-    const solarCanvas = document.getElementById('solarCanvas');
-    const solarCtx = solarCanvas.getContext('2d');
-    let width, height;
-    let stars = [];
-    let planets = [];
-    let angle = 0;
+    // ---------- MATRIX RAIN (0 and 1) ----------
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, columns, drops;
+    const fontSize = 24;
+    const chars = "01";
 
-    function initBackground() {
+    function resizeCanvas() {
       width = window.innerWidth;
       height = window.innerHeight;
-      spaceCanvas.width = width;
-      spaceCanvas.height = height;
-      solarCanvas.width = width;
-      solarCanvas.height = height;
-      // stars
-      for (let i = 0; i < 400; i++) {
-        stars.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: Math.random() * 1.5 + 0.5,
-          alpha: Math.random() * 0.6 + 0.2,
-          twinkle: Math.random() * 0.05
-        });
-      }
-      // planets for rotating system
-      for (let i = 0; i < 12; i++) {
-        planets.push({
-          radius: 30 + i * 15,
-          speed: 0.005 + i * 0.001,
-          size: 2 + i * 0.5,
-          color: `rgba(255,255,255,${0.2 + i * 0.03})`
-        });
+      canvas.width = width;
+      canvas.height = height;
+      columns = Math.floor(width / fontSize);
+      drops = Array(columns).fill(1);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, width, height);
+      ctx.fillStyle = '#0f0';
+      ctx.font = `${fontSize}px monospace`;
+      ctx.shadowBlur = 0;
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(text, x, y);
+        if (y > height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
       }
     }
+    setInterval(drawMatrix, 60);
 
-    function drawStars() {
-      spaceCtx.clearRect(0, 0, width, height);
-      for (let s of stars) {
-        spaceCtx.beginPath();
-        spaceCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-        spaceCtx.fillStyle = `rgba(255,255,255,${s.alpha + Math.sin(Date.now() * s.twinkle) * 0.1})`;
-        spaceCtx.fill();
+    // ---------- HACKING TERMINAL SPAM (fake IPs, ports) ----------
+    const terminalLog = document.getElementById('terminalLog');
+    const fakeData = [
+      "> scanning 192.168.0.1:22",
+      "> connection refused",
+      "> probing 10.0.0.45:8080",
+      "> handshake established",
+      "> injecting payload into 172.16.42.1",
+      "> bypassing firewall rule #127",
+      "> accessing root@localhost",
+      "> fetching /etc/shadow",
+      "> decrypting hash 0x7f3a2b",
+      "> token: nyx_7f3a2b9c",
+      "> routing through TOR node 45.33.22.11",
+      "> ssh -i id_rsa nyx@darknet.onion",
+      "> port knocking sequence: 7000,8000,9000",
+      "> UDP flood on 8.8.8.8:53",
+      "> kernel panic simulated",
+      "> privilege escalation confirmed",
+      "> writing to /dev/mem",
+      "> ##### ACCESS GRANTED #####",
+      "> welcome, nyx."
+    ];
+    let lineIndex = 0;
+    function addTerminalLine() {
+      const line = fakeData[lineIndex % fakeData.length];
+      const div = document.createElement('div');
+      div.className = 'terminal-line';
+      div.textContent = line;
+      terminalLog.appendChild(div);
+      lineIndex++;
+      // keep scroll at bottom
+      const container = terminalLog.parentElement;
+      if (container) container.scrollTop = container.scrollHeight;
+      // limit lines
+      while (terminalLog.children.length > 25) {
+        terminalLog.removeChild(terminalLog.firstChild);
       }
     }
+    setInterval(addTerminalLine, 1800);
+    // initial burst
+    for (let i = 0; i < 5; i++) setTimeout(addTerminalLine, i * 200);
 
-    function drawSolarSystem() {
-      solarCtx.clearRect(0, 0, width, height);
-      const centerX = width * 0.7;
-      const centerY = height * 0.3;
-      angle += 0.008;
-      for (let p of planets) {
-        const rad = angle * p.speed * 30;
-        const x = centerX + Math.cos(rad) * p.radius;
-        const y = centerY + Math.sin(rad) * p.radius * 0.6;
-        solarCtx.beginPath();
-        solarCtx.arc(x, y, p.size, 0, Math.PI * 2);
-        solarCtx.fillStyle = p.color;
-        solarCtx.fill();
-        solarCtx.shadowBlur = 8;
-        solarCtx.shadowColor = 'white';
-      }
-      // central sun glow
-      solarCtx.beginPath();
-      solarCtx.arc(centerX, centerY, 18, 0, Math.PI * 2);
-      solarCtx.fillStyle = 'rgba(255,255,255,0.4)';
-      solarCtx.fill();
-      solarCtx.shadowBlur = 20;
-      solarCtx.beginPath();
-      solarCtx.arc(centerX, centerY, 8, 0, Math.PI * 2);
-      solarCtx.fillStyle = '#fff';
-      solarCtx.fill();
-    }
-
-    function animateBackground() {
-      if (!width) return;
-      drawStars();
-      drawSolarSystem();
-      requestAnimationFrame(animateBackground);
-    }
-    window.addEventListener('resize', () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      spaceCanvas.width = width;
-      spaceCanvas.height = height;
-      solarCanvas.width = width;
-      solarCanvas.height = height;
-      stars = [];
-      initBackground();
-    });
-    initBackground();
-    animateBackground();
-
-    // ---------- LOADING SEQUENCE ----------
-    const liquidFill = document.getElementById('liquidFill');
-    const loadingPercent = document.getElementById('loadingPercent');
-    const loadingLabel = document.getElementById('loadingLabel');
-    const errorBox = document.getElementById('errorBox');
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const welcomeOverlay = document.getElementById('welcomeOverlay');
-    let step = 0;
-    const totalSteps = 60;
-    const interval = setInterval(() => {
-      step++;
-      const prog = Math.min(100, Math.floor((step / totalSteps) * 100));
-      liquidFill.style.height = prog + '%';
-      loadingPercent.textContent = prog + '%';
-      if (step === 18) { errorBox.style.display = 'block'; loadingLabel.textContent = 'connection lost'; }
-      if (step === 28) { errorBox.style.display = 'none'; loadingLabel.textContent = 're-routing'; }
-      if (step === 40) { loadingLabel.textContent = 'almost there'; }
-      if (step >= totalSteps) {
-        clearInterval(interval);
-        loadingOverlay.classList.add('fade-out');
-        welcomeOverlay.classList.add('active');
-      }
-    }, 50);
-
-    // ---------- WELCOME TO MAIN ----------
-    const mainDashboard = document.getElementById('mainDashboard');
+    // ---------- WELCOME -> DASHBOARD ----------
     const enterBtn = document.getElementById('enterBtn');
+    const mainDashboard = document.getElementById('mainDashboard');
     enterBtn.addEventListener('click', () => {
-      welcomeOverlay.classList.remove('active');
-      welcomeOverlay.classList.add('fade-out');
-      mainDashboard.classList.add('visible');
+      mainDashboard.classList.add('active');
+      // optionally stop matrix rain? keep it for style.
+      // start music? we can include youtube iframe
       startMusic();
     });
 
-    // ---------- YOUTUBE MUSIC ----------
+    // ---------- YOUTUBE MUSIC (ambient) ----------
     let player, musicPlaying = false;
-    const musicBtn = document.getElementById('musicBtn');
-    const musicLabelSpan = document.getElementById('musicLabel');
-    function setMusicUI(state) {
-      if (state === 'on') { musicLabelSpan.textContent = 'Music On'; musicPlaying = true; }
-      else { musicLabelSpan.textContent = 'Music Off'; musicPlaying = false; }
+    function startMusic() {
+      if (player && player.playVideo) {
+        player.playVideo();
+      }
     }
-    function startMusic() { if (player && player.playVideo) { player.playVideo(); setMusicUI('on'); } }
-    function toggleMusic() {
-      if (!player) return;
-      if (musicPlaying) { player.pauseVideo(); setMusicUI('off'); }
-      else { player.playVideo(); setMusicUI('on'); }
-    }
-    musicBtn.addEventListener('click', toggleMusic);
     window.onYouTubeIframeAPIReady = function() {
       player = new YT.Player('ytPlayer', {
         events: { 'onReady': () => {}, 'onStateChange': (e) => { if (e.data === YT.PlayerState.ENDED) player.playVideo(); } }
@@ -752,61 +428,33 @@
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
+    // hidden youtube player
+    const ytFrame = document.createElement('iframe');
+    ytFrame.id = 'ytPlayer';
+    ytFrame.style.display = 'none';
+    ytFrame.src = "https://www.youtube.com/embed/g_vLIAXurig?enablejsapi=1&autoplay=0&loop=1&playlist=g_vLIAXurig";
+    document.body.appendChild(ytFrame);
 
-    // ---------- CLOCK & GREETING ----------
-    function updateClockGreeting() {
-      const now = new Date();
-      document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour12: false });
-      const hour = now.getHours();
-      let greet = hour < 5 ? "Good Midnight" : hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
-      document.getElementById('greeting').textContent = `${greet}, nyx`;
-    }
-    updateClockGreeting();
-    setInterval(updateClockGreeting, 1000);
-
-    // ---------- LUAU TIPS ----------
-    const tips = [
-      "Use task.wait() instead of wait() — it's more accurate and prevents infinite loops.",
-      "Local variables are faster than globals. Always use 'local' inside functions.",
-      "Use :Connect() (new syntax) instead of :connect().",
-      "Avoid while true do without task.wait() — it will freeze the engine.",
-      "Use type checking with '::' to catch bugs early in Luau.",
-      "table.create(size, initial) pre-allocates arrays for better performance.",
-      "debug.traceback() helps trace errors. Wrap pcall() for safety."
+    // ---------- LUAU TIP CAROUSEL ----------
+    const luauTips = [
+      "Use task.wait() instead of wait() — more accurate.",
+      "Local variables are faster than globals. Always use 'local'.",
+      "Use :Connect() instead of :connect() (new syntax).",
+      "Avoid while true do without task.wait() — it freezes.",
+      "Type checking with '::' catches bugs early.",
+      "table.create() pre-allocates arrays for performance.",
+      "Wrap pcall() with debug.traceback() for safe calls."
     ];
     let tipIdx = 0;
     const tipEl = document.getElementById('luauTip');
     setInterval(() => {
-      tipIdx = (tipIdx + 1) % tips.length;
+      tipIdx = (tipIdx + 1) % luauTips.length;
       tipEl.style.opacity = '0';
       setTimeout(() => {
-        tipEl.textContent = `"${tips[tipIdx]}"`;
+        tipEl.textContent = `"${luauTips[tipIdx]}"`;
         tipEl.style.opacity = '1';
       }, 200);
-    }, 9000);
-
-    // ---------- DISCORD PROFILE ----------
-    const USER_ID = "1418597263479144471";
-    async function loadDiscord() {
-      try {
-        const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
-        const json = await res.json();
-        if (json.success) {
-          const d = json.data;
-          document.getElementById('username').textContent = d.discord_user.global_name || d.discord_user.username;
-          const av = d.discord_user.avatar;
-          if (av) document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${USER_ID}/${av}.${av.startsWith('a_') ? 'gif' : 'png'}?size=512`;
-          const status = d.discord_status || "offline";
-          const dot = document.getElementById('statusDot');
-          dot.className = `status-dot ${status}`;
-          document.getElementById('statusText').textContent = status.charAt(0).toUpperCase() + status.slice(1);
-          const customAct = d.activities?.find(a => a.type === 4);
-          document.getElementById('customStatus').textContent = customAct?.state || "";
-        }
-      } catch(e) {}
-    }
-    loadDiscord();
-    setInterval(loadDiscord, 30000);
+    }, 8000);
 
     // ---------- CRYPTO (BTC) ----------
     async function fetchBTC() {
@@ -827,20 +475,16 @@
     setInterval(fetchBTC, 60000);
 
     // ---------- TIMER ----------
-    const timerDisplay = document.getElementById('timerDisplay');
-    const timerStatus = document.getElementById('timerStatus');
-    const startBtn = document.getElementById('timerStart');
-    const resetBtn = document.getElementById('timerReset');
-    let WORK = 25 * 60;
-    let BREAK = 5 * 60;
-    let timeLeft = WORK;
-    let isWorking = true;
-    let isRunning = false;
-    let timerInt = null;
+    let timerDisplay = document.getElementById('timerDisplay');
+    let timerStatus = document.getElementById('timerStatus');
+    let startBtn = document.getElementById('timerStart');
+    let resetBtn = document.getElementById('timerReset');
+    let WORK = 25 * 60, BREAK = 5 * 60;
+    let timeLeft = WORK, isWorking = true, isRunning = false, timerInt = null;
     function updateTimerUI() {
-      const mins = Math.floor(timeLeft / 60);
-      const secs = timeLeft % 60;
-      timerDisplay.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      let m = Math.floor(timeLeft / 60);
+      let s = timeLeft % 60;
+      timerDisplay.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
     }
     function stopTimer() { if (timerInt) clearInterval(timerInt); timerInt = null; isRunning = false; startBtn.textContent = 'start'; startBtn.classList.remove('active'); }
     function resetTimer() { stopTimer(); timeLeft = isWorking ? WORK : BREAK; updateTimerUI(); }
@@ -866,50 +510,22 @@
     resetBtn.addEventListener('click', resetTimer);
     updateTimerUI();
 
-    // ---------- SKILLS SIDE PANEL ----------
-    const infoPanel = document.getElementById('infoPanel');
-    const panelTitle = document.getElementById('panelTitle');
-    const panelDesc = document.getElementById('panelDesc');
-    const closePanel = document.getElementById('closePanel');
-    const skillMap = {
-      javascript: "JavaScript is the language of the web — interactive frontends and scalable backends.",
-      html: "HTML structures every webpage. The skeleton of digital experiences.",
-      luau: "Luau is a fast, typed scripting language derived from Lua, used in Roblox.",
-      css: "CSS brings design to life: animations, layouts, responsiveness.",
-      python: "Python is a high-level language for AI, automation, and backend systems."
-    };
-    document.getElementById('skillsContainer').addEventListener('click', (e) => {
-      const pill = e.target.closest('.skill-pill');
-      if (pill) {
-        const lang = pill.dataset.lang;
-        panelTitle.textContent = pill.textContent;
-        panelDesc.textContent = skillMap[lang] || "Master this language to create amazing things.";
-        infoPanel.classList.add('open');
-      }
-    });
-    closePanel.addEventListener('click', () => infoPanel.classList.remove('open'));
-    document.addEventListener('click', (e) => {
-      if (!infoPanel.contains(e.target) && !e.target.closest('.skill-pill')) infoPanel.classList.remove('open');
-    });
-
-    // ---------- WATERMARK TYPING ----------
-    const watermarkEl = document.getElementById('watermark');
-    const fullText = "nyx.tuff";
-    let idx = 0;
-    function typeWriter() {
-      if (idx < fullText.length) {
-        watermarkEl.textContent += fullText.charAt(idx);
-        idx++;
-        setTimeout(typeWriter, 130);
-      } else {
-        setTimeout(() => {
-          watermarkEl.textContent = '';
-          idx = 0;
-          typeWriter();
-        }, 2000);
-      }
+    // fetch discord status for dashboard (optional)
+    const USER_ID = "1418597263479144471";
+    async function loadDiscord() {
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${USER_ID}`);
+        const json = await res.json();
+        if (json.success) {
+          const d = json.data;
+          const usernameEl = document.getElementById('username');
+          if (usernameEl) usernameEl.textContent = d.discord_user.global_name || d.discord_user.username;
+          const av = d.discord_user.avatar;
+          if (av) document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${USER_ID}/${av}.${av.startsWith('a_')?'gif':'png'}?size=512`;
+        }
+      } catch(e) {}
     }
-    setTimeout(typeWriter, 2000);
+    loadDiscord();
   })();
 </script>
 </body>
