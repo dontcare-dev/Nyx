@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>nyx · death</title>
+  <title>nyx · monochrome</title>
   <style>
     * {
       margin: 0;
@@ -14,7 +14,7 @@
 
     body {
       font-family: 'Poppins', 'Inter', system-ui, sans-serif;
-      background: #0a0101;
+      background: #000;
       min-height: 100vh;
       color: #fff;
       overflow-x: hidden;
@@ -24,52 +24,53 @@
       position: relative;
     }
 
-    /* background layers */
+    /* black/white background layers */
     .bg-gradient {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at 25% 20%, #2a0505 0%, #050000 100%);
+      background: radial-gradient(circle at 25% 20%, #111 0%, #000 100%);
       z-index: -3;
     }
 
     .glow-orb {
       position: fixed;
       border-radius: 50%;
-      filter: blur(120px);
-      opacity: 0.4;
+      filter: blur(140px);
+      opacity: 0.2;
       z-index: -2;
       pointer-events: none;
       animation: floatGlow 20s infinite alternate ease-in-out;
     }
-    .orb1 { width: 800px; height: 800px; background: #ff2a2a; top: -350px; left: -300px; }
-    .orb2 { width: 700px; height: 700px; background: #b30000; bottom: -300px; right: -300px; animation-delay: -6s; }
-    .orb3 { width: 500px; height: 500px; background: #ff4d4d; top: 45%; left: 45%; animation-duration: 22s; opacity: 0.3; }
+    .orb1 { width: 800px; height: 800px; background: #333; top: -350px; left: -300px; }
+    .orb2 { width: 700px; height: 700px; background: #222; bottom: -300px; right: -300px; animation-delay: -6s; }
+    .orb3 { width: 500px; height: 500px; background: #444; top: 45%; left: 45%; animation-duration: 22s; opacity: 0.15; }
     @keyframes floatGlow {
-      0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
-      100% { transform: translate(50px, -40px) scale(1.1); opacity: 0.5; }
+      0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+      100% { transform: translate(50px, -40px) scale(1.1); opacity: 0.3; }
     }
 
     canvas#particles {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.65;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.3;
     }
 
     #matrixCanvas {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.25;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; opacity: 0.15;
+      color: #aaa;
     }
 
     .scanlines {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 5px);
+      background: repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 6px);
       pointer-events: none;
       z-index: 2;
     }
 
-    /* LOADING OVERLAY - test tube + hologram above */
+    /* LOADING OVERLAY - monochrome */
     #loadingOverlay {
       position: fixed; inset: 0; z-index: 1000;
       display: flex;
@@ -81,7 +82,6 @@
     }
     #loadingOverlay.fade-out { opacity: 0; visibility: hidden; }
 
-    /* background matrix rain canvas for loading */
     #loadingMatrixCanvas {
       position: absolute;
       top: 0;
@@ -89,11 +89,10 @@
       width: 100%;
       height: 100%;
       z-index: 0;
-      opacity: 0.4;
+      opacity: 0.3;
       pointer-events: none;
     }
 
-    /* loading content centered */
     .loading-content {
       position: relative;
       z-index: 2;
@@ -108,100 +107,66 @@
       padding: 20px;
     }
 
-    /* hologram above test tube */
-    .hologram-bg {
-      width: 380px;
-      height: 380px;
-      margin: 0 auto;
-      perspective: 1000px;
-    }
-    .death-ring {
+    /* rotating wireframe sphere (monochrome) */
+    .mono-sphere {
+      width: 180px;
+      height: 180px;
       position: relative;
+      transform-style: preserve-3d;
+      animation: rotateSphere 8s infinite linear;
+    }
+    @keyframes rotateSphere {
+      0% { transform: rotateX(0deg) rotateY(0deg); }
+      100% { transform: rotateX(360deg) rotateY(360deg); }
+    }
+    .ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
       width: 100%;
       height: 100%;
-      transform-style: preserve-3d;
-      animation: rotate3d 12s infinite linear;
-    }
-    @keyframes rotate3d {
-      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
-    }
-    .death-letter {
-      position: absolute;
-      font-size: 3rem;
-      font-weight: 800;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #ff3366, #ff66cc, #ffccff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 25px rgba(255,51,102,0.9);
-      left: 50%;
-      top: 50%;
-      transform-style: preserve-3d;
-      white-space: nowrap;
-    }
-    .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(160px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(160px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(160px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(160px) translateX(-50%) translateY(-50%); }
-    .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(160px) translateX(-50%) translateY(-50%); }
-    .death-core {
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
       transform: translate(-50%, -50%);
-      font-size: 2.2rem;
-      font-weight: 800;
-      background: radial-gradient(circle, #ff66aa, #ff3366);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 35px #ff3366;
-      animation: pulseCore 1.5s infinite alternate;
-      white-space: nowrap;
     }
-    @keyframes pulseCore {
-      0% { opacity: 0.6; text-shadow: 0 0 15px #ff3366; }
-      100% { opacity: 1; text-shadow: 0 0 50px #ff6699; }
+    .ring:nth-child(1) { transform: translate(-50%, -50%) rotateX(0deg); }
+    .ring:nth-child(2) { transform: translate(-50%, -50%) rotateX(60deg); }
+    .ring:nth-child(3) { transform: translate(-50%, -50%) rotateX(120deg); }
+    .ring::after {
+      content: '';
+      position: absolute;
+      top: -4px;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 10px #fff;
     }
 
-    /* test tube panel */
     .test-tube-panel {
-      background: rgba(8, 0, 0, 0.88);
-      backdrop-filter: blur(48px);
-      border: 1px solid rgba(255, 80, 80, 0.85);
-      border-radius: 64px;
+      background: rgba(20,20,20,0.9);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 48px;
       padding: 30px 45px;
-      box-shadow: 0 0 180px rgba(255, 30, 30, 0.7), inset 0 0 30px rgba(255, 60, 60, 0.25);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 28px;
       width: 100%;
-      max-width: 360px;
-      margin: 0 auto;
+      max-width: 340px;
     }
     .tube {
-      width: 88px;
-      height: 260px;
-      background: rgba(0, 0, 0, 0.65);
-      border: 2px solid rgba(255, 110, 110, 0.95);
-      border-radius: 0 0 56px 56px;
+      width: 80px;
+      height: 240px;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 0 0 48px 48px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 55px rgba(255, 0, 0, 0.7);
-    }
-    .tube::before {
-      content: "";
-      position: absolute;
-      top: -4px;
-      left: -10%;
-      width: 120%;
-      height: 16px;
-      background: rgba(255, 240, 240, 0.98);
-      border-radius: 50%;
-      filter: blur(2px);
     }
     .liquid {
       position: absolute;
@@ -209,74 +174,45 @@
       left: 0;
       width: 100%;
       height: 0%;
-      background: linear-gradient(145deg, #ff1a1a, #ff5555, #ffaaaa);
-      box-shadow: 0 0 45px #ff3a3a;
+      background: linear-gradient(145deg, #ccc, #fff);
       transition: height 0.03s linear;
-      border-radius: 0 0 52px 52px;
+      border-radius: 0 0 44px 44px;
     }
     .bubble {
       position: absolute;
       bottom: 8px;
-      background: radial-gradient(circle, rgba(255, 255, 250, 0.95), rgba(255, 120, 120, 0.7));
+      background: rgba(255,255,255,0.5);
       border-radius: 50%;
       animation: bubbleRise 2.2s infinite ease-out;
     }
     @keyframes bubbleRise {
-      0% { transform: translateY(0) scale(0.6); opacity: 0.9; }
-      100% { transform: translateY(-240px) scale(0.2); opacity: 0; }
+      0% { transform: translateY(0) scale(0.6); opacity: 0.6; }
+      100% { transform: translateY(-220px) scale(0.2); opacity: 0; }
     }
     .loading-text {
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 5px;
-      background: linear-gradient(125deg, #ffcccc, #ff4d4d);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 25px #ff2a2a;
-      animation: textGlow 1.4s infinite alternate;
-    }
-    @keyframes textGlow {
-      0% { opacity: 0.8; text-shadow: 0 0 12px #ff0000; }
-      100% { opacity: 1; text-shadow: 0 0 40px #ff8888; }
+      font-size: 1.4rem;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
     .loading-percent {
-      font-size: 1.4rem;
-      font-weight: 700;
-      background: linear-gradient(125deg, #ffaaaa, #ff4d4d);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #aaa;
     }
     .error-panel {
-      background: rgba(40, 0, 0, 0.96);
-      backdrop-filter: blur(28px);
-      border: 1px solid #ff3a3a;
-      border-radius: 56px;
-      padding: 10px 24px;
+      background: rgba(30,30,30,0.95);
+      border: 1px solid #ff4444;
+      border-radius: 40px;
+      padding: 8px 20px;
       display: none;
       text-align: center;
     }
-    .error-title { font-size: 0.9rem; font-weight: 700; color: #ff7a7a; }
-    .error-sub { color: #ffbbbb; font-size: 0.75rem; margin-top: 4px; }
+    .error-title { font-size: 0.85rem; font-weight: 600; color: #ff8888; }
+    .error-sub { color: #ffaaaa; font-size: 0.7rem; }
 
-    @media (max-width: 600px) {
-      .loading-content { gap: 25px; }
-      .hologram-bg { width: 260px; height: 260px; }
-      .death-letter { font-size: 2rem; }
-      .death-letter:nth-child(1) { transform: rotateY(0deg) translateZ(110px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(2) { transform: rotateY(72deg) translateZ(110px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(3) { transform: rotateY(144deg) translateZ(110px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(4) { transform: rotateY(216deg) translateZ(110px) translateX(-50%) translateY(-50%); }
-      .death-letter:nth-child(5) { transform: rotateY(288deg) translateZ(110px) translateX(-50%) translateY(-50%); }
-      .death-core { font-size: 1.4rem; }
-      .test-tube-panel { padding: 24px 35px; max-width: 300px; }
-      .tube { width: 76px; height: 230px; }
-      .loading-text { font-size: 1.3rem; }
-      .loading-percent { font-size: 1.2rem; }
-    }
-
-    /* WELCOME OVERLAY */
+    /* WELCOME OVERLAY - monochrome */
     #welcomeOverlay {
       position: fixed;
       inset: 0;
@@ -287,6 +223,7 @@
     }
     #welcomeOverlay.active { display: block; }
     #welcomeOverlay.fade-out { opacity: 0; visibility: hidden; }
+
     #welcomeVideo {
       position: absolute;
       top: 0;
@@ -295,7 +232,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
-      filter: brightness(0.6) contrast(1.2);
+      filter: brightness(0.4) contrast(1.5) grayscale(1);
     }
     .video-overlay {
       position: absolute;
@@ -303,7 +240,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.88));
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.6), #000);
       z-index: 1;
     }
     #welcomeMatrixCanvas {
@@ -322,78 +259,43 @@
       transform: translate(-50%, -50%);
       z-index: 3;
       width: 90%;
-      max-width: 500px;
-    }
-    .welcome-card {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      width: 100%;
-      max-width: 460px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(5, 0, 0, 0.55);
-      backdrop-filter: blur(70px);
-      border: 1.5px solid rgba(255, 100, 100, 0.85);
-      border-radius: 50%;
-      box-shadow: 0 0 180px rgba(255, 40, 40, 0.7), inset 0 0 70px rgba(255, 40, 40, 0.3);
-      animation: pulseBorder 3s infinite alternate;
-    }
-    @keyframes pulseBorder {
-      0% { box-shadow: 0 0 120px rgba(255, 40, 40, 0.5), inset 0 0 45px rgba(255, 40, 40, 0.15); border-color: rgba(255, 80, 80, 0.7); }
-      100% { box-shadow: 0 0 260px rgba(255, 80, 80, 1), inset 0 0 100px rgba(255, 80, 80, 0.45); border-color: rgba(255, 150, 150, 1); }
-    }
-    .welcome-ring {
-      position: absolute;
-      top: -16px;
-      left: -16px;
-      right: -16px;
-      bottom: -16px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      border-top-color: #ff5e5e;
-      border-right-color: #ff2a2a;
-      animation: spinRing 6s linear infinite;
-      filter: drop-shadow(0 0 18px #ff0000);
-    }
-    @keyframes spinRing {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .welcome-title {
-      font-size: clamp(1.8rem, 7vw, 3.8rem);
-      font-weight: 800;
-      background: linear-gradient(135deg, #fff, #ffb3b3);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 0.1em;
+      max-width: 480px;
       text-align: center;
     }
+    .welcome-card {
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(40px);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 48px;
+      padding: 50px 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    .welcome-title {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
     .enter-btn {
-      background: rgba(0, 0, 0, 0.7);
-      border: 1.5px solid #ff6a6a;
-      color: white;
-      font-size: clamp(1rem, 4vw, 1.4rem);
+      background: #fff;
+      border: none;
+      color: #000;
+      font-size: clamp(1rem, 4vw, 1.3rem);
       font-weight: 600;
-      padding: 10px 36px;
-      border-radius: 100px;
+      padding: 12px 36px;
+      border-radius: 60px;
       cursor: pointer;
-      letter-spacing: 0.2em;
-      backdrop-filter: blur(24px);
-      transition: all 0.3s ease;
-      margin-top: 28px;
-      box-shadow: 0 0 25px rgba(255, 50, 50, 0.6);
-      white-space: nowrap;
+      margin-top: 32px;
+      transition: 0.2s;
+      letter-spacing: 2px;
     }
     .enter-btn:hover {
-      background: #ff3333;
-      transform: scale(1.05);
-      box-shadow: 0 0 70px #ff4d4d;
+      background: #aaa;
+      transform: scale(1.02);
     }
 
-    /* MAIN DASHBOARD - REFINED GLASSMORPHISM WITH LAYERED SHADOWS + GRADIENT BORDER */
+    /* MAIN DASHBOARD - monochrome glass */
     #mainDashboard {
       opacity: 0;
       visibility: hidden;
@@ -405,12 +307,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 16px 12px;
+      padding: 20px 16px;
       z-index: 3;
     }
     #mainDashboard.visible { opacity: 1; visibility: visible; }
 
-    /* LESS BLUR ON BACKGROUND IMAGE - NOW VISIBLE */
+    /* background image - subtle grayscale */
     #mainBgImage {
       position: absolute;
       top: 0;
@@ -419,8 +321,8 @@
       height: 100%;
       object-fit: cover;
       z-index: -1;
-      opacity: 0.3;
-      filter: blur(6px) brightness(0.55);
+      opacity: 0.15;
+      filter: grayscale(1) blur(8px) brightness(0.6);
       transform: scale(1.02);
     }
 
@@ -432,245 +334,225 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 28px;
+      gap: 32px;
     }
+
     .header {
       width: 100%;
-      background: rgba(5, 0, 0, 0.5);
-      backdrop-filter: blur(50px);
-      border: 1px solid rgba(255, 100, 100, 0.55);
+      background: rgba(10,10,10,0.6);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(255,255,255,0.15);
       border-radius: 80px;
-      padding: 12px 20px;
+      padding: 14px 24px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
     }
     .greeting {
-      font-size: clamp(0.9rem, 4vw, 1.4rem);
-      font-weight: 600;
-      background: linear-gradient(125deg, #fff, #ffc0c0);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-weight: 500;
+      color: #eee;
     }
     .live-clock {
-      font-family: 'Courier New', monospace;
-      font-size: clamp(0.85rem, 3.8vw, 1.4rem);
-      font-weight: 600;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 4px 14px;
+      font-family: monospace;
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      background: rgba(0,0,0,0.6);
+      padding: 6px 18px;
       border-radius: 50px;
       letter-spacing: 2px;
-      color: #ffdddd;
+      color: #ddd;
     }
     .music-btn {
-      background: rgba(255, 70, 70, 0.25);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 110, 110, 0.8);
-      padding: 5px 18px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 20px;
       border-radius: 50px;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      color: #fff;
     }
+    .music-btn:hover { background: #fff; color: #000; border-color: #fff; }
+
     .cards-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
+      gap: 24px;
       width: 100%;
     }
 
-    /* REFINED GLASS CARD: layered shadows + gradient border on hover */
+    /* refined glass cards - monochrome */
     .glass-card {
-      background: rgba(8, 0, 0, 0.55);
-      backdrop-filter: blur(38px);
-      border: 1px solid rgba(255, 90, 90, 0.45);
+      background: rgba(15,15,15,0.7);
+      backdrop-filter: blur(28px);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 40px;
-      padding: 20px 18px;
-      /* layered shadows: small sharp dark + large colored glow */
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 0, 0, 0.25);
-      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+      padding: 22px 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 0 0.5px rgba(255,255,255,0.05) inset;
+      transition: all 0.3s ease;
       width: 100%;
       max-width: 320px;
-      animation: cardReveal 0.6s ease-out backwards;
-      position: relative;
-      overflow: hidden;
-    }
-    .glass-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 40px;
-      padding: 1px;
-      background: transparent;
-      transition: background 0.3s ease;
-      pointer-events: none;
     }
     @media (max-width: 680px) { .glass-card { max-width: 100%; } }
-    @keyframes cardReveal {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
     .glass-card:hover {
-      transform: translateY(-8px);
-      border-color: transparent; /* hide original border to show gradient */
-      /* stronger layered shadows on hover */
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 45px rgba(255, 40, 40, 0.7);
-      background: rgba(12, 0, 0, 0.65);
+      transform: translateY(-5px);
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.2) inset;
+      background: rgba(20,20,20,0.8);
     }
-    /* gradient border on hover using pseudo-element */
-    .glass-card:hover::after {
-      background: linear-gradient(135deg, rgba(255, 120, 120, 0.9), rgba(255, 50, 50, 0.6));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-    }
+
     .card-inner {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      position: relative;
-      z-index: 2;
     }
     .avatar {
       width: 100px;
       height: 100px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid #ff6a6a;
-      box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+      border: 2px solid #fff;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
     }
     .username {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 12px;
-      background: linear-gradient(125deg, #fff, #ffb5b5);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 14px;
+      color: #fff;
     }
     .status-row {
       margin-top: 8px;
       display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 3px 14px;
-      border-radius: 50px;
-      font-size: 0.75rem;
+      gap: 8px;
+      background: rgba(0,0,0,0.5);
+      padding: 4px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
     }
     .dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
     }
+    .dot.online { background: #4ade80; box-shadow: 0 0 6px #4ade80; }
+    .dot.idle { background: #facc15; box-shadow: 0 0 6px #facc15; }
+    .dot.dnd { background: #f87171; box-shadow: 0 0 6px #f87171; }
+    .dot.offline { background: #6b7280; }
     .custom-status {
       margin-top: 8px;
-      font-size: 0.7rem;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 3px 12px;
+      font-size: 0.75rem;
+      background: rgba(255,255,255,0.1);
+      padding: 4px 12px;
       border-radius: 40px;
+      color: #ccc;
     }
+
     .section-title {
       font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 14px;
+      font-weight: 500;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #ffdddd;
-      border-bottom: 1.5px solid rgba(255, 100, 100, 0.6);
+      gap: 10px;
+      color: #ddd;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
       padding-bottom: 8px;
       justify-content: center;
     }
     .about-text {
       font-size: 0.85rem;
       line-height: 1.5;
-      color: #ffe6e6;
+      color: #ccc;
     }
     .skills-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
       margin-top: 12px;
     }
     .skill-tag {
-      background: rgba(255, 80, 80, 0.3);
-      border: 1px solid rgba(255, 100, 100, 0.8);
-      padding: 6px 14px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 5px 14px;
       border-radius: 40px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       font-weight: 500;
       cursor: pointer;
       transition: 0.2s;
+      color: #eee;
     }
-    .skill-tag svg { width: 18px; height: 18px; }
-    .skill-tag:hover { background: #ff4a4a; transform: translateY(-2px); }
+    .skill-tag:hover {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+
     .luau-tip {
       font-size: 0.8rem;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.5);
       padding: 14px;
-      border-radius: 32px;
+      border-radius: 28px;
       margin-top: 12px;
       display: flex;
       align-items: flex-start;
       gap: 10px;
       text-align: left;
+      color: #ccc;
     }
-    .luau-tip svg { width: 20px; height: 20px; stroke: #ffaaaa; fill: none; stroke-width: 1.8; flex-shrink: 0; margin-top: 2px; }
     .timer-display {
       font-size: 2rem;
       font-family: monospace;
-      font-weight: 800;
+      font-weight: 600;
       margin: 12px 0;
-      text-shadow: 0 0 20px #ff2a2a;
+      color: #fff;
     }
     .timer-controls { display: flex; gap: 12px; justify-content: center; }
     .timer-btn {
-      background: rgba(30, 0, 0, 0.8);
-      border: 1px solid #ff6a6a;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
       padding: 5px 20px;
       border-radius: 50px;
       font-size: 0.75rem;
       cursor: pointer;
+      color: #fff;
     }
-    .crypto-price { font-size: 1.6rem; font-weight: 800; margin: 8px 0; }
+    .timer-btn:hover { background: #fff; color: #000; }
+    .crypto-price { font-size: 1.6rem; font-weight: 600; margin: 8px 0; color: #fff; }
     .quick-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       margin-top: 16px;
-      background: rgba(88, 101, 242, 0.25);
-      border: 1px solid #8a9cf0;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
       padding: 6px 24px;
       border-radius: 50px;
       text-decoration: none;
       color: #fff;
       font-size: 0.8rem;
     }
+    .quick-link:hover { background: #fff; color: #000; }
     .watermark-text {
       font-family: monospace;
       font-size: 2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ff6a6a, #ffc0c0);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 6px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 4px;
+      opacity: 0.6;
     }
-    @media (max-width: 550px) { .watermark-text { font-size: 1.4rem; letter-spacing: 4px; } }
+    @media (max-width: 550px) { .watermark-text { font-size: 1.4rem; letter-spacing: 3px; } }
+
     .side-panel {
       position: fixed;
       top: 0;
@@ -678,27 +560,27 @@
       width: 80%;
       max-width: 360px;
       height: 100%;
-      background: rgba(3, 0, 0, 0.98);
-      backdrop-filter: blur(70px);
-      border-left: 1.5px solid rgba(255, 100, 100, 0.9);
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(40px);
+      border-left: 1px solid rgba(255,255,255,0.2);
       z-index: 1100;
       transition: right 0.4s ease;
-      padding: 60px 24px;
+      padding: 70px 24px;
       overflow-y: auto;
     }
     .side-panel.open { right: 0; }
     .close-panel {
       background: none;
       border: none;
-      color: #ffaaaa;
+      color: #fff;
       font-size: 2rem;
       position: absolute;
-      top: 16px;
-      right: 20px;
+      top: 20px;
+      right: 24px;
       cursor: pointer;
     }
-    .panel-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 20px; background: linear-gradient(125deg,#ffc0c0,#fff); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .panel-desc { font-size: 1rem; line-height: 1.6; color: #ffe6e6; }
+    .panel-title { font-size: 1.8rem; font-weight: 600; margin-bottom: 20px; color: #fff; }
+    .panel-desc { font-size: 1rem; line-height: 1.6; color: #ccc; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -714,22 +596,17 @@
 <div id="loadingOverlay">
   <canvas id="loadingMatrixCanvas"></canvas>
   <div class="loading-content">
-    <div class="hologram-bg">
-      <div class="death-ring">
-        <div class="death-letter">D</div>
-        <div class="death-letter">E</div>
-        <div class="death-letter">A</div>
-        <div class="death-letter">T</div>
-        <div class="death-letter">H</div>
-        <div class="death-core">DEATH</div>
-      </div>
+    <div class="mono-sphere">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
     </div>
     <div class="test-tube-panel">
       <div class="tube">
         <div class="liquid" id="liquidFill">
-          <div class="bubble" style="left:12px; width:11px; height:11px; animation-duration:1.2s;"></div>
-          <div class="bubble" style="left:38px; width:9px; height:9px; animation-duration:1.6s; animation-delay:0.4s;"></div>
-          <div class="bubble" style="left:62px; width:13px; height:13px; animation-duration:1.9s; animation-delay:0.8s;"></div>
+          <div class="bubble" style="left:12px; width:10px; height:10px; animation-duration:1.2s;"></div>
+          <div class="bubble" style="left:38px; width:8px; height:8px; animation-duration:1.6s; animation-delay:0.4s;"></div>
+          <div class="bubble" style="left:58px; width:12px; height:12px; animation-duration:1.9s; animation-delay:0.8s;"></div>
         </div>
       </div>
       <div class="loading-text" id="loadingLabel">NYX.exe loading...</div>
@@ -750,11 +627,8 @@
   <canvas id="welcomeMatrixCanvas"></canvas>
   <div class="welcome-content">
     <div class="welcome-card">
-      <div class="welcome-ring"></div>
-      <div style="text-align: center;">
-        <div class="welcome-title">WELCOME, NYX</div>
-        <button class="enter-btn" id="enterBtn">ENTER SYSTEM</button>
-      </div>
+      <div class="welcome-title">WELCOME, NYX</div>
+      <button class="enter-btn" id="enterBtn">ENTER</button>
     </div>
   </div>
 </div>
@@ -776,12 +650,12 @@
 
     <div class="cards-grid">
       <div class="glass-card"><div class="card-inner"><img class="avatar" id="avatar" src=""><div class="username" id="username">nyx._.dev</div><div class="status-row"><span class="dot" id="statusDot"></span><span id="statusText">Loading...</span></div><div class="custom-status" id="customStatus"></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> About</div><p class="about-text">14‑year‑old developer building sleek tools and immersive experiences. Passionate about design and code.</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Skills</div><div class="skills-tags" id="skillsContainer"><div class="skill-tag" data-lang="javascript"><svg viewBox="0 0 24 24" fill="#f7df1e"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#f7df1e"/></svg> JavaScript</div><div class="skill-tag" data-lang="html"><svg viewBox="0 0 24 24" fill="#e44d26"><path d="M12 2L4 4l1 14 7 4 7-4 1-14-8-2z" fill="#e44d26"/><path d="M12 18.5l-5.5-3.1-.5-8.2 6-1.2 6 1.2-.5 8.2-5.5 3.1z" fill="#fff"/><path d="M12 2v3.5l5 .5-.5 7-4.5 2.5V18l5.5-3 .5-8-6-1z" fill="#f06529"/></svg> HTML</div><div class="skill-tag" data-lang="luau"><svg viewBox="0 0 24 24" fill="#00a2ff"><circle cx="12" cy="12" r="10" fill="#00a2ff"/><path d="M12 6v6l4 2" stroke="#fff" fill="none" stroke-width="2"/></svg> Luau</div><div class="skill-tag" data-lang="css"><svg viewBox="0 0 24 24" fill="#2965f1"><path d="M12 2L4 4l1 14 7 4 7-4 1-14-8-2z" fill="#2965f1"/><path d="M12 18.5l-5.5-3.1-.5-8.2 6-1.2 6 1.2-.5 8.2-5.5 3.1z" fill="#fff"/><path d="M12 2v3.5l5 .5-.5 7-4.5 2.5V18l5.5-3 .5-8-6-1z" fill="#ebebeb"/></svg> CSS</div><div class="skill-tag" data-lang="python"><svg viewBox="0 0 24 24" fill="#3776ab"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z" fill="#ffd43b"/><path d="M12 2c-2.5 0-4 1.5-4 4h2c0-1.5.5-2 2-2s2 .5 2 2h2c0-2.5-1.5-4-4-4z" fill="#3776ab"/></svg> Python</div></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> Luau Tip</div><div class="luau-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span id="luauTip">"Use task.wait() instead of wait() for better performance and accuracy."</span></div></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="timer-controls"><button class="timer-btn active" id="timerStart">Start</button><button class="timer-btn" id="timerReset">Reset</button></div><p style="margin-top:8px; color:#ffcaca; font-size:0.7rem;" id="timerStatus">Focus session</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg> Bitcoin</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.7rem;" id="btcChange">–</p></div></div>
-      <div class="glass-card"><div class="card-inner"><div class="section-title"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</div><a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title">About</div><p class="about-text">14‑year‑old developer building sleek tools and immersive experiences.</p></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title">Skills</div><div class="skills-tags" id="skillsContainer"><span class="skill-tag" data-lang="javascript">JavaScript</span><span class="skill-tag" data-lang="html">HTML</span><span class="skill-tag" data-lang="luau">Luau</span><span class="skill-tag" data-lang="css">CSS</span><span class="skill-tag" data-lang="python">Python</span></div></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title">Luau Tip</div><div class="luau-tip"><span id="luauTip">"Use task.wait() instead of wait() for better performance."</span></div></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title">Timer</div><div class="timer-display" id="timerDisplay">25:00</div><div class="timer-controls"><button class="timer-btn active" id="timerStart">Start</button><button class="timer-btn" id="timerReset">Reset</button></div><p style="margin-top:8px; color:#ccc; font-size:0.7rem;" id="timerStatus">Focus session</p></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title">Bitcoin</div><div class="crypto-price" id="btcPrice">...</div><p style="font-size:0.7rem;" id="btcChange">–</p></div></div>
+      <div class="glass-card"><div class="card-inner"><div class="section-title">Links</div><a class="quick-link" href="https://discord.gg/eternalcrimson" target="_blank"><svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.88-1.51.07.07 0 0 0-.08.04c-.2.38-.42.86-.57 1.22a18.6 18.6 0 0 0-5.54 0c-.15-.37-.38-.85-.58-1.22a.08.08 0 0 0-.08-.04 19.8 19.8 0 0 0-4.88 1.51.07.07 0 0 0-.03.03C1.66 9.42.63 14.36.95 19.18a.08.08 0 0 0 .05.06 19.73 19.73 0 0 0 5.96 2.99.08.08 0 0 0 .08-.03c.46-.62.86-1.28 1.2-1.96a.08.08 0 0 0-.04-.11c-.65-.25-1.28-.55-1.88-.9a.08.08 0 0 1-.01-.13c.13-.1.26-.2.38-.3a.08.08 0 0 1 .08-.02 14.1 14.1 0 0 0 12.06 0 .08.08 0 0 1 .08.02c.12.1.25.21.38.3a.08.08 0 0 1 0 .13c-.6.35-1.23.66-1.88.9a.08.08 0 0 0-.04.11c.34.68.74 1.34 1.2 1.96a.08.08 0 0 0 .08.03 19.65 19.65 0 0 0 5.97-2.99.08.08 0 0 0 .05-.06c.38-5.57-.99-10.41-4.16-14.7a.07.07 0 0 0-.04-.03zM8.68 15.4c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83zm6.64 0c-1.38 0-2.52-1.27-2.52-2.83s1.12-2.84 2.52-2.84 2.54 1.28 2.52 2.84c0 1.56-1.12 2.83-2.52 2.83z"/></svg> Discord</a></div></div>
     </div>
     <div class="watermark-cell"><div class="watermark-text" id="watermark"></div></div>
   </div>
@@ -796,8 +670,8 @@
     let particles = [], pw, ph;
     function resizeParticles(){ pw = pCanvas.width = window.innerWidth; ph = pCanvas.height = window.innerHeight; }
     window.addEventListener('resize', resizeParticles); resizeParticles();
-    class Particle { constructor(){ this.reset(); } reset(){ this.x = Math.random() * pw; this.y = Math.random() * ph; this.size = Math.random() * 2 + 0.7; this.speedX = (Math.random() - 0.5) * 0.3; this.speedY = (Math.random() - 0.5) * 0.3; this.opacity = Math.random() * 0.5 + 0.2; } update(){ this.x += this.speedX; this.y += this.speedY; if(this.x < 0 || this.x > pw) this.speedX *= -1; if(this.y < 0 || this.y > ph) this.speedY *= -1; } draw(){ pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI*2); pCtx.fillStyle = `rgba(255, 100, 100, ${this.opacity})`; pCtx.fill(); } }
-    for(let i=0;i<100;i++) particles.push(new Particle());
+    class Particle { constructor(){ this.reset(); } reset(){ this.x = Math.random() * pw; this.y = Math.random() * ph; this.size = Math.random() * 2 + 0.5; this.speedX = (Math.random() - 0.5) * 0.2; this.speedY = (Math.random() - 0.5) * 0.2; this.opacity = Math.random() * 0.3 + 0.1; } update(){ this.x += this.speedX; this.y += this.speedY; if(this.x < 0 || this.x > pw) this.speedX *= -1; if(this.y < 0 || this.y > ph) this.speedY *= -1; } draw(){ pCtx.beginPath(); pCtx.arc(this.x, this.y, this.size, 0, Math.PI*2); pCtx.fillStyle = `rgba(255,255,255,${this.opacity})`; pCtx.fill(); } }
+    for(let i=0;i<80;i++) particles.push(new Particle());
     function animateParticles(){ pCtx.clearRect(0,0,pw,ph); particles.forEach(p=>{p.update();p.draw();}); requestAnimationFrame(animateParticles); }
     animateParticles();
 
@@ -806,15 +680,15 @@
     let mw, mh, columns, drops, fontSize = 22;
     function setupMatrix(){ mw = mCanvas.width = window.innerWidth; mh = mCanvas.height = window.innerHeight; columns = Math.floor(mw/fontSize)+1; drops = Array(columns).fill(1); }
     window.addEventListener('resize', setupMatrix); setupMatrix();
-    function drawMatrix(){ mCtx.fillStyle = 'rgba(0,0,0,0.06)'; mCtx.fillRect(0,0,mw,mh); mCtx.font = `${fontSize}px monospace`; mCtx.textAlign = 'center'; for(let i=0;i<drops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*fontSize+fontSize/2, y = drops[i]*fontSize; mCtx.fillStyle = '#f66'; mCtx.shadowBlur=6; mCtx.fillText(text,x,y); if(y>mh && Math.random()>0.975) drops[i]=0; drops[i]++; } }
+    function drawMatrix(){ mCtx.fillStyle = 'rgba(0,0,0,0.05)'; mCtx.fillRect(0,0,mw,mh); mCtx.font = `${fontSize}px monospace`; mCtx.textAlign = 'center'; for(let i=0;i<drops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*fontSize+fontSize/2, y = drops[i]*fontSize; mCtx.fillStyle = '#aaa'; mCtx.fillText(text,x,y); if(y>mh && Math.random()>0.975) drops[i]=0; drops[i]++; } }
     setInterval(drawMatrix, 70);
 
-    // loading matrix rain (01)
+    // loading matrix rain
     const loadMatrixCanvas = document.getElementById('loadingMatrixCanvas'), loadCtx = loadMatrixCanvas.getContext('2d');
     let lw, lh, lColumns, lDrops, lFontSize = 20;
     function resizeLoadMatrix(){ lw = loadMatrixCanvas.width = window.innerWidth; lh = loadMatrixCanvas.height = window.innerHeight; lColumns = Math.floor(lw / lFontSize) + 1; lDrops = Array(lColumns).fill(1); }
     window.addEventListener('resize', resizeLoadMatrix); resizeLoadMatrix();
-    function drawLoadMatrix(){ loadCtx.fillStyle = 'rgba(0,0,0,0.05)'; loadCtx.fillRect(0,0,lw,lh); loadCtx.font = `${lFontSize}px monospace`; loadCtx.textAlign = 'center'; for(let i=0;i<lDrops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*lFontSize + lFontSize/2, y = lDrops[i]*lFontSize; loadCtx.fillStyle = '#0f8'; loadCtx.shadowBlur = 4; loadCtx.fillText(text, x, y); if(y > lh && Math.random() > 0.975) lDrops[i] = 0; lDrops[i]++; } }
+    function drawLoadMatrix(){ loadCtx.fillStyle = 'rgba(0,0,0,0.05)'; loadCtx.fillRect(0,0,lw,lh); loadCtx.font = `${lFontSize}px monospace`; loadCtx.textAlign = 'center'; for(let i=0;i<lDrops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*lFontSize + lFontSize/2, y = lDrops[i]*lFontSize; loadCtx.fillStyle = '#aaa'; loadCtx.fillText(text, x, y); if(y > lh && Math.random() > 0.975) lDrops[i] = 0; lDrops[i]++; } }
     setInterval(drawLoadMatrix, 60);
 
     // welcome matrix
@@ -823,7 +697,7 @@
     function resizeWelcomeMatrix(){ wCanvas.width = window.innerWidth; wCanvas.height = window.innerHeight; welcomeColumns = Math.floor(wCanvas.width / wFontSize) + 1; welcomeDrops = Array(welcomeColumns).fill(1); }
     window.addEventListener('resize', () => { if(welcomeActive) resizeWelcomeMatrix(); });
     function startWelcomeMatrix(){ resizeWelcomeMatrix(); welcomeActive = true; }
-    function drawWelcomeMatrix(){ if(!welcomeActive) return; wCtx.fillStyle = 'rgba(0,0,0,0.05)'; wCtx.fillRect(0,0,wCanvas.width,wCanvas.height); wCtx.font = `${wFontSize}px monospace`; wCtx.textAlign = 'center'; for(let i=0;i<welcomeDrops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*wFontSize + wFontSize/2, y = welcomeDrops[i]*wFontSize; wCtx.fillStyle = '#0f8'; wCtx.shadowBlur=5; wCtx.fillText(text,x,y); if(y > wCanvas.height && Math.random() > 0.975) welcomeDrops[i]=0; welcomeDrops[i]++; } }
+    function drawWelcomeMatrix(){ if(!welcomeActive) return; wCtx.fillStyle = 'rgba(0,0,0,0.05)'; wCtx.fillRect(0,0,wCanvas.width,wCanvas.height); wCtx.font = `${wFontSize}px monospace`; wCtx.textAlign = 'center'; for(let i=0;i<welcomeDrops.length;i++){ const text = Math.random()>0.5?'1':'0'; const x = i*wFontSize + wFontSize/2, y = welcomeDrops[i]*wFontSize; wCtx.fillStyle = '#aaa'; wCtx.fillText(text,x,y); if(y > wCanvas.height && Math.random() > 0.975) welcomeDrops[i]=0; welcomeDrops[i]++; } }
     setInterval(drawWelcomeMatrix, 55);
 
     // loading sequence
@@ -867,14 +741,13 @@
     updateClockGreeting(); setInterval(updateClockGreeting, 1000);
 
     const tips = [
-      "Use task.wait() instead of wait() — it's more accurate and doesn't yield on the same frame, preventing infinite loops.",
-      "Local variables are faster than global ones. Always declare variables with 'local' inside functions for better performance.",
-      "Use :Connect() instead of :connect() (new Luau syntax). The lowercase version is deprecated.",
-      "Avoid while true do without a task.wait() inside — it will freeze the Roblox engine.",
-      "Leverage type checking in Luau using '::' annotations to catch bugs early in development.",
-      "Use table.create(size, initial) for pre-allocated arrays when you know the size — it's significantly faster.",
-      "debug.traceback() helps trace errors. Wrap risky calls in pcall() and use traceback to log.",
-      "String interpolation with `..` is fine, but for complex strings use string.format() for clarity."
+      "Use task.wait() instead of wait() — it's more accurate and doesn't yield on the same frame.",
+      "Local variables are faster than globals. Always use 'local' inside functions.",
+      "Use :Connect() instead of :connect() (new Luau syntax).",
+      "Avoid while true do without a task.wait() — it will freeze.",
+      "Leverage type checking in Luau using '::' annotations.",
+      "Use table.create(size, initial) for pre-allocated arrays.",
+      "debug.traceback() helps trace errors. Wrap risky calls in pcall()."
     ];
     let tIndex=0, tipEl=document.getElementById('luauTip'); setInterval(()=>{ tIndex=(tIndex+1)%tips.length; tipEl.style.opacity='0'; setTimeout(()=>{ tipEl.textContent = `"${tips[tIndex]}"`; tipEl.style.opacity='1'; },300); }, 10000);
 
@@ -894,7 +767,7 @@
     startBtn.addEventListener('click', startTimerFunc); resetBtn.addEventListener('click', resetTimerFunc); updateTimerDisplayUI();
 
     const sidePanel = document.getElementById('sidePanel'), panelTitle = document.getElementById('panelTitle'), panelDesc = document.getElementById('panelDesc'), closePanelBtn = document.getElementById('closePanel');
-    const skillMap = { javascript:"JavaScript: Versatile language for web, both frontend and backend. Powers dynamic websites.", html:"HTML: HyperText Markup Language - the skeleton of every webpage.", luau:"Luau: A derivative of Lua used in Roblox with type checking and performance optimizations.", css:"CSS: Cascading Style Sheets - controls layout, colors, animations, and responsiveness.", python:"Python: High-level, readable language used for AI, data science, automation, and backend." };
+    const skillMap = { javascript:"JavaScript: Versatile language for web, both frontend and backend.", html:"HTML: HyperText Markup Language - structure of webpages.", luau:"Luau: Roblox scripting language with type checking.", css:"CSS: Cascading Style Sheets - styling and design.", python:"Python: High-level language for AI, automation, backend." };
     document.getElementById('skillsContainer').addEventListener('click', (e) => { const tag = e.target.closest('.skill-tag'); if(tag){ let lang = tag.dataset.lang; panelTitle.textContent = tag.innerText.trim(); panelDesc.textContent = skillMap[lang] || "Mastery in progress."; sidePanel.classList.add('open'); } });
     closePanelBtn.addEventListener('click', () => sidePanel.classList.remove('open'));
     document.addEventListener('click', (e) => { if(!sidePanel.contains(e.target) && !e.target.closest('.skill-tag')) sidePanel.classList.remove('open'); });
